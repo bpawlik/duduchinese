@@ -35,17 +35,20 @@ namespace DuDuChinese.Models
 
         public ObservableCollection<DictionaryItem> Words { get; private set; } = new ObservableCollection<DictionaryItem>();
 
-        public void LoadDictionaryFromFile(Windows.Storage.StorageFile file)
+        public async void LoadDictionaryFromFile(Windows.Storage.StorageFile file)
         {
             try
             {
-                // Open the text file using a stream reader.
-                using (StreamReader sr = File.OpenText(file.Path))
+                // Get the file.
+                System.IO.Stream file_stream = await file.OpenStreamForReadAsync();
+
+                // Read the data.
+                using (StreamReader streamReader = new StreamReader(file_stream))
                 {
                     string line;
                     bool startFound = false;
 
-                    while ((line = sr.ReadLine()) != null)
+                    while ((line = streamReader.ReadLine()) != null)
                     {
                         if (!startFound)
                         {
@@ -61,6 +64,12 @@ namespace DuDuChinese.Models
                         this.Words.Add(new DictionaryItem(line));
                     }
                 }
+
+                //// Open the text file using a stream reader.
+                //using (StreamReader sr = File.OpenText(file.Path))
+                //{
+                    
+                //}
             }
             catch (Exception ex)
             {
