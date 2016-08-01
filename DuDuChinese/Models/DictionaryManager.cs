@@ -10,31 +10,46 @@ namespace DuDuChinese
 {
     public class DictionaryManager
     {
-        List<DictionaryItem> dictionary = null;
-        List<DictionaryItemList> lists = null;
+        static List<DictionaryItem> dictionary = null;
+        static Dictionary<string, DictionaryItemList> lists = null;
 
-        public List<DictionaryItem> Dictionary
+        public static List<DictionaryItem> Dictionary
         {
             get
             {
-                return this.dictionary;
+                if (dictionary == null)
+                    dictionary = new List<DictionaryItem>();
+                return dictionary;
             }
         }
 
-        public List<DictionaryItemList> Lists
+        public static Dictionary<string, DictionaryItemList> Lists
         {
             get
             {
-                return this.lists;
+                if (lists == null)
+                    lists = new Dictionary<string, DictionaryItemList>();
+                return lists;
             }
         }
 
-        public DictionaryManager()
+        public static void AddList(DictionaryItemList list)
         {
-            this.dictionary = new List<DictionaryItem>();
+            if (Lists.ContainsKey(list.Title))
+                Lists[list.Title] = list;
+            else
+                Lists.Add(list.Title, list);
         }
 
-        public void LoadDictionary(string filename)
+        public static DictionaryItemList GetList(string title)
+        {
+            if (Lists.ContainsKey(title))
+                return Lists[title];
+            else
+                return null;
+        }
+
+        public static void LoadDictionary(string filename)
         {
             try
             {
@@ -52,7 +67,7 @@ namespace DuDuChinese
                         if (line.StartsWith("#"))
                             continue;
 
-                        this.dictionary.Add(new DictionaryItem(line));
+                        Dictionary.Add(new DictionaryItem(line));
                     }
                 }
             }

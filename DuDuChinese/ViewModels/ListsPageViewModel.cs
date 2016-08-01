@@ -75,7 +75,9 @@ namespace DuDuChinese.ViewModels
                 // Application now has read/write access to the picked file
                 DictionaryItemList newItemList = new DictionaryItemList(file.Name, file);
                 this.SavedLists.Add(newItemList);
-                /*this.selectedList = newItemList;   */         }
+                DictionaryManager.AddList(newItemList);
+                /*this.selectedList = newItemList;   */
+            }
             else
             {
                 //this.fileTextBox.Text = "Operation cancelled.";
@@ -89,6 +91,8 @@ namespace DuDuChinese.ViewModels
             this.SavedLists.Add(newItemList);
 
             listCounter++;
+
+            DictionaryManager.AddList(newItemList);
         }
 
         // ItemClick event only happens when user is a Master state. In this state, 

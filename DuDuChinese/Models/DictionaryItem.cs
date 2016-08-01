@@ -24,6 +24,7 @@ namespace DuDuChinese.Models
         string simplified = String.Empty;
         List<string> pinyin = null;
         List<string> translation = null;
+        string oneLine = String.Empty;
 
         public string Traditional
         {
@@ -45,8 +46,14 @@ namespace DuDuChinese.Models
             get { return this.translation; }
         }
 
+        public string OneLine
+        {
+            get { return this.oneLine; }
+        }
+
         public DictionaryItem(string line)
         {
+            oneLine = line;
             State state = State.Traditonal;
 
             StringBuilder sb = new StringBuilder();

@@ -61,7 +61,15 @@
             <StackPanel>
                 <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="List name:" />
                 <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{x:Bind ViewModel.Title, Mode=OneWay, FallbackValue=DesigntimeValue}" />
-                <ListView x:Name="listView" Height="509" Width="324"/>
+                <ListView x:Name="listView"
+                          ItemsSource="{x:Bind ViewModel.Words}"
+                          xmlns:m="using:DuDuChinese.Models" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="m:DictionaryItem" >
+                            <TextBlock Text="{x:Bind OneLine}" />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </StackPanel>
         </ScrollViewer>
 

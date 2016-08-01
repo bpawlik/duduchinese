@@ -32,10 +32,8 @@ namespace DuDuChinese.ViewModels
             Title = (suspensionState.ContainsKey(nameof(Title))) ? suspensionState[nameof(Title)]?.ToString() : parameter?.ToString();
 
             // TODO:
-            //Items = DictionaryManager.GetList(Title);
-
-            // Populate items in the ListView
-
+            Items = DictionaryManager.GetList(Title);
+            Words = Items.Words;
 
             await Task.CompletedTask;
         }
