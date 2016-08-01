@@ -33,23 +33,38 @@ namespace DuDuChinese.ViewModels
         }
 
         private DictionaryItemList selectedList;
-        public ObservableCollection<DictionaryItemList> SavedLists { get; private set; } = new ObservableCollection<DictionaryItemList>();
+        public ObservableCollection<DictionaryItemList> SavedLists { get; private set; } = null;
         
+        // Triggered when entering the page
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
             if (suspensionState.Any())
             {
                 //Value = suspensionState[nameof(Value)]?.ToString();
             }
+
+            DictionaryManager.Deserialize();
+
+            if (this.SavedLists == null)
+            {
+                this.SavedLists = new ObservableCollection<DictionaryItemList>();
+                foreach (var key in DictionaryManager.Lists.Keys)
+                    this.SavedLists.Add(DictionaryManager.Lists[key]);
+            }
+
             await Task.CompletedTask;
         }
 
+        // Triggered when leaving the page
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> suspensionState, bool suspending)
         {
             if (suspending)
             {
                 //suspensionState[nameof(Value)] = Value;
             }
+
+            DictionaryManager.Serialize();
+
             await Task.CompletedTask;
         }
 

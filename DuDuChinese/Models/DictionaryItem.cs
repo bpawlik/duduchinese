@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,37 +19,49 @@ namespace DuDuChinese.Models
     /// Dictionary item basic format is:
     /// Traditional Simplified [pin1 yin1] /English equivalent 1/equivalent 2/
     /// </summary>
+    [DataContract]
     public class DictionaryItem
     {
+
         string traditional = String.Empty;
         string simplified = String.Empty;
         List<string> pinyin = null;
         List<string> translation = null;
         string oneLine = String.Empty;
 
+        [DataMember]
         public string Traditional
         {
             get { return this.traditional; }
+            set { this.traditional = value; }
         }
 
+        [DataMember]
         public string Simplified
         {
             get { return this.simplified; }
+            set { this.simplified = value; }
         }
 
+        [DataMember]
         public List<string> Pinyin
         {
             get { return this.pinyin; }
+            set { this.pinyin = value; }
         }
 
+        [DataMember]
         public List<string> Translation
         {
             get { return this.translation; }
+            set { this.translation = value; }
         }
 
+        [DataMember]
         public string OneLine
         {
             get { return this.oneLine; }
+            set { this.oneLine = value; }
         }
 
         public DictionaryItem(string line)

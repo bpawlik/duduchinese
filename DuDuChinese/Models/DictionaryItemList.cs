@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 
 namespace DuDuChinese.Models
 {
+    [DataContract]
     public class DictionaryItemList
     {
         public DictionaryItemList(string title)
@@ -31,8 +33,10 @@ namespace DuDuChinese.Models
             }
         }
 
+        [DataMember]
         public string Title { get; set; }
 
+        [DataMember]
         public ObservableCollection<DictionaryItem> Words { get; private set; } = new ObservableCollection<DictionaryItem>();
 
         public async void LoadDictionaryFromFile(Windows.Storage.StorageFile file)
