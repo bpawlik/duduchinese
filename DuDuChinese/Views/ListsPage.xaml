@@ -91,7 +91,7 @@
 
             <ListView x:Name="listsView" ItemsSource="{x:Bind ViewModel.SavedLists}"
                       xmlns:m="using:DuDuChinese.Models"
-                      SelectionChanged="{x:Bind ViewModel.OnSelectionChanged}">
+                      Tapped="{x:Bind ViewModel.OnItemClick}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="m:DictionaryItemList" >
                         <TextBlock Text="{x:Bind Title}" />

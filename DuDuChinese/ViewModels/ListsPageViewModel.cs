@@ -112,10 +112,14 @@ namespace DuDuChinese.ViewModels
 
         // ItemClick event only happens when user is a Master state. In this state, 
         // selection mode is none and click event navigates to the details view.
-        public void OnItemClick(object sender, ItemClickEventArgs e)
+        public void OnItemClick(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            //// The clicked item it is the new selected contact
-            //selectedList = e.ClickedItem as DictionaryItemList;
+            // The clicked item it is the new selected contact
+            ListView currentListView = sender as ListView;
+
+            selectedList = currentListView.SelectedItem as DictionaryItemList;
+
+            NavigationService.Navigate(typeof(Views.ListPage), selectedList.Title);
 
             //NavigationService.Navigate(typeof(Views.ListPage), selectedList);
             //if (PageSizeStatesGroup.CurrentState == NarrowState)
