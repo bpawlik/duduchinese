@@ -159,11 +159,11 @@ namespace DuDuChinese.Models
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {
-            throw new NotImplementedException();
+            return new List<string>();
         }
     }
 
-    public class EntryToBackgroundConverter : Windows.UI.Xaml.Data.IValueConverter
+    public class ColourFormatter : Windows.UI.Xaml.Data.IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

@@ -9,6 +9,7 @@ using Template10.Mvvm;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Navigation;
 using DuDuChinese.Models;
+using Windows.UI.Xaml.Controls;
 
 namespace DuDuChinese.ViewModels
 {

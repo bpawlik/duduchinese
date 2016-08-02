@@ -129,6 +129,11 @@ namespace DuDuChinese.Models
             }
         }
         
+        public static bool EndOfItemList()
+        {
+            return currentItemIndex >= shuffledItems.Count;
+        }
+
         public static DictionaryItem GetNextItem()
         {
             if (shuffledItems == null || currentItemIndex >= shuffledItems.Count)

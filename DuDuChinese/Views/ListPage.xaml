@@ -17,6 +17,7 @@
     </Page.DataContext>
 
     <Page.Resources>
+        <m:ColourFormatter x:Key="EntryToForegroundConverter"/>
         <m:StringFormatter x:Key="StringFormatterValueConverter"/>
     </Page.Resources>
 
@@ -71,10 +72,45 @@
                           xmlns:m="using:DuDuChinese.Models">
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="m:DictionaryItem">
-                            <StackPanel Orientation="Horizontal" Margin="6">
-                                <SymbolIcon Symbol="Audio" Margin="0,0,12,0"/>
+                            <StackPanel Orientation="Horizontal" Margin="20">
+                                <!--<SymbolIcon Symbol="Audio" Margin="0,0,12,0"/>-->
                                 <StackPanel>
-                                    <TextBlock Text="{x:Bind Pinyin, Converter={StaticResource StringFormatterValueConverter}}" FontWeight="Bold" FontSize="16" />
+                                    <!--<ListView ItemsSource="{x:Bind Pinyin}"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Left"
+                                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                              ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                              ScrollViewer.HorizontalScrollMode="Disabled"
+                                              ScrollViewer.VerticalScrollMode="Disabled"
+                                              ScrollViewer.ZoomMode="Disabled"
+                                              SelectionMode="None"
+                                              FontWeight="Bold"
+                                              FontSize="16">
+                                        <ListView.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <ItemsStackPanel
+                                                    Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ListView.ItemsPanel>
+                                        <ListView.ItemContainerStyle>
+                                            <Style TargetType="ListViewItem">
+                                                --><!-- note - for GridView you should specify GridViewItem, for ListBox - ListBoxItem, etc. --><!--
+                                                <Setter
+                                                    Property="Height"
+                                                    Value="20" />
+                                                --><!-- this is where you can specify the size of your ListView items --><!--
+                                                <Setter
+                                                    Property="Width"
+                                                    Value="20" />
+                                            </Style>
+                                        </ListView.ItemContainerStyle>
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate x:DataType="m:DictionaryItem">
+                                                <TextBlock Text="{Binding}" FontSize="16"/>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>-->
+                                    <TextBlock Text="{x:Bind Pinyin, Converter={StaticResource StringFormatterValueConverter}}" FontWeight="Bold" FontSize="16"/>
                                     <TextBlock Text="{x:Bind Translation, Converter={StaticResource StringFormatterValueConverter}, ConverterParameter=newLine}" FontSize="12"/>
                                     <TextBlock Text="{x:Bind Simplified}" FontWeight="Bold" FontSize="16"/>
                                 </StackPanel>

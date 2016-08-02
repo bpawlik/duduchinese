@@ -7,6 +7,7 @@
       xmlns:controls="using:Template10.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="using:DuDuChinese.Views"
+      xmlns:m="using:DuDuChinese.Models"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:vm="using:DuDuChinese.ViewModels" x:Name="ThisPage"
       mc:Ignorable="d">
@@ -14,6 +15,10 @@
     <Page.DataContext>
         <vm:ExercisePageViewModel x:Name="ViewModel" />
     </Page.DataContext>
+
+    <Page.Resources>
+        <m:StringFormatter x:Key="StringFormatterValueConverter"/>
+    </Page.Resources>
 
     <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -65,34 +70,16 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="50" />
-                        <RowDefinition Height="50" />
-                        <RowDefinition Height="50" />
                     </Grid.RowDefinitions>
                 </Grid>
-                <ListView ItemsSource="{x:Bind ViewModel.CurrentItem}"
-                          HorizontalAlignment="Center" VerticalAlignment="Center"
-                          xmlns:m="using:DuDuChinese.Models">
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="m:DictionaryItem">
-                            <StackPanel Orientation="Horizontal" Margin="6">
-                                <SymbolIcon Symbol="Audio" Margin="0,0,12,0"/>
-                                <StackPanel>
-                                    <TextBlock Text="{x:Bind Pinyin}" FontWeight="Bold"/>
-                                    <TextBlock Text="{x:Bind Translation}"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-
-                <GridView x:Name="listsView" ItemsSource="{x:Bind ViewModel.CurrentItem}"
-                      xmlns:m="using:DuDuChinese.Models" >
-                    <GridView.ItemTemplate>
-                        <DataTemplate x:DataType="m:DictionaryItem" >
-                            <TextBlock Text="{x:Bind Pinyin}" />
-                        </DataTemplate>
-                    </GridView.ItemTemplate>
-                </GridView>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20">
+                    <!--<SymbolIcon Symbol="Audio" Margin="0,0,12,0"/>-->
+                    <StackPanel>
+                        <TextBlock Text="{x:Bind ViewModel.CurrentItem.Pinyin, Converter={StaticResource StringFormatterValueConverter}, Mode=TwoWay}" FontWeight="Bold" FontSize="16"/>
+                        <TextBlock Text="{x:Bind ViewModel.CurrentItem.Translation, Converter={StaticResource StringFormatterValueConverter}, ConverterParameter=X, Mode=TwoWay}" FontSize="12"/>
+                        <TextBlock Text="{x:Bind ViewModel.CurrentItem.Simplified, Mode=TwoWay}" FontWeight="Bold" FontSize="16"/>
+                    </StackPanel>
+                </StackPanel>
                 <!--<TextBlock HorizontalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}" Text="{x:Bind ViewModel.Text}" />-->
                 <Button x:Name="continueButton" Grid.Column="0" Content="Continue" Margin="50" HorizontalAlignment="Center" Click="{x:Bind ViewModel.Continue_Click}"/>
             </StackPanel>

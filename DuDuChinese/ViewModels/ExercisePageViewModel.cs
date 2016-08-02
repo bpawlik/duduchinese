@@ -1,6 +1,7 @@
 using DuDuChinese.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,17 @@ namespace DuDuChinese.ViewModels
 {
     public class ExercisePageViewModel : ViewModelBase
     {
-        public DictionaryItem CurrentItem { get; set; } = null;
+        private DictionaryItem currentItem = null;
+        public DictionaryItem CurrentItem
+        {
+            get { return this.currentItem; }
+            set
+            {
+                this.Set(ref this.currentItem, value);
+            }
+        }
+
+        public string Title { get; set; } = "blah";
 
         public ExercisePageViewModel()
         {
@@ -23,6 +34,13 @@ namespace DuDuChinese.ViewModels
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
             //Value = (suspensionState.ContainsKey(nameof(Value))) ? suspensionState[nameof(Value)]?.ToString() : parameter?.ToString();
+
+            // This is our exercise! :)
+            CurrentItem = LearningEngine.GetNextItem();
+
+            // Later put here exercise selection
+            // ....
+
             await Task.CompletedTask;
         }
 
@@ -51,8 +69,11 @@ namespace DuDuChinese.ViewModels
             }
             else
             {
-                // Display exercise item
                 CurrentItem = nextItem;
+                Title = CurrentItem.OneLine;
+                NavigationService.Navigate(typeof(Views.ExerciseDisplayPage), 0);
+
+                //NavigationService.Refresh();
             }
         }
     }
