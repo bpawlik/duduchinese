@@ -5,6 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Navigation;
+using System.Collections.ObjectModel;
+using DuDuChinese.Models;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace DuDuChinese.ViewModels
 {
@@ -12,21 +16,27 @@ namespace DuDuChinese.ViewModels
     {
         public NewMaterialPageViewModel()
         {
-            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-            {
-                Value = "Designtime value";
-            }
         }
 
-        string _Value = "Blah";
-        public string Value { get { return _Value; } set { Set(ref _Value, value); } }
+        public ObservableCollection<DictionaryItemList> Lists { get; private set; } = null;
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
             if (suspensionState.Any())
             {
-                Value = suspensionState[nameof(Value)]?.ToString();
+                //Value = suspensionState[nameof(Value)]?.ToString();
             }
+
+            DictionaryManager.Deserialize();
+
+            if (this.Lists == null)
+                this.Lists = new ObservableCollection<DictionaryItemList>();
+
+            // Refresh list (always)
+            this.Lists.Clear();
+            foreach (var key in DictionaryManager.Lists.Keys)
+                this.Lists.Add(DictionaryManager.Lists[key]);
+
             await Task.CompletedTask;
         }
 
@@ -34,7 +44,7 @@ namespace DuDuChinese.ViewModels
         {
             if (suspending)
             {
-                suspensionState[nameof(Value)] = Value;
+                //suspensionState[nameof(Value)] = Value;
             }
             await Task.CompletedTask;
         }
@@ -45,8 +55,19 @@ namespace DuDuChinese.ViewModels
             await Task.CompletedTask;
         }
 
-        public void GotoDetailsPage() =>
-            NavigationService.Navigate(typeof(Views.DetailPage), Value);
+        public void radioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            RadioButton rb = sender as RadioButton;
+            LearningEngine.Mode = rb.Tag == null ? LearningMode.Words : (LearningMode)Convert.ToInt32(rb.Tag);
+        }
+
+        public void Start_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(typeof(Views.ProgressPage), 0);
+        }
+
+        //public void GotoDetailsPage() =>
+        //    NavigationService.Navigate(typeof(Views.DetailPage), Value);
 
         public void GotoSettings() =>
             NavigationService.Navigate(typeof(Views.SettingsPage), 0);

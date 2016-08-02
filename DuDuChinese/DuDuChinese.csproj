@@ -100,10 +100,12 @@
     <Compile Include="Models\DictionaryItem.cs" />
     <Compile Include="Models\DictionaryItemList.cs" />
     <Compile Include="Models\DictionaryManager.cs" />
+    <Compile Include="Models\LearningEngine.cs" />
     <Compile Include="Models\OutlookDataObject.cs" />
     <Compile Include="Models\OutlookStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\SettingsServices\SettingsService.cs" />
+    <Compile Include="ViewModels\ProgressPageViewModel.cs" />
     <Compile Include="ViewModels\ListPageViewModel.cs" />
     <Compile Include="ViewModels\ListsPageViewModel.cs" />
     <Compile Include="ViewModels\DictionaryPageViewModel.cs" />
@@ -114,6 +116,9 @@
     <Compile Include="ViewModels\SettingsPageViewModel.cs" />
     <Compile Include="Views\Busy.xaml.cs">
       <DependentUpon>Busy.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProgressPage.xaml.cs">
+      <DependentUpon>ProgressPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ListPage.xaml.cs">
       <DependentUpon>ListPage.xaml</DependentUpon>
@@ -172,6 +177,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="Views\Busy.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ProgressPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

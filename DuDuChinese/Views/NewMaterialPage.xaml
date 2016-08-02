@@ -23,7 +23,9 @@
                         <AdaptiveTrigger MinWindowWidth="{StaticResource NarrowMinWidth}" />
                     </VisualState.StateTriggers>
                     <!--<VisualState.Setters>
-                        --><!--  TODO: change properties for narrow view  --><!--
+                        -->
+                    <!--  TODO: change properties for narrow view  -->
+                    <!--
                         <Setter Target="stateTextBox.Text" Value="Narrow Visual State" />
                     </VisualState.Setters>-->
                 </VisualState>
@@ -32,7 +34,9 @@
                         <AdaptiveTrigger MinWindowWidth="{StaticResource NormalMinWidth}" />
                     </VisualState.StateTriggers>
                     <!--<VisualState.Setters>
-                        --><!--  TODO: change properties for normal view  --><!--
+                        -->
+                    <!--  TODO: change properties for normal view  -->
+                    <!--
                         <Setter Target="stateTextBox.Text" Value="Normal Visual State" />
                     </VisualState.Setters>-->
                 </VisualState>
@@ -41,7 +45,9 @@
                         <AdaptiveTrigger MinWindowWidth="{StaticResource WideMinWidth}" />
                     </VisualState.StateTriggers>
                     <!--<VisualState.Setters>
-                        --><!--  TODO: change properties for wide view  --><!--
+                        -->
+                    <!--  TODO: change properties for wide view  -->
+                    <!--
                         <Setter Target="stateTextBox.Text" Value="Wide Visual State" />
                     </VisualState.Setters>-->
                 </VisualState>
@@ -60,7 +66,7 @@
             </controls:PageHeader.SecondaryCommands>
 
         </controls:PageHeader>
-        <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="141" Margin="48,84,-125,-84">
+        <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="141" Margin="168,134,-245,-134">
             <ComboBoxItem>10</ComboBoxItem>
             <ComboBoxItem>20</ComboBoxItem>
             <ComboBoxItem>30</ComboBoxItem>
@@ -70,7 +76,20 @@
             <ComboBoxItem>70</ComboBoxItem>
             <ComboBoxItem>80</ComboBoxItem>
         </ComboBox>
-        <Button x:Name="button" Content="Start" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="98" RenderTransformOrigin="3.666,3.162" Margin="194,81,-227.333,-84"/>
+        <Button x:Name="button" Content="Start" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="98" RenderTransformOrigin="3.666,3.162" Margin="103,234,-136.333,-237" Click="{x:Bind ViewModel.Start_Click}"/>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Select list:" VerticalAlignment="Top" RenderTransformOrigin="1.178,6.017" Margin="10,103,-42.667,-110"/>
+        <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Number of items:" VerticalAlignment="Top" RenderTransformOrigin="1.178,6.017" Margin="10,139,-43.333,-126"/>
+        <ComboBox x:Name="comboBoxLists" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="141" Margin="168,98,-245,-98"
+                  ItemsSource="{x:Bind ViewModel.Lists}"
+                  xmlns:m="using:DuDuChinese.Models">
+            <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="m:DictionaryItemList" >
+                    <TextBlock Text="{x:Bind Title}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <RadioButton x:Name="radioButtonWords" Content="Words" IsChecked="True" Tag="0" GroupName="mode" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="120" Margin="10,176,-10,-176" Checked="{x:Bind ViewModel.radioButton_Checked}" />
+        <RadioButton x:Name="radioButtonSentences" Content="Sentences" IsChecked="False" Tag="1" GroupName="mode" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="120" Margin="168,176,-168,-176" Checked="{x:Bind ViewModel.radioButton_Checked}" />
 
     </RelativePanel>
 </Page>
