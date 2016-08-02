@@ -25,7 +25,15 @@ namespace DuDuChinese.ViewModels
             }
         }
 
-        public string Title { get; set; } = "blah";
+        private string summary = "Exercises started.";
+        public string Summary
+        {
+            get { return this.summary; }
+            set
+            {
+                this.Set(ref this.summary, value);
+            }
+        }
 
         public ExercisePageViewModel()
         {
@@ -37,6 +45,7 @@ namespace DuDuChinese.ViewModels
 
             // This is our exercise! :)
             CurrentItem = LearningEngine.GetNextItem();
+            Summary = LearningEngine.GetStatus();
 
             // Later put here exercise selection
             // ....
@@ -70,10 +79,7 @@ namespace DuDuChinese.ViewModels
             else
             {
                 CurrentItem = nextItem;
-                Title = CurrentItem.OneLine;
-                NavigationService.Navigate(typeof(Views.ExerciseDisplayPage), 0);
-
-                //NavigationService.Refresh();
+                Summary = LearningEngine.GetStatus();
             }
         }
     }

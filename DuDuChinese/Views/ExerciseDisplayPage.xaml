@@ -63,26 +63,28 @@
                       RelativePanel.AlignRightWithPanel="True"
                       RelativePanel.Below="pageHeader"
                       VerticalScrollBarVisibility="Auto">
-            <StackPanel>
-                <Grid HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="50" />
-                    </Grid.RowDefinitions>
-                </Grid>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20">
+            <Grid HorizontalAlignment="Left" Margin="50">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="300" />
+                    <RowDefinition Height="50"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="20">
                     <!--<SymbolIcon Symbol="Audio" Margin="0,0,12,0"/>-->
                     <StackPanel>
-                        <TextBlock Text="{x:Bind ViewModel.CurrentItem.Pinyin, Converter={StaticResource StringFormatterValueConverter}, Mode=TwoWay}" FontWeight="Bold" FontSize="16"/>
-                        <TextBlock Text="{x:Bind ViewModel.CurrentItem.Translation, Converter={StaticResource StringFormatterValueConverter}, ConverterParameter=X, Mode=TwoWay}" FontSize="12"/>
-                        <TextBlock Text="{x:Bind ViewModel.CurrentItem.Simplified, Mode=TwoWay}" FontWeight="Bold" FontSize="16"/>
+                        <TextBlock Text="{x:Bind ViewModel.CurrentItem.Pinyin, Converter={StaticResource StringFormatterValueConverter}, Mode=TwoWay}" FontWeight="Bold" FontSize="20"/>
+                        <TextBlock Text="{x:Bind ViewModel.CurrentItem.Translation, Converter={StaticResource StringFormatterValueConverter}, ConverterParameter=X, Mode=TwoWay}" FontSize="16"/>
+                        <TextBlock Text="{x:Bind ViewModel.CurrentItem.Simplified, Mode=TwoWay}" FontWeight="Bold" FontSize="30"/>
                     </StackPanel>
                 </StackPanel>
                 <!--<TextBlock HorizontalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}" Text="{x:Bind ViewModel.Text}" />-->
-                <Button x:Name="continueButton" Grid.Column="0" Content="Continue" Margin="50" HorizontalAlignment="Center" Click="{x:Bind ViewModel.Continue_Click}"/>
-            </StackPanel>
+                <StackPanel Grid.Row="1">
+                    <Button x:Name="continueButton" Content="Continue" Margin="150,0,0,0" HorizontalAlignment="Left" Click="{x:Bind ViewModel.Continue_Click}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="2" VerticalAlignment="Bottom">
+                    <TextBlock Text="{x:Bind ViewModel.Summary, Mode=TwoWay}" FontSize="20" />
+                </StackPanel>
+            </Grid>
         </ScrollViewer>
 
     </RelativePanel>

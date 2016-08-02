@@ -159,7 +159,17 @@ namespace DuDuChinese.Models
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {
-            return new List<string>();
+            string converterParameter = parameter as string;
+            string text = value as string;
+
+            if (!string.IsNullOrEmpty(converterParameter))
+            {
+                return new List<string>(text.Split('\n'));
+            }
+            else
+            {
+                return new List<string>(text.Split(' '));
+            }
         }
     }
 

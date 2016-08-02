@@ -147,6 +147,13 @@ namespace DuDuChinese.Models
             }
         }
 
+        public static string GetStatus()
+        {
+            string temp = currentItemIndex.ToString() + " / " + shuffledItems.Count.ToString();
+            return temp;
+        }
+
+
         // Helper function to display enums description
         public static string GetDescription(LearningExercise code)
         {
@@ -159,7 +166,7 @@ namespace DuDuChinese.Models
                 object[] attrs = (object[])memInfo[0].GetCustomAttributes(typeof(Description), false);
 
                 if (attrs != null && attrs.Length > 0)
-                    return ((Description)attrs[0]).Text + " (" + code.ToString() + ")";
+                    return ((Description)attrs[0]).Text;
             }
 
             return code.ToString();

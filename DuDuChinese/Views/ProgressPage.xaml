@@ -58,7 +58,7 @@
                       RelativePanel.AlignRightWithPanel="True"
                       RelativePanel.Below="pageHeader"
                       VerticalScrollBarVisibility="Auto">
-            <StackPanel>
+            <StackPanel Margin="25">
                 <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Progress:" />
                 <ListView x:Name="listView"
                           ItemsSource="{x:Bind ViewModel.ExerciseList}">
