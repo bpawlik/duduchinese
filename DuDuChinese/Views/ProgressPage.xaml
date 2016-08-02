@@ -59,11 +59,13 @@
                       RelativePanel.Below="pageHeader"
                       VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="25">
-                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Progress:" />
+                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="List of exercises:" />
                 <ListView x:Name="listView"
-                          ItemsSource="{x:Bind ViewModel.ExerciseList}">
+                          Margin="25"
+                          ItemsSource="{x:Bind ViewModel.ExerciseList}"
+                          SelectedIndex="{x:Bind ViewModel.SelectedItemIndex}">
                 </ListView>
-                <Grid>
+                <Grid Margin="0, 50">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="150" />
                         <ColumnDefinition Width="150" />

@@ -15,6 +15,7 @@ namespace DuDuChinese.ViewModels
     public class ProgressPageViewModel : ViewModelBase
     {
         public List<string> ExerciseList { get; set; } = null;
+        public int SelectedItemIndex { get; set; } = -1;
 
         public ProgressPageViewModel()
         {
@@ -31,6 +32,16 @@ namespace DuDuChinese.ViewModels
             this.ExerciseList.Clear();
             foreach (LearningExercise exerc in LearningEngine.ExerciseList)
                 this.ExerciseList.Add(LearningEngine.GetDescription(exerc));
+
+            int index = LearningEngine.NextExercise();
+            if (index < 0)
+            {
+                // This is it, display summary and ask whether one want to review
+            }
+            else
+            {
+                this.SelectedItemIndex = index;
+            }
 
             await Task.CompletedTask;
         }

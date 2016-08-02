@@ -107,6 +107,11 @@ namespace DuDuChinese.Models
             }
         }
 
+        public static int NextExercise()
+        {
+            return CurrentExerciseIndex++;
+        }
+
         private static int currentItemIndex = 0;
         private static DictionaryItemList currentItemList = null;
         private static List<DictionaryItem> shuffledItems = null;
