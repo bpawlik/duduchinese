@@ -66,6 +66,12 @@ namespace DuDuChinese.ViewModels
             NavigationService.Navigate(typeof(Views.ProgressPage), 0);
         }
 
+        public void SelectedListChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox cb = sender as ComboBox;
+            LearningEngine.CurrentItemList = (DictionaryItemList)cb.SelectedItem;
+        }
+
         //public void GotoDetailsPage() =>
         //    NavigationService.Navigate(typeof(Views.DetailPage), Value);
 

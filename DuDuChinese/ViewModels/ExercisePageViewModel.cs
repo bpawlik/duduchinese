@@ -1,3 +1,4 @@
+using DuDuChinese.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,32 +7,22 @@ using System.Threading.Tasks;
 using Template10.Common;
 using Template10.Mvvm;
 using Template10.Services.NavigationService;
-using Windows.UI.Xaml.Navigation;
-using DuDuChinese.Models;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Navigation;
 
 namespace DuDuChinese.ViewModels
 {
-    public class ProgressPageViewModel : ViewModelBase
+    public class ExercisePageViewModel : ViewModelBase
     {
-        public List<string> ExerciseList { get; set; } = null;
+        public DictionaryItem CurrentItem { get; set; } = null;
 
-        public ProgressPageViewModel()
+        public ExercisePageViewModel()
         {
         }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
             //Value = (suspensionState.ContainsKey(nameof(Value))) ? suspensionState[nameof(Value)]?.ToString() : parameter?.ToString();
-
-            // Refresh task list
-            if (this.ExerciseList == null)
-                this.ExerciseList = new List<string>();
-
-            this.ExerciseList.Clear();
-            foreach (LearningExercise exerc in LearningEngine.ExerciseList)
-                this.ExerciseList.Add(LearningEngine.GetDescription(exerc));
-
             await Task.CompletedTask;
         }
 
@@ -41,7 +32,6 @@ namespace DuDuChinese.ViewModels
             {
                 //suspensionState[nameof(Value)] = Value;
             }
-
             await Task.CompletedTask;
         }
 
@@ -53,21 +43,17 @@ namespace DuDuChinese.ViewModels
 
         public void Continue_Click(object sender, RoutedEventArgs e)
         {
-            if (LearningEngine.CurrentExerciseIndex == LearningEngine.ExerciseList.Count)
+            DictionaryItem nextItem = LearningEngine.GetNextItem();
+
+            if (nextItem == null)
             {
-                // We're done!
-                // Go back to new material page
-                NavigationService.Navigate(typeof(Views.NewMaterialPage), 0);
+                NavigationService.Navigate(typeof(Views.ProgressPage), 0);
             }
             else
             {
-                NavigationService.Navigate(typeof(Views.ExerciseDisplayPage), 0);
+                // Display exercise item
+                CurrentItem = nextItem;
             }
-        }
-
-        public void Cancel_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(typeof(Views.ProgressPage), 0);
         }
     }
 }

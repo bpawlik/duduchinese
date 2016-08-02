@@ -63,6 +63,15 @@
                 <ListView x:Name="listView"
                           ItemsSource="{x:Bind ViewModel.ExerciseList}">
                 </ListView>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="150" />
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="continueButton" Grid.Column="0" Content="Continue" HorizontalAlignment="Center" Click="{x:Bind ViewModel.Continue_Click}"/>
+                    <Button x:Name="cancelButton" Grid.Column="1" Content="Cancel" HorizontalAlignment="Center" Click="{x:Bind ViewModel.Cancel_Click}"/>
+                </Grid>
+                
             </StackPanel>
         </ScrollViewer>
 

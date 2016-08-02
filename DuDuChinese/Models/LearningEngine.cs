@@ -74,8 +74,8 @@ namespace DuDuChinese.Models
     public class LearningEngine
     {
         // Predefined exercise lists
-        private static readonly LearningExercise[] ExerciseListWords = { LearningExercise.Display };
-        private static readonly LearningExercise[] ExerciseListSentences = { LearningExercise.Display };
+        private static readonly LearningExercise[] ExerciseListWords = { LearningExercise.Display, LearningExercise.UnderstadningFromHearing };
+        private static readonly LearningExercise[] ExerciseListSentences = { LearningExercise.Display, LearningExercise.FillGaps };
 
         private static LearningMode mode = LearningMode.Words;
         public static LearningMode Mode
@@ -95,6 +95,52 @@ namespace DuDuChinese.Models
         }
 
         public static List<LearningExercise> ExerciseList { get; set; } = null;
+
+        private static int currentExerciseIndex = 0;
+        public static int CurrentExerciseIndex {
+            get { return currentExerciseIndex; }
+            set
+            {
+                currentExerciseIndex = value;
+                if (currentExerciseIndex >= ExerciseList.Count)
+                    currentExerciseIndex = 0;
+            }
+        }
+
+        private static int currentItemIndex = 0;
+        private static DictionaryItemList currentItemList = null;
+        private static List<DictionaryItem> shuffledItems = null;
+        public static DictionaryItemList CurrentItemList
+        {
+            get
+            {
+                return currentItemList;
+            }
+            set
+            {
+                currentItemList = value;
+
+                // Shuffle entries
+                if (currentItemList != null)
+                {
+                    var shuffledList = currentItemList.Words.OrderBy(a => Guid.NewGuid());
+                    shuffledItems = new List<DictionaryItem>(shuffledList);
+                }
+            }
+        }
+        
+        public static DictionaryItem GetNextItem()
+        {
+            if (shuffledItems == null || currentItemIndex >= shuffledItems.Count)
+            {
+                currentItemIndex = 0;
+                return null;
+            }
+            else
+            {
+                return shuffledItems[currentItemIndex++];
+            }
+        }
 
         // Helper function to display enums description
         public static string GetDescription(LearningExercise code)

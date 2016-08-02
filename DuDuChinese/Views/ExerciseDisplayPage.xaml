@@ -1,4 +1,4 @@
-<Page x:Class="DuDuChinese.Views.ListPage"
+<Page x:Class="DuDuChinese.Views.ExerciseDisplayPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:Behaviors="using:Template10.Behaviors"
@@ -7,18 +7,13 @@
       xmlns:controls="using:Template10.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="using:DuDuChinese.Views"
-      xmlns:m="using:DuDuChinese.Models"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:vm="using:DuDuChinese.ViewModels" x:Name="ThisPage"
       mc:Ignorable="d">
 
     <Page.DataContext>
-        <vm:ListPageViewModel x:Name="ViewModel" />
+        <vm:ExercisePageViewModel x:Name="ViewModel" />
     </Page.DataContext>
-
-    <Page.Resources>
-        <m:StringFormatter x:Key="StringFormatterValueConverter"/>
-    </Page.Resources>
 
     <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -55,7 +50,7 @@
         <controls:PageHeader x:Name="pageHeader" Frame="{x:Bind Frame}"
                              RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignTopWithPanel="True" Text="List Page" />
+                             RelativePanel.AlignTopWithPanel="True" Text="Exercise Page" />
 
         <!--  content  -->
         <ScrollViewer Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"
@@ -64,9 +59,17 @@
                       RelativePanel.Below="pageHeader"
                       VerticalScrollBarVisibility="Auto">
             <StackPanel>
-                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="List name:" />
-                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{x:Bind ViewModel.Title, Mode=OneWay, FallbackValue=DesigntimeValue}" />
-                <ListView x:Name="listView" ItemsSource="{x:Bind ViewModel.Words}"
+                <Grid HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50" />
+                        <RowDefinition Height="50" />
+                        <RowDefinition Height="50" />
+                    </Grid.RowDefinitions>
+                </Grid>
+                <ListView ItemsSource="{x:Bind ViewModel.CurrentItem}"
                           HorizontalAlignment="Center" VerticalAlignment="Center"
                           xmlns:m="using:DuDuChinese.Models">
                     <ListView.ItemTemplate>
@@ -74,16 +77,24 @@
                             <StackPanel Orientation="Horizontal" Margin="6">
                                 <SymbolIcon Symbol="Audio" Margin="0,0,12,0"/>
                                 <StackPanel>
-                                    <TextBlock Text="{x:Bind Pinyin, Converter={StaticResource StringFormatterValueConverter}}" FontWeight="Bold" FontSize="16" />
-                                    <TextBlock Text="{x:Bind Translation, Converter={StaticResource StringFormatterValueConverter}, ConverterParameter=newLine}" FontSize="12"/>
-                                    <TextBlock Text="{x:Bind Simplified}" FontWeight="Bold" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind Pinyin}" FontWeight="Bold"/>
+                                    <TextBlock Text="{x:Bind Translation}"/>
                                 </StackPanel>
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
 
-                
+                <GridView x:Name="listsView" ItemsSource="{x:Bind ViewModel.CurrentItem}"
+                      xmlns:m="using:DuDuChinese.Models" >
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="m:DictionaryItem" >
+                            <TextBlock Text="{x:Bind Pinyin}" />
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+                <!--<TextBlock HorizontalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}" Text="{x:Bind ViewModel.Text}" />-->
+                <Button x:Name="continueButton" Grid.Column="0" Content="Continue" Margin="50" HorizontalAlignment="Center" Click="{x:Bind ViewModel.Continue_Click}"/>
             </StackPanel>
         </ScrollViewer>
 

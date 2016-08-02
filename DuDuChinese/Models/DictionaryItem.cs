@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Media;
 
 namespace DuDuChinese.Models
 {
@@ -131,6 +132,61 @@ namespace DuDuChinese.Models
             }
 
             translation = new List<string>(translationTemp.Split('/'));
+        }
+    }
+
+    public class StringFormatter : Windows.UI.Xaml.Data.IValueConverter
+    {
+        // This converts the value object to the string to display.
+        // This will work with most simple types.
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            List<string> list = (List<string>)value;
+            string converterParameter = parameter as string;
+
+            if (!string.IsNullOrEmpty(converterParameter))
+            {
+
+                return string.Join("\n", list.ToArray());
+            }
+            else
+            {
+                return string.Join(" ", list.ToArray());
+            } 
+        }
+
+        // No need to implement converting back on a one-way binding
+        public object ConvertBack(object value, Type targetType,
+            object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class EntryToBackgroundConverter : Windows.UI.Xaml.Data.IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            string stringValue = value as string;
+
+            if (string.IsNullOrEmpty(stringValue))
+                return Windows.UI.Colors.Black;
+
+            if (stringValue.EndsWith("1"))
+                return Windows.UI.Colors.Red;
+            else if (stringValue.EndsWith("2"))
+                return Windows.UI.Colors.Orange;
+            else if (stringValue.EndsWith("3"))
+                return Windows.UI.Colors.Green;
+            else if (stringValue.EndsWith("4"))
+                return Windows.UI.Colors.Blue;
+
+            return Windows.UI.Colors.Black;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            return value;
         }
     }
 }
