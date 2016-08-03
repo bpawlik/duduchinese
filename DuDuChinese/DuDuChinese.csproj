@@ -118,8 +118,8 @@
     <Compile Include="Views\Busy.xaml.cs">
       <DependentUpon>Busy.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ExerciseTextBoxPagey.xaml.cs">
-      <DependentUpon>ExerciseTextBoxPagey.xaml</DependentUpon>
+    <Compile Include="Views\ExerciseTextBoxPage.xaml.cs">
+      <DependentUpon>ExerciseTextBoxPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ExerciseDisplayPage.xaml.cs">
       <DependentUpon>ExerciseDisplayPage.xaml</DependentUpon>
@@ -187,7 +187,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\ExerciseTextBoxPagey.xaml">
+    <Page Include="Views\ExerciseTextBoxPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

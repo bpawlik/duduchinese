@@ -10,6 +10,7 @@ using Template10.Mvvm;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Media;
 
 namespace DuDuChinese.ViewModels
 {
@@ -19,20 +20,34 @@ namespace DuDuChinese.ViewModels
         public DictionaryItem CurrentItem
         {
             get { return this.currentItem; }
-            set
-            {
-                this.Set(ref this.currentItem, value);
-            }
+            set { this.Set(ref this.currentItem, value); }
         }
 
         private string status = "Enter translation:";
         public string Status
         {
             get { return this.status; }
-            set
-            {
-                this.Set(ref this.status, value);
-            }
+            set { this.Set(ref this.status, value); }
+        }
+
+        public bool Validated { get; set; } = false;
+
+        public string inputText = "";
+        public string InputText
+        {
+            get { return this.inputText; }
+            set { this.Set(ref this.inputText, value); }
+        }
+
+        private static readonly Brush transparentBrush = new SolidColorBrush(Windows.UI.Colors.Transparent);
+        private static readonly Brush redBrush = new SolidColorBrush(Windows.UI.Colors.Red);
+        private static readonly Brush greenBrush = new SolidColorBrush(Windows.UI.Colors.Green);
+
+        private Brush colour = transparentBrush;
+        public Brush Colour
+        {
+            get { return this.colour; }
+            set { this.Set(ref this.colour, value); }
         }
 
         private string summary = "Exercises started.";
@@ -77,8 +92,7 @@ namespace DuDuChinese.ViewModels
             // Later put here exercise selection
             // ....
 
-            // Set visibility
-            LearningEngine.SetVisibility(ref this.pinyinVisible, ref this.translationVisible, ref this.simplifiedVisible);
+            ResetUI();
 
             await Task.CompletedTask;
         }
@@ -100,6 +114,13 @@ namespace DuDuChinese.ViewModels
 
         public void Continue_Click(object sender, RoutedEventArgs e)
         {
+            if (!Validated)
+            {
+                Validate();
+                return;
+            }
+
+            ResetUI();
             DictionaryItem nextItem = LearningEngine.GetNextItem();
 
             if (nextItem == null)
@@ -118,11 +139,41 @@ namespace DuDuChinese.ViewModels
         {
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
-                // Validate the answer
-                //LearningEngine.Validate()
-
-                this.Status = "Very good!";
+                Validate();
             }
+        }
+
+        private void Validate()
+        {
+            // Validate the answer
+            bool pass = LearningEngine.Validate(inputText);
+
+            if (pass)
+            {
+                this.Status = "Very good!";
+                this.Colour = greenBrush;
+            }
+            else
+            {
+                this.Status = "Correct answer:";
+                this.Colour = redBrush;
+            }
+
+            this.PinyinVisible = Visibility.Visible;
+            this.SimplifiedVisible = Visibility.Visible;
+            this.TranslationVisible = Visibility.Visible;
+            this.Validated = true;
+        }
+
+        private void ResetUI()
+        {
+            this.Status = "Enter translation:";
+            this.Colour = transparentBrush;
+            this.Validated = LearningEngine.Validate(String.Empty);
+            this.InputText = "";
+
+            // Set visibility
+            LearningEngine.SetVisibility(ref this.pinyinVisible, ref this.translationVisible, ref this.simplifiedVisible);
         }
     }
 }

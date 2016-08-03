@@ -60,7 +60,7 @@ namespace DuDuChinese.Models
         Pinyin2English,
 
         [Description("Translate from Hanzi to English")]
-        Simplified2English,
+        Hanzi2English,
 
         [Description("Translate from English to Pinyin")]
         English2Pinyin,
@@ -238,6 +238,35 @@ namespace DuDuChinese.Models
             return temp;
         }
 
+        public static bool Validate(string inputText)
+        {
+            if (currentItemIndex >= shuffledItems.Count)
+                return false;
+
+            DictionaryItem currentItem = shuffledItems[currentItemIndex];
+            switch (ExerciseList[CurrentExerciseIndex])
+            {
+                case LearningExercise.Display:
+                    return true;
+                case LearningExercise.HanziPinyin2English:
+                case LearningExercise.Hanzi2English:
+                case LearningExercise.Pinyin2English:
+                    foreach (string s in currentItem.Translation)
+                    {
+                        if (String.IsNullOrWhiteSpace(s) || String.IsNullOrWhiteSpace(inputText))
+                            continue;
+                        if (s.Contains(inputText))
+                            return true;
+                    }
+                    return false;
+                case LearningExercise.English2Hanzi:
+                    return currentItem.Simplified == inputText;
+                case LearningExercise.Pinyin2Hanzi:
+                    return string.Join(" ", currentItem.Pinyin.ToArray()) == inputText;
+                default:
+                    return false;
+            }
+        }
 
         // Helper function to display enums description
         public static string GetDescription(LearningExercise code)

@@ -71,7 +71,7 @@
                     <RowDefinition Height="50"/>
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="{x:Bind ViewModel.Status, Mode=TwoWay}" FontSize="30"/>
+                <TextBlock Grid.Row="0" Text="{x:Bind ViewModel.Status, Mode=TwoWay}" Foreground="{x:Bind ViewModel.Colour, Mode=TwoWay}" FontSize="30"/>
                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="20">
                     <StackPanel>
                         <TextBlock Text="{x:Bind ViewModel.CurrentItem.Pinyin, Converter={StaticResource StringFormatterValueConverter}, Mode=TwoWay}" Visibility="{x:Bind ViewModel.PinyinVisible}" FontWeight="Bold" FontSize="20"/>
@@ -79,10 +79,13 @@
                         <TextBlock Text="{x:Bind ViewModel.CurrentItem.Simplified, Mode=TwoWay}" Visibility="{x:Bind ViewModel.SimplifiedVisible}" FontWeight="Bold" FontSize="30"/>
                     </StackPanel>
                 </StackPanel>
-                <TextBox Grid.Row="2" Margin="20" KeyDown="{x:Bind ViewModel.TextBox_KeyDown}" />
-                <!--<TextBlock HorizontalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}" Text="{x:Bind ViewModel.Text}" />-->
+                <TextBox Grid.Row="2" Margin="20"
+                         KeyDown="{x:Bind ViewModel.TextBox_KeyDown}"
+                         Background="{x:Bind ViewModel.Colour, Mode=TwoWay}"
+                         Text="{x:Bind ViewModel.InputText, Mode=TwoWay}"/>
                 <StackPanel Grid.Row="3">
-                    <Button x:Name="continueButton" Content="Continue" Margin="150,0,0,0" HorizontalAlignment="Left" Click="{x:Bind ViewModel.Continue_Click}"/>
+                    <Button x:Name="continueButton" Content="Continue" Margin="150,0,0,0" HorizontalAlignment="Left"
+                            Click="{x:Bind ViewModel.Continue_Click}"/>
                 </StackPanel>
                 <StackPanel Grid.Row="4" VerticalAlignment="Bottom">
                     <TextBlock Text="{x:Bind ViewModel.Summary, Mode=TwoWay}" FontSize="20" />
