@@ -93,6 +93,7 @@
         <ComboBox x:Name="comboBoxLists" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="141" Margin="168,98,-245,-98"
                   ItemsSource="{x:Bind ViewModel.Lists}"
                   SelectionChanged="{x:Bind ViewModel.SelectedListChanged}"
+                  SelectedIndex="{x:Bind ViewModel.SelectedListIndex}"
                   xmlns:m="using:DuDuChinese.Models">
             <ComboBox.ItemTemplate>
                 <DataTemplate x:DataType="m:DictionaryItemList" >

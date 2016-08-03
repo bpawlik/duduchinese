@@ -20,6 +20,13 @@ namespace DuDuChinese.ViewModels
 
         public ObservableCollection<DictionaryItemList> Lists { get; private set; } = null;
 
+        private int selectedListIndex = -1;
+        public int SelectedListIndex
+        {
+            get { return this.selectedListIndex; }
+            set { this.Set(ref this.selectedListIndex, value); }
+        }
+
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
             if (suspensionState.Any())
@@ -29,6 +36,9 @@ namespace DuDuChinese.ViewModels
 
             DictionaryManager.Deserialize();
 
+            // Reset learning engine
+            LearningEngine.Reset();
+
             if (this.Lists == null)
                 this.Lists = new ObservableCollection<DictionaryItemList>();
 
@@ -37,8 +47,9 @@ namespace DuDuChinese.ViewModels
             foreach (var key in DictionaryManager.Lists.Keys)
                 this.Lists.Add(DictionaryManager.Lists[key]);
 
-            // Reset learning engine
-            LearningEngine.Reset();
+            // Select index
+            if (this.Lists.Count > 0)
+                this.SelectedListIndex = 0;
 
             await Task.CompletedTask;
         }
@@ -64,15 +75,29 @@ namespace DuDuChinese.ViewModels
             LearningEngine.Mode = rb.Tag == null ? LearningMode.Words : (LearningMode)Convert.ToInt32(rb.Tag);
         }
 
-        public void Start_Click(object sender, RoutedEventArgs e)
+        public async void Start_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(typeof(Views.ProgressPage), 0);
+            if (LearningEngine.CurrentItemList == null)
+            {
+                ContentDialog dialog = new ContentDialog();
+                dialog.Content = "Learning list is empty!";
+                dialog.Title = "Error";
+                dialog.PrimaryButtonText = "OK";
+                dialog.CanDrag = true;
+                
+                await dialog.ShowAsync();
+            }
+            else
+            {
+                NavigationService.Navigate(typeof(Views.ProgressPage), 0);
+            }
         }
 
         public void SelectedListChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox cb = sender as ComboBox;
             LearningEngine.CurrentItemList = (DictionaryItemList)cb.SelectedItem;
+            this.selectedListIndex = cb.SelectedIndex;
         }
 
         //public void GotoDetailsPage() =>

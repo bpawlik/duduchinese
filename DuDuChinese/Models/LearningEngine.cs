@@ -212,6 +212,7 @@ namespace DuDuChinese.Models
             currentExerciseIndex = -1;
             CurrentExercise = LearningExercise.Start;
             currentItemIndex = 0;
+            currentItemList = null;
         }
 
         public static bool EndOfItemList()
