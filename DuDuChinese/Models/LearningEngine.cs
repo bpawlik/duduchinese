@@ -156,7 +156,9 @@ namespace DuDuChinese.Models
             return CurrentExercise;
         }
 
-        public static LearningExercise CurrentExercise { get; set; } = LearningExercise.Start;
+        public static LearningExercise CurrentExercise { get; private set; } = LearningExercise.Start;
+
+        public static DictionaryItem CurrentItem { get; private set; } = null;
 
         private static int currentItemIndex = 0;
         private static DictionaryItemList currentItemList = null;
@@ -213,11 +215,8 @@ namespace DuDuChinese.Models
             CurrentExercise = LearningExercise.Start;
             currentItemIndex = 0;
             currentItemList = null;
-        }
-
-        public static bool EndOfItemList()
-        {
-            return currentItemIndex >= shuffledItems.Count;
+            correctCount = 0;
+            wrongCount = 0;
         }
 
         public static DictionaryItem GetNextItem()
@@ -229,14 +228,31 @@ namespace DuDuChinese.Models
             }
             else
             {
-                return shuffledItems[currentItemIndex++];
+                CurrentItem = shuffledItems[currentItemIndex++];
+                return CurrentItem;
             }
         }
 
+        private static int correctCount = 0;
+        private static int wrongCount = 0;
+
         public static string GetStatus()
         {
-            string temp = currentItemIndex.ToString() + " / " + shuffledItems.Count.ToString();
-            return temp;
+            int totalItems = shuffledItems.Count;
+            string progress = currentItemIndex.ToString() + " / " + totalItems.ToString() + Environment.NewLine;
+
+            if (correctCount > 0 || wrongCount > 0)
+            {
+                string score = "Total: " + (100 * correctCount / totalItems).ToString() + " %" + Environment.NewLine;
+                string correct = "Correct: " + correctCount.ToString() + Environment.NewLine;
+                string wrong = "Wrong: " + wrongCount.ToString() + Environment.NewLine;
+                
+                return progress + correct + wrong + score;
+            }
+            else
+            {
+                return progress;
+            }
         }
 
         public static bool Validate(string inputText)
@@ -244,7 +260,8 @@ namespace DuDuChinese.Models
             if (currentItemIndex >= shuffledItems.Count)
                 return false;
 
-            DictionaryItem currentItem = shuffledItems[currentItemIndex];
+            bool result = false;
+
             switch (ExerciseList[CurrentExerciseIndex])
             {
                 case LearningExercise.Display:
@@ -252,21 +269,28 @@ namespace DuDuChinese.Models
                 case LearningExercise.HanziPinyin2English:
                 case LearningExercise.Hanzi2English:
                 case LearningExercise.Pinyin2English:
-                    foreach (string s in currentItem.Translation)
+                    foreach (string s in CurrentItem.Translation)
                     {
                         if (String.IsNullOrWhiteSpace(s) || String.IsNullOrWhiteSpace(inputText))
                             continue;
                         if (s.Contains(inputText))
-                            return true;
+                            result = true;
                     }
-                    return false;
+                    break;
                 case LearningExercise.English2Hanzi:
-                    return currentItem.Simplified == inputText;
+                    result = CurrentItem.Simplified == inputText;
+                    break;
                 case LearningExercise.Pinyin2Hanzi:
-                    return string.Join(" ", currentItem.Pinyin.ToArray()) == inputText;
-                default:
-                    return false;
+                    result = string.Join(" ", CurrentItem.Pinyin.ToArray()) == inputText;
+                    break;
             }
+
+            if (result)
+                correctCount++;
+            else
+                wrongCount++;
+
+            return result;
         }
 
         // Helper function to display enums description

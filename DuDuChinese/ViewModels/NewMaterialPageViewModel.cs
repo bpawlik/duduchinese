@@ -100,9 +100,6 @@ namespace DuDuChinese.ViewModels
             this.selectedListIndex = cb.SelectedIndex;
         }
 
-        //public void GotoDetailsPage() =>
-        //    NavigationService.Navigate(typeof(Views.DetailPage), Value);
-
         public void GotoSettings() =>
             NavigationService.Navigate(typeof(Views.SettingsPage), 0);
 

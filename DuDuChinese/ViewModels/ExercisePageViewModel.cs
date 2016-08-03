@@ -118,7 +118,10 @@ namespace DuDuChinese.ViewModels
         {
             if (!Validated && !InputTextDisabled)
             {
-                Validate();
+                if (e.OriginalSource.GetType() == typeof(Windows.UI.Xaml.Controls.TextBox))
+                    Validate((e.OriginalSource as Windows.UI.Xaml.Controls.TextBox).Text);
+                else
+                    Validate();
                 return;
             }
 
@@ -141,14 +144,14 @@ namespace DuDuChinese.ViewModels
         {
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
-                Validate();
+                Validate((sender as Windows.UI.Xaml.Controls.TextBox).Text);
             }
         }
 
-        private void Validate()
+        private void Validate(string input = null)
         {
             // Validate the answer
-            bool pass = LearningEngine.Validate(inputText);
+            bool pass = LearningEngine.Validate(input == null ? this.InputText : input);
 
             if (pass)
             {
@@ -172,7 +175,7 @@ namespace DuDuChinese.ViewModels
         {
             this.Status = "Enter translation:";
             this.Colour = transparentBrush;
-            this.InputTextDisabled = LearningEngine.Validate(String.Empty);
+            this.InputTextDisabled = (LearningEngine.CurrentExercise == LearningExercise.Display);
             this.Validated = false;
             this.InputText = "";
 

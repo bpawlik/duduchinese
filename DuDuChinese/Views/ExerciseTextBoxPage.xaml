@@ -98,7 +98,7 @@
                             Click="{x:Bind Continue_Click}" />
                 </StackPanel>
                 <StackPanel Grid.Row="4" VerticalAlignment="Bottom">
-                    <TextBlock Text="{x:Bind ViewModel.Summary, Mode=TwoWay}" FontSize="20" />
+                    <TextBlock Text="{x:Bind ViewModel.Summary, Mode=TwoWay}" FontSize="16" />
                 </StackPanel>
             </Grid>
         </ScrollViewer>
