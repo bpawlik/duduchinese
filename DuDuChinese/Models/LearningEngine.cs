@@ -273,11 +273,13 @@ namespace DuDuChinese.Models
                     {
                         if (String.IsNullOrWhiteSpace(s) || String.IsNullOrWhiteSpace(inputText))
                             continue;
-                        if (s.Contains(inputText))
-                        {
-                            result = true;
-                            break;
-                        }
+                        List<string> temp = new List<string>(s.Split(' '));
+                        foreach (string sInner in temp)
+                            if (sInner == inputText)
+                            {
+                                result = true;
+                                break;
+                            }
                     }
                     break;
                 case LearningExercise.English2Hanzi:
