@@ -57,9 +57,9 @@ namespace DuDuChinese.ViewModels
         //public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         //{
         //    //Title = (suspensionState.ContainsKey(nameof(Title))) ? suspensionState[nameof(Title)]?.ToString() : parameter?.ToString();
-        //    Items = (suspensionState.ContainsKey(nameof(Title))) ? (DictionaryItemList)suspensionState[nameof(Title)] : (DictionaryItemList)parameter;
-        //    Title = Items.Title;
-        //    Words = Items.Words;
+        //    ProgressItems = (suspensionState.ContainsKey(nameof(Title))) ? (DictionaryItemList)suspensionState[nameof(Title)] : (DictionaryItemList)parameter;
+        //    Title = ProgressItems.Title;
+        //    Words = ProgressItems.Words;
 
         //    // Time to load the list
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 
 namespace DuDuChinese.Models
 {
@@ -52,13 +53,34 @@ namespace DuDuChinese.Models
 
         // Yes / No
 
-        [Description("Translate to English")]
-        Chinese2English,
+        [Description("Translate from Hanzi + Pinyin to English")]
+        HanziPinyin2English,
 
-        [Description("Translate to Chinese")]
-        English2Chinese,
+        [Description("Translate from Pinyin to English")]
+        Pinyin2English,
+
+        [Description("Translate from Hanzi to English")]
+        Simplified2English,
+
+        [Description("Translate from English to Pinyin")]
+        English2Pinyin,
+
+        [Description("Translate from English to Hanzi")]
+        English2Hanzi,
+
+        [Description("Translate from Pinyin to Hanzi")]
+        Pinyin2Hanzi,
+
+        [Description("Translate from Hanzi to Pinyin")]
+        Hanzi2Pinyin,
 
         #endregion
+
+        [Description("We are at the start fo the big adventure!")]
+        Start,
+
+        [Description("All exercises done")]
+        Done
     }
 
     public class Description : Attribute
@@ -74,7 +96,11 @@ namespace DuDuChinese.Models
     public class LearningEngine
     {
         // Predefined exercise lists
-        private static readonly LearningExercise[] ExerciseListWords = { LearningExercise.Display, LearningExercise.UnderstadningFromHearing };
+        private static readonly LearningExercise[] ExerciseListWords = {
+            LearningExercise.Display,
+            LearningExercise.HanziPinyin2English,
+            LearningExercise.English2Hanzi
+        };
         private static readonly LearningExercise[] ExerciseListSentences = { LearningExercise.Display, LearningExercise.FillGaps };
 
         private static LearningMode mode = LearningMode.Words;
@@ -96,21 +122,41 @@ namespace DuDuChinese.Models
 
         public static List<LearningExercise> ExerciseList { get; set; } = null;
 
-        private static int currentExerciseIndex = 0;
+        private static int currentExerciseIndex = -1;
         public static int CurrentExerciseIndex {
-            get { return currentExerciseIndex; }
-            set
+            get
+            {
+                if (currentExerciseIndex < 0)
+                    return 0;
+                return currentExerciseIndex;
+            }
+            private set
             {
                 currentExerciseIndex = value;
-                if (currentExerciseIndex >= ExerciseList.Count)
+                if (currentExerciseIndex > ExerciseList.Count)
                     currentExerciseIndex = 0;
             }
         }
 
-        public static int NextExercise()
+        public static LearningExercise NextExercise()
         {
-            return CurrentExerciseIndex++;
+            if (CurrentExercise == LearningExercise.Done)
+            {
+                // return current exercise
+            }
+            else if (currentExerciseIndex + 1 == ExerciseList.Count)
+            {
+                currentExerciseIndex = -1;
+                CurrentExercise = LearningExercise.Done;
+            }
+            else
+            {
+                CurrentExercise = ExerciseList[++currentExerciseIndex];
+            }
+            return CurrentExercise;
         }
+
+        public static LearningExercise CurrentExercise { get; set; } = LearningExercise.Start;
 
         private static int currentItemIndex = 0;
         private static DictionaryItemList currentItemList = null;
@@ -133,7 +179,41 @@ namespace DuDuChinese.Models
                 }
             }
         }
-        
+
+        public static void SetVisibility(ref Visibility PinyinVisible, ref Visibility TranslationVisible, ref Visibility SimplifiedVisible)
+        {
+            switch (ExerciseList[CurrentExerciseIndex])
+            {
+                case LearningExercise.Display:
+                    PinyinVisible = Visibility.Visible;
+                    TranslationVisible = Visibility.Visible;
+                    SimplifiedVisible = Visibility.Visible;
+                    break;
+                case LearningExercise.HanziPinyin2English:
+                    PinyinVisible = Visibility.Visible;
+                    TranslationVisible = Visibility.Collapsed;
+                    SimplifiedVisible = Visibility.Visible;
+                    break;
+                case LearningExercise.English2Hanzi:
+                    PinyinVisible = Visibility.Collapsed;
+                    TranslationVisible = Visibility.Visible;
+                    SimplifiedVisible = Visibility.Collapsed;
+                    break;
+                default:
+                    PinyinVisible = Visibility.Visible;
+                    TranslationVisible = Visibility.Visible;
+                    SimplifiedVisible = Visibility.Visible;
+                    break;
+            }
+        }
+
+        public static void Reset()
+        {
+            currentExerciseIndex = -1;
+            CurrentExercise = LearningExercise.Start;
+            currentItemIndex = 0;
+        }
+
         public static bool EndOfItemList()
         {
             return currentItemIndex >= shuffledItems.Count;

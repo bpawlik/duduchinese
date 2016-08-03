@@ -1,4 +1,4 @@
-<Page x:Class="DuDuChinese.Views.ProgressPage"
+<Page x:Class="DuDuChinese.Views.ExerciseTextBoxPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:Behaviors="using:Template10.Behaviors"
@@ -7,13 +7,18 @@
       xmlns:controls="using:Template10.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="using:DuDuChinese.Views"
+      xmlns:m="using:DuDuChinese.Models"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:vm="using:DuDuChinese.ViewModels" x:Name="ThisPage"
       mc:Ignorable="d">
 
     <Page.DataContext>
-        <vm:ProgressPageViewModel x:Name="ViewModel" />
+        <vm:ExercisePageViewModel x:Name="ViewModel" />
     </Page.DataContext>
+
+    <Page.Resources>
+        <m:StringFormatter x:Key="StringFormatterValueConverter"/>
+    </Page.Resources>
 
     <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -50,7 +55,7 @@
         <controls:PageHeader x:Name="pageHeader" Frame="{x:Bind Frame}"
                              RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignTopWithPanel="True" Text="Progress Page" />
+                             RelativePanel.AlignTopWithPanel="True" Text="Exercise Page" />
 
         <!--  content  -->
         <ScrollViewer Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"
@@ -58,39 +63,31 @@
                       RelativePanel.AlignRightWithPanel="True"
                       RelativePanel.Below="pageHeader"
                       VerticalScrollBarVisibility="Auto">
-            <StackPanel Margin="25">
-                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="List of exercises:" />
-                <!--<ListView x:Name="listView"
-                          Margin="25"
-                          ItemsSource="{x:Bind ViewModel.ExerciseList}"
-                          SelectedIndex="{x:Bind ViewModel.SelectedItemIndex}">
-                </ListView>-->
-                <ListView x:Name="listView" ItemsSource="{x:Bind ViewModel.ProgressItems}"
-                          Margin="25"
-                          HorizontalContentAlignment="Stretch"
-                          SelectionChanged="{x:Bind ViewModel.listView_SelectionChanged}"
-                          SelectedIndex="{x:Bind ViewModel.SelectedItemIndex}" Background="{ThemeResource ButtonDisabledBackgroundThemeBrush}" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False" IsTapEnabled="False">
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="vm:ProgressItem">
-                            <TextBlock Text="{x:Bind Text, Mode=TwoWay}">
-                                <TextBlock.Foreground>
-                                    <SolidColorBrush Color="{x:Bind ForegroundColor, Mode=TwoWay}"/>
-                                </TextBlock.Foreground>
-                            </TextBlock>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-                <TextBlock Margin="20, 50" Text="{x:Bind ViewModel.Text, Mode=TwoWay}" />
-                <Grid Margin="0, 10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="150" />
-                        <ColumnDefinition Width="150" />
-                    </Grid.ColumnDefinitions>
-                    <Button x:Name="continueButton" Grid.Column="0" Content="Continue" HorizontalAlignment="Center" Click="{x:Bind ViewModel.Continue_Click}"/>
-                    <Button x:Name="cancelButton" Grid.Column="1" Content="Cancel" HorizontalAlignment="Center" Click="{x:Bind ViewModel.Cancel_Click}"/>
-                </Grid>
-                
-            </StackPanel>
+            <Grid HorizontalAlignment="Left" Margin="50">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="200" />
+                    <RowDefinition Height="80"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="{x:Bind ViewModel.Status, Mode=TwoWay}" FontSize="30"/>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="20">
+                    <StackPanel>
+                        <TextBlock Text="{x:Bind ViewModel.CurrentItem.Pinyin, Converter={StaticResource StringFormatterValueConverter}, Mode=TwoWay}" Visibility="{x:Bind ViewModel.PinyinVisible}" FontWeight="Bold" FontSize="20"/>
+                        <TextBlock Text="{x:Bind ViewModel.CurrentItem.Translation, Converter={StaticResource StringFormatterValueConverter}, ConverterParameter=X, Mode=TwoWay}" Visibility="{x:Bind ViewModel.TranslationVisible}" FontSize="16"/>
+                        <TextBlock Text="{x:Bind ViewModel.CurrentItem.Simplified, Mode=TwoWay}" Visibility="{x:Bind ViewModel.SimplifiedVisible}" FontWeight="Bold" FontSize="30"/>
+                    </StackPanel>
+                </StackPanel>
+                <TextBox Grid.Row="2" Margin="20" KeyDown="{x:Bind ViewModel.TextBox_KeyDown}" />
+                <!--<TextBlock HorizontalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}" Text="{x:Bind ViewModel.Text}" />-->
+                <StackPanel Grid.Row="3">
+                    <Button x:Name="continueButton" Content="Continue" Margin="150,0,0,0" HorizontalAlignment="Left" Click="{x:Bind ViewModel.Continue_Click}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="4" VerticalAlignment="Bottom">
+                    <TextBlock Text="{x:Bind ViewModel.Summary, Mode=TwoWay}" FontSize="20" />
+                </StackPanel>
+            </Grid>
         </ScrollViewer>
 
     </RelativePanel>

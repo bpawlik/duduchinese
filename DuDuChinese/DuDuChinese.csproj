@@ -118,6 +118,9 @@
     <Compile Include="Views\Busy.xaml.cs">
       <DependentUpon>Busy.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ExerciseTextBoxPagey.xaml.cs">
+      <DependentUpon>ExerciseTextBoxPagey.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ExerciseDisplayPage.xaml.cs">
       <DependentUpon>ExerciseDisplayPage.xaml</DependentUpon>
     </Compile>
@@ -181,6 +184,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
     <Page Include="Views\Busy.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ExerciseTextBoxPagey.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

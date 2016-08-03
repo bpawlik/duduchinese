@@ -25,14 +25,41 @@ namespace DuDuChinese.ViewModels
             }
         }
 
+        private string status = "Enter translation:";
+        public string Status
+        {
+            get { return this.status; }
+            set
+            {
+                this.Set(ref this.status, value);
+            }
+        }
+
         private string summary = "Exercises started.";
         public string Summary
         {
             get { return this.summary; }
-            set
-            {
-                this.Set(ref this.summary, value);
-            }
+            set { this.Set(ref this.summary, value); }
+        }
+
+        // Visibility flags
+        private Visibility pinyinVisible = Visibility.Collapsed;
+        public Visibility PinyinVisible
+        {
+            get { return this.pinyinVisible; }
+            set { this.Set(ref this.pinyinVisible, value); }
+        }
+        private Visibility translationVisible = Visibility.Collapsed;
+        public Visibility TranslationVisible
+        {
+            get { return this.translationVisible; }
+            set { this.Set(ref this.translationVisible, value); }
+        }
+        private Visibility simplifiedVisible = Visibility.Collapsed;
+        public Visibility SimplifiedVisible
+        {
+            get { return this.simplifiedVisible; }
+            set { this.Set(ref this.simplifiedVisible, value); }
         }
 
         public ExercisePageViewModel()
@@ -49,6 +76,9 @@ namespace DuDuChinese.ViewModels
 
             // Later put here exercise selection
             // ....
+
+            // Set visibility
+            LearningEngine.SetVisibility(ref this.pinyinVisible, ref this.translationVisible, ref this.simplifiedVisible);
 
             await Task.CompletedTask;
         }
@@ -80,6 +110,18 @@ namespace DuDuChinese.ViewModels
             {
                 CurrentItem = nextItem;
                 Summary = LearningEngine.GetStatus();
+            }
+        }
+
+        // TextBox key down
+        public void TextBox_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                // Validate the answer
+                //LearningEngine.Validate()
+
+                this.Status = "Very good!";
             }
         }
     }

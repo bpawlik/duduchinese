@@ -37,6 +37,9 @@ namespace DuDuChinese.ViewModels
             foreach (var key in DictionaryManager.Lists.Keys)
                 this.Lists.Add(DictionaryManager.Lists[key]);
 
+            // Reset learning engine
+            LearningEngine.Reset();
+
             await Task.CompletedTask;
         }
 
