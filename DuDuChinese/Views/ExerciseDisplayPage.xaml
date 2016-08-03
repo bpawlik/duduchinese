@@ -69,7 +69,7 @@
                     <RowDefinition Height="50"/>
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="20">
+                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="20">
                     <!--<SymbolIcon Symbol="Audio" Margin="0,0,12,0"/>-->
                     <StackPanel>
                         <TextBlock Text="{x:Bind ViewModel.CurrentItem.Pinyin, Converter={StaticResource StringFormatterValueConverter}, Mode=TwoWay}" FontWeight="Bold" FontSize="20"/>

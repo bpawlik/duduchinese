@@ -18,7 +18,6 @@ namespace DuDuChinese.Views
             {
                 ViewModel.Continue_Click(sender, e);
                 this.continueButton.Focus(Windows.UI.Xaml.FocusState.Programmatic);
-                Bindings.Update();
             }
         }
 

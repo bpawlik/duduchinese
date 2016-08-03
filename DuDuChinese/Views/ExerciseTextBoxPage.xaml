@@ -64,26 +64,31 @@
                       RelativePanel.Below="pageHeader"
                       VerticalScrollBarVisibility="Auto">
             <Grid HorizontalAlignment="Left" Margin="50, 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50" />
-                    <RowDefinition Height="250" />
+                    <RowDefinition Height="250"/>
                     <RowDefinition Height="80"/>
                     <RowDefinition Height="50"/>
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <TextBlock x:Name="statusTextBlock" Grid.Row="0" Text="{x:Bind ViewModel.Status, Mode=TwoWay}" Foreground="{x:Bind ViewModel.FgColour, Mode=TwoWay}" FontSize="30"/>
-                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="20">
-                    <StackPanel>
-                        <TextBlock x:Name="pinyinTextBox"
-                                   Text="{x:Bind ViewModel.CurrentItem.Pinyin, Converter={StaticResource StringFormatterValueConverter}, Mode=TwoWay}"
-                                   Visibility="{x:Bind ViewModel.PinyinVisible, Mode=TwoWay}" FontWeight="Bold" FontSize="20"/>
-                        <TextBlock x:Name="translationTextBox"
-                                   Text="{x:Bind ViewModel.CurrentItem.Translation, Converter={StaticResource StringFormatterValueConverter}, ConverterParameter=X, Mode=TwoWay}"
-                                   Visibility="{x:Bind ViewModel.TranslationVisible, Mode=TwoWay}" FontSize="16"/>
-                        <TextBlock x:Name="simplifiedTextBox"
-                                   Text="{x:Bind ViewModel.CurrentItem.Simplified, Mode=TwoWay}"
-                                   Visibility="{x:Bind ViewModel.SimplifiedVisible, Mode=TwoWay}" FontWeight="Bold" FontSize="30"/>
-                    </StackPanel>
+                <TextBlock x:Name="statusTextBlock" Grid.Row="0" Text="{x:Bind ViewModel.Status, Mode=TwoWay}" Foreground="{x:Bind ViewModel.FgColour, Mode=TwoWay}" FontSize="20"/>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="20">
+                    <ScrollViewer>
+                        <StackPanel>
+                            <TextBlock x:Name="pinyinTextBox"
+                                       Text="{x:Bind ViewModel.CurrentItem.Pinyin, Converter={StaticResource StringFormatterValueConverter}, Mode=TwoWay}"
+                                       Visibility="{x:Bind ViewModel.PinyinVisible, Mode=TwoWay}" FontWeight="Bold" FontSize="20"/>
+                            <TextBlock x:Name="translationTextBox"
+                                       Text="{x:Bind ViewModel.CurrentItem.Translation, Converter={StaticResource StringFormatterValueConverter}, ConverterParameter=X, Mode=TwoWay}"
+                                       Visibility="{x:Bind ViewModel.TranslationVisible, Mode=TwoWay}" FontSize="16"/>
+                            <TextBlock x:Name="simplifiedTextBox"
+                                       Text="{x:Bind ViewModel.CurrentItem.Simplified, Mode=TwoWay}"
+                                       Visibility="{x:Bind ViewModel.SimplifiedVisible, Mode=TwoWay}" FontWeight="Bold" FontSize="30"/>
+                        </StackPanel>
+                    </ScrollViewer>
                 </StackPanel>
                 <TextBox x:Name="inputTextBox" Grid.Row="2" Margin="20"
                          KeyUp="{x:Bind TextBox_KeyDown}"

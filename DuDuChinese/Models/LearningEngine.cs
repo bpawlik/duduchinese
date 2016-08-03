@@ -53,25 +53,25 @@ namespace DuDuChinese.Models
 
         // Yes / No
 
-        [Description("Translate from Hanzi + Pinyin to English")]
+        [Description("Translate from Chinese to English")]
         HanziPinyin2English,
 
         [Description("Translate from Pinyin to English")]
         Pinyin2English,
 
-        [Description("Translate from Hanzi to English")]
+        [Description("Translate from Chinese characters to English")]
         Hanzi2English,
 
         [Description("Translate from English to Pinyin")]
         English2Pinyin,
 
-        [Description("Translate from English to Hanzi")]
+        [Description("Translate from English to Chinese characters")]
         English2Hanzi,
 
-        [Description("Translate from Pinyin to Hanzi")]
+        [Description("Translate from Pinyin to Chinese characters")]
         Pinyin2Hanzi,
 
-        [Description("Translate from Hanzi to Pinyin")]
+        [Description("Translate from Chinese characters to Pinyin")]
         Hanzi2Pinyin,
 
         #endregion
@@ -243,7 +243,7 @@ namespace DuDuChinese.Models
 
             if (correctCount > 0 || wrongCount > 0)
             {
-                string score = "Total: " + (100 * correctCount / totalItems).ToString() + " %" + Environment.NewLine;
+                string score = "Total: " + (100.0 * Convert.ToDouble(correctCount) / Convert.ToDouble(totalItems)).ToString() + " %" + Environment.NewLine;
                 string correct = "Correct: " + correctCount.ToString() + Environment.NewLine;
                 string wrong = "Wrong: " + wrongCount.ToString() + Environment.NewLine;
                 
@@ -257,7 +257,7 @@ namespace DuDuChinese.Models
 
         public static bool Validate(string inputText)
         {
-            if (currentItemIndex >= shuffledItems.Count)
+            if (currentItemIndex > shuffledItems.Count)
                 return false;
 
             bool result = false;

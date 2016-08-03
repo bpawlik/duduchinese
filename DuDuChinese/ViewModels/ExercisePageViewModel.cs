@@ -187,7 +187,7 @@ namespace DuDuChinese.ViewModels
 
         private void ResetUI()
         {
-            this.Status = "Enter translation:";
+            this.Status = LearningEngine.GetDescription(LearningEngine.CurrentExercise) + ":";
             this.BgColour = transparentBrush;
             this.FgColour = defaultTextColor;
             this.InputTextDisabled = (LearningEngine.CurrentExercise == LearningExercise.Display);
