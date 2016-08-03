@@ -41,15 +41,25 @@ namespace DuDuChinese.ViewModels
 
         public bool InputTextDisabled { get; set; } = false;
 
+        private static readonly Brush defaultTextColor =
+            (Services.SettingsServices.SettingsService.Instance.AppTheme == ApplicationTheme.Dark) ?
+            new SolidColorBrush(Windows.UI.Colors.White) : new SolidColorBrush(Windows.UI.Colors.Black);
         private static readonly Brush transparentBrush = new SolidColorBrush(Windows.UI.Colors.Transparent);
         private static readonly Brush redBrush = new SolidColorBrush(Windows.UI.Colors.Red);
         private static readonly Brush greenBrush = new SolidColorBrush(Windows.UI.Colors.Green);
 
-        private Brush colour = transparentBrush;
-        public Brush Colour
+        private Brush bgcolour = transparentBrush;
+        public Brush BgColour
         {
-            get { return this.colour; }
-            set { this.Set(ref this.colour, value); }
+            get { return this.bgcolour; }
+            set { this.Set(ref this.bgcolour, value); }
+        }
+
+        private Brush fgcolour = defaultTextColor;
+        public Brush FgColour
+        {
+            get { return this.fgcolour; }
+            set { this.Set(ref this.fgcolour, value); }
         }
 
         private string summary = "Exercises started.";
@@ -66,12 +76,14 @@ namespace DuDuChinese.ViewModels
             get { return this.pinyinVisible; }
             set { this.Set(ref this.pinyinVisible, value); }
         }
+
         private Visibility translationVisible = Visibility.Collapsed;
         public Visibility TranslationVisible
         {
             get { return this.translationVisible; }
             set { this.Set(ref this.translationVisible, value); }
         }
+
         private Visibility simplifiedVisible = Visibility.Collapsed;
         public Visibility SimplifiedVisible
         {
@@ -156,12 +168,14 @@ namespace DuDuChinese.ViewModels
             if (pass)
             {
                 this.Status = "Very good!";
-                this.Colour = greenBrush;
+                this.FgColour = greenBrush;
+                this.BgColour = greenBrush;
             }
             else
             {
                 this.Status = "Correct answer:";
-                this.Colour = redBrush;
+                this.BgColour = redBrush;
+                this.FgColour = redBrush;
             }
 
             this.PinyinVisible = Visibility.Visible;
@@ -174,13 +188,17 @@ namespace DuDuChinese.ViewModels
         private void ResetUI()
         {
             this.Status = "Enter translation:";
-            this.Colour = transparentBrush;
+            this.BgColour = transparentBrush;
+            this.FgColour = defaultTextColor;
             this.InputTextDisabled = (LearningEngine.CurrentExercise == LearningExercise.Display);
             this.Validated = false;
             this.InputText = "";
 
             // Set visibility
             LearningEngine.SetVisibility(ref this.pinyinVisible, ref this.translationVisible, ref this.simplifiedVisible);
+            this.PinyinVisible = this.pinyinVisible;
+            this.TranslationVisible = this.translationVisible;
+            this.SimplifiedVisible = this.simplifiedVisible;
         }
     }
 }

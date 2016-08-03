@@ -274,7 +274,10 @@ namespace DuDuChinese.Models
                         if (String.IsNullOrWhiteSpace(s) || String.IsNullOrWhiteSpace(inputText))
                             continue;
                         if (s.Contains(inputText))
+                        {
                             result = true;
+                            break;
+                        }
                     }
                     break;
                 case LearningExercise.English2Hanzi:
