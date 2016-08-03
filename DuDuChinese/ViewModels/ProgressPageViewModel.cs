@@ -25,7 +25,12 @@ namespace DuDuChinese.ViewModels
             }
         }
 
-        private Windows.UI.Color foregroundColor = Windows.UI.Colors.Black;
+        private static readonly Windows.UI.Color defaultColor =
+            (Services.SettingsServices.SettingsService.Instance.AppTheme == ApplicationTheme.Dark) ?
+            Windows.UI.Colors.White : Windows.UI.Colors.Black;
+
+
+        private Windows.UI.Color foregroundColor = defaultColor;
         public Windows.UI.Color ForegroundColor
         {
             get { return this.foregroundColor; }
@@ -46,6 +51,7 @@ namespace DuDuChinese.ViewModels
         public int SelectedItemIndex { get; set; } = -1;
         public List<ProgressItem> ProgressItems { get; set; } = null;
         public string Text { get; set; } = "Click Continue to go to the next exercise:";
+        public bool CancelEnabled { get; set; } = true;
 
         public ProgressPageViewModel()
         {
@@ -72,6 +78,7 @@ namespace DuDuChinese.ViewModels
                     item.ForegroundColor = Windows.UI.Colors.Green;
 
                 this.Text = "All done! Click Continue to go back to the New Material page:";
+                this.CancelEnabled = false;
             }
             else
             {

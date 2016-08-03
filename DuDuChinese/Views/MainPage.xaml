@@ -61,37 +61,28 @@
 
         </controls:PageHeader>
 
-        <controls:Resizer x:Name="parameterResizer" Margin="16,16,16,0"
-                          RelativePanel.AlignLeftWithPanel="True"
-                          RelativePanel.Below="pageHeader">
+        <StackPanel>
+            <Grid Margin="50" HorizontalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="75" />
+                    <RowDefinition Height="75" />
+                    <RowDefinition Height="75" />
+                    <RowDefinition Height="75" />
+                </Grid.RowDefinitions>
+                <TextBlock HorizontalAlignment="Center" Margin="0,30,0,10" Grid.Row="0" Text="Select what you want to do today:" />
+                <Button FontSize="20" HorizontalAlignment="Center" Width="150" Height="50" Grid.Row="1"
+                        Content="Revision"
+                        Click="{x:Bind ViewModel.GotoRevision}" />
+                <Button FontSize="20" HorizontalAlignment="Center" Width="150" Height="50" Grid.Row="2"
+                        Content="New Material"
+                        Click="{x:Bind ViewModel.GotoNewMaterial}" />
+                <Button FontSize="20" HorizontalAlignment="Center" Width="150" Height="50" Grid.Row="3"
+                        Content="Lists"
+                        Click="{x:Bind ViewModel.GotoLists}"/>
+            </Grid>
+            <TextBlock x:Name="stateTextBox" />
 
-            <TextBox MinWidth="150" MinHeight="62"
-                     Header="Parameter to pass"
-                     Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     TextWrapping="Wrap">
-                <Interactivity:Interaction.Behaviors>
-                    <!--  enable submit on enter key  -->
-                    <Behaviors:KeyBehavior Key="Enter">
-                        <Core:CallMethodAction MethodName="GotoDetailsPage" TargetObject="{Binding}" />
-                    </Behaviors:KeyBehavior>
-                    <!--  focus on textbox when page loads  -->
-                    <Core:EventTriggerBehavior>
-                        <Behaviors:FocusAction />
-                    </Core:EventTriggerBehavior>
-                </Interactivity:Interaction.Behaviors>
-            </TextBox>
-
-        </controls:Resizer>
-
-        <Button x:Name="submitButton"
-                Click="{x:Bind ViewModel.GotoDetailsPage}" Content="Submit"
-                RelativePanel.AlignBottomWith="parameterResizer"
-                RelativePanel.RightOf="parameterResizer" />
-
-        <TextBlock x:Name="stateTextBox" Margin="16,16,0,0"
-                   RelativePanel.AlignLeftWith="parameterResizer"
-                   RelativePanel.Below="parameterResizer"
-                   Text="Current Visual State" />
+        </StackPanel>
 
     </RelativePanel>
 </Page>

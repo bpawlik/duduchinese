@@ -14,18 +14,15 @@ namespace DuDuChinese.ViewModels
         {
             if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
-                Value = "Designtime value";
+                //Value = "Designtime value";
             }
         }
-
-        string _Value = "Blah";
-        public string Value { get { return _Value; } set { Set(ref _Value, value); } }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
             if (suspensionState.Any())
             {
-                Value = suspensionState[nameof(Value)]?.ToString();
+                //Value = suspensionState[nameof(Value)]?.ToString();
             }
             await Task.CompletedTask;
         }
@@ -34,7 +31,7 @@ namespace DuDuChinese.ViewModels
         {
             if (suspending)
             {
-                suspensionState[nameof(Value)] = Value;
+                //suspensionState[nameof(Value)] = Value;
             }
             await Task.CompletedTask;
         }
@@ -42,11 +39,9 @@ namespace DuDuChinese.ViewModels
         public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
         {
             args.Cancel = false;
+
             await Task.CompletedTask;
         }
-
-        public void GotoDetailsPage() =>
-            NavigationService.Navigate(typeof(Views.DetailPage), Value);
 
         public void GotoSettings() =>
             NavigationService.Navigate(typeof(Views.SettingsPage), 0);
@@ -56,6 +51,15 @@ namespace DuDuChinese.ViewModels
 
         public void GotoAbout() =>
             NavigationService.Navigate(typeof(Views.SettingsPage), 2);
+
+        public void GotoRevision() =>
+            NavigationService.Navigate(typeof(Views.RevisePage));
+
+        public void GotoNewMaterial() =>
+            NavigationService.Navigate(typeof(Views.NewMaterialPage));
+
+        public void GotoLists() =>
+            NavigationService.Navigate(typeof(Views.ListsPage));
 
     }
 }

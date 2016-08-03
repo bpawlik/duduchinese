@@ -26,6 +26,7 @@ namespace DuDuChinese.ViewModels
             else
             {
                 _settings = Services.SettingsServices.SettingsService.Instance;
+                UseLightThemeButton = true;
             }
         }
 
