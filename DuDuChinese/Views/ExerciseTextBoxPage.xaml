@@ -79,13 +79,23 @@
                         <TextBlock Text="{x:Bind ViewModel.CurrentItem.Simplified, Mode=TwoWay}" Visibility="{x:Bind ViewModel.SimplifiedVisible}" FontWeight="Bold" FontSize="30"/>
                     </StackPanel>
                 </StackPanel>
-                <TextBox Grid.Row="2" Margin="20"
-                         KeyDown="{x:Bind ViewModel.TextBox_KeyDown}"
+                <TextBox x:Name="inputTextBox" Grid.Row="2" Margin="20"
+                         KeyUp="{x:Bind TextBox_KeyDown}"
                          Background="{x:Bind ViewModel.Colour, Mode=TwoWay}"
-                         Text="{x:Bind ViewModel.InputText, Mode=TwoWay}"/>
+                         Text="{x:Bind ViewModel.InputText, Mode=TwoWay}"
+                         IsReadOnly="{x:Bind ViewModel.InputTextDisabled, Mode=TwoWay}"
+                         AcceptsReturn="False"
+                         IsSpellCheckEnabled="False">
+                    <Interactivity:Interaction.Behaviors>
+                        <!--  focus on textbox when page loads  -->
+                        <Core:EventTriggerBehavior>
+                            <Behaviors:FocusAction />
+                        </Core:EventTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
+                </TextBox>
                 <StackPanel Grid.Row="3">
                     <Button x:Name="continueButton" Content="Continue" Margin="150,0,0,0" HorizontalAlignment="Left"
-                            Click="{x:Bind ViewModel.Continue_Click}"/>
+                            Click="{x:Bind Continue_Click}" />
                 </StackPanel>
                 <StackPanel Grid.Row="4" VerticalAlignment="Bottom">
                     <TextBlock Text="{x:Bind ViewModel.Summary, Mode=TwoWay}" FontSize="20" />

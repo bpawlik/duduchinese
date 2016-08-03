@@ -79,7 +79,15 @@
                 </StackPanel>
                 <!--<TextBlock HorizontalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}" Text="{x:Bind ViewModel.Text}" />-->
                 <StackPanel Grid.Row="1">
-                    <Button x:Name="continueButton" Content="Continue" Margin="150,0,0,0" HorizontalAlignment="Left" Click="{x:Bind ViewModel.Continue_Click}"/>
+                    <Button x:Name="continueButton" Content="Continue" Margin="150,0,0,0"
+                            HorizontalAlignment="Left" Click="{x:Bind ViewModel.Continue_Click}">
+                        <Interactivity:Interaction.Behaviors>
+                            <!--  focus on textbox when page loads  -->
+                            <Core:EventTriggerBehavior>
+                                <Behaviors:FocusAction />
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
+                    </Button>
                 </StackPanel>
                 <StackPanel Grid.Row="2" VerticalAlignment="Bottom">
                     <TextBlock Text="{x:Bind ViewModel.Summary, Mode=TwoWay}" FontSize="20" />

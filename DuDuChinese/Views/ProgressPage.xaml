@@ -86,7 +86,15 @@
                         <ColumnDefinition Width="150" />
                         <ColumnDefinition Width="150" />
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="continueButton" Grid.Column="1" Content="Continue" HorizontalAlignment="Center" Click="{x:Bind ViewModel.Continue_Click}"/>
+                    <Button x:Name="continueButton" Grid.Column="1" Content="Continue"
+                            HorizontalAlignment="Center" Click="{x:Bind ViewModel.Continue_Click}">
+                        <Interactivity:Interaction.Behaviors>
+                            <!--  focus on textbox when page loads  -->
+                            <Core:EventTriggerBehavior>
+                                <Behaviors:FocusAction />
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
+                    </Button>
                     <Button x:Name="cancelButton" Grid.Column="0" Content="Cancel" HorizontalAlignment="Center" Click="{x:Bind ViewModel.Cancel_Click}" IsEnabled="{x:Bind ViewModel.CancelEnabled, Mode=TwoWay}"/>
                 </Grid>
                 

@@ -78,7 +78,16 @@
             <ComboBoxItem>70</ComboBoxItem>
             <ComboBoxItem>80</ComboBoxItem>
         </ComboBox>
-        <Button x:Name="button" Content="Start" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="98" RenderTransformOrigin="3.666,3.162" Margin="103,234,-136.333,-237" Click="{x:Bind ViewModel.Start_Click}"/>
+        <Button x:Name="button" Content="Start" HorizontalAlignment="Left" Height="35"
+                VerticalAlignment="Top" Width="98" RenderTransformOrigin="3.666,3.162"
+                Margin="103,234,-136.333,-237" Click="{x:Bind ViewModel.Start_Click}">
+            <Interactivity:Interaction.Behaviors>
+                <!--  focus on textbox when page loads  -->
+                <Core:EventTriggerBehavior>
+                    <Behaviors:FocusAction />
+                </Core:EventTriggerBehavior>
+            </Interactivity:Interaction.Behaviors>
+        </Button>
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Select list:" VerticalAlignment="Top" RenderTransformOrigin="1.178,6.017" Margin="10,103,-42.667,-110"/>
         <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Number of items:" VerticalAlignment="Top" RenderTransformOrigin="1.178,6.017" Margin="10,139,-43.333,-126"/>
         <ComboBox x:Name="comboBoxLists" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="141" Margin="168,98,-245,-98"

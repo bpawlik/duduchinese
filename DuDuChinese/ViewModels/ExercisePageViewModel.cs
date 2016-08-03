@@ -39,6 +39,8 @@ namespace DuDuChinese.ViewModels
             set { this.Set(ref this.inputText, value); }
         }
 
+        public bool InputTextDisabled { get; set; } = false;
+
         private static readonly Brush transparentBrush = new SolidColorBrush(Windows.UI.Colors.Transparent);
         private static readonly Brush redBrush = new SolidColorBrush(Windows.UI.Colors.Red);
         private static readonly Brush greenBrush = new SolidColorBrush(Windows.UI.Colors.Green);
@@ -114,7 +116,7 @@ namespace DuDuChinese.ViewModels
 
         public void Continue_Click(object sender, RoutedEventArgs e)
         {
-            if (!Validated)
+            if (!Validated && !InputTextDisabled)
             {
                 Validate();
                 return;
@@ -163,13 +165,15 @@ namespace DuDuChinese.ViewModels
             this.SimplifiedVisible = Visibility.Visible;
             this.TranslationVisible = Visibility.Visible;
             this.Validated = true;
+            this.InputTextDisabled = true;
         }
 
         private void ResetUI()
         {
             this.Status = "Enter translation:";
             this.Colour = transparentBrush;
-            this.Validated = LearningEngine.Validate(String.Empty);
+            this.InputTextDisabled = LearningEngine.Validate(String.Empty);
+            this.Validated = false;
             this.InputText = "";
 
             // Set visibility
