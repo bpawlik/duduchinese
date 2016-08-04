@@ -111,8 +111,8 @@ namespace DuDuChinese.Views
         void ExtractFile(string file)
         {
             inProgress++;
-            Resource2IsolatedStorageDecoder decoder = new Resource2IsolatedStorageDecoder();
-            Resource2IsolatedStorageDecoder.AllowConcurrentDecoding = false;
+            IsolatedStorageDecoder decoder = new IsolatedStorageDecoder();
+            IsolatedStorageDecoder.AllowConcurrentDecoding = false;
             decoder.ProgressChanged += new ProgressChangedEventHandler(decoder_ProgressChanged);
             decoder.RunWorkerCompleted += new RunWorkerCompletedEventHandler(decoder_RunWorkerCompleted);
             Progress.Visibility = Visibility.Visible;
@@ -120,7 +120,6 @@ namespace DuDuChinese.Views
 
             Assembly assembly = this.GetType().GetTypeInfo().Assembly;
             AssemblyName assemblyName = new AssemblyName(assembly.FullName);
-            var names = assembly.GetManifestResourceNames();
             Stream resourceStream = assembly.GetManifestResourceStream(assemblyName.Name + ".Assets." + file + ".lzma");
 
             decoder.DecodeAsync(resourceStream, file);
