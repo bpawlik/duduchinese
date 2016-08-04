@@ -64,7 +64,7 @@
         <Pivot x:Name="pivot" Title=" " SelectionChanged="pivot_SelectionChanged">
             <PivotItem x:Name="SearchPane" Header="Search">
                 <!-- Search pivot content goes here-->
-                <Grid Margin="0,-12,-12,0">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>

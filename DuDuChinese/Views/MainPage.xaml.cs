@@ -50,6 +50,8 @@ namespace DuDuChinese.Views
 
             if (inProgress == 0)
                 LoadDictionary();
+
+            Query.Focus(FocusState.Programmatic);
         }
 
         //protected override void OnBackKeyPress(CancelEventArgs e)
@@ -194,6 +196,7 @@ namespace DuDuChinese.Views
             Query.Text = Query.Text.Trim();
             if (Query.Text.Length == 0)
             {
+                ViewModel.ClearData();
                 Results.Focus(FocusState.Programmatic);
                 return;
             }
@@ -226,7 +229,9 @@ namespace DuDuChinese.Views
             }
 
             lastQuery = query;
-            Results.Focus(FocusState.Programmatic);
+
+            // This would be good for mobile up to hide keyboard. On PC however is annoying.
+            //Results.Focus(FocusState.Programmatic);
         }
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
@@ -252,12 +257,13 @@ namespace DuDuChinese.Views
         {
             switch (((Pivot)sender).SelectedIndex)
             {
-                case 0: // search page
+                case 0: // Search page
                     //ApplicationBar = ((ApplicationBar)Resources["AppBar_SearchPivotPage"]);
                     if (RecordToAdd != null)
                         RecordToAdd = null; // cancel the incomplete add-to-list action
+                    Query.Focus(FocusState.Programmatic);
                     break;
-                case 1: // lists page
+                case 1: // Learn page
                     //ApplicationBar = ((ApplicationBar)Resources["AppBar_ListsPivotPage"]);
                     //CreateDefaultList();
                     //LoadLists();
