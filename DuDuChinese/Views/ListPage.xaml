@@ -80,7 +80,7 @@
                                     <TextBlock Text="{x:Bind Simplified}" TextWrapping="NoWrap" TextTrimming="WordEllipsis" FontWeight="Bold" FontSize="16"/>
                                 </StackPanel>
                                 <StackPanel x:Name="ExpandedView" Visibility="Collapsed">
-                                    <TextBlock Text="{x:Bind Pinyin, Converter={StaticResource StringFormatterValueConverter}}" FontWeight="Bold" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind Pinyin, Converter={StaticResource StringFormatterValueConverter}}" Loaded="Pinyin_Loaded" FontWeight="Bold" FontSize="16"/>
                                     <TextBlock Text="{x:Bind Translation, Converter={StaticResource StringFormatterValueConverter}, ConverterParameter=N}" FontSize="12"/>
                                     <TextBlock Text="{x:Bind Simplified}" FontWeight="Bold" FontSize="16"/>
                                 </StackPanel>

@@ -4,6 +4,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using System;
+using DuDuChinese.Models;
+using CC_CEDICT.Universal;
 
 namespace DuDuChinese.Views
 {
@@ -18,11 +20,19 @@ namespace DuDuChinese.Views
         private void Pinyin_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             TextBlock textBlock = (TextBlock)sender;
-            //ItemViewModel item = (ItemViewModel)textBlock.DataContext;
-            //DictionaryRecord record = item.Record;
-            //PinyinColorizer p = new PinyinColorizer();
-            //Settings settings = new Settings();
-            //p.Colorize(textBlock, record, (PinyinColorScheme)settings.PinyinColorSetting);
+            PinyinColorizer p = new PinyinColorizer();
+            DictionaryItem item = (DictionaryItem)textBlock.DataContext;
+
+            string traditional = item.Traditional;
+            string simplified = item.Simplified;
+            string pinyin = string.Join(" ", item.Pinyin.ToArray());
+
+            DictionaryRecord record = new DictionaryRecord();
+            record.Chinese = new Chinese(traditional, simplified, pinyin);
+            record.English = item.Translation;
+
+            p.Colorize(textBlock, record);
+
         }
 
         int previous = -1;
@@ -66,31 +76,6 @@ namespace DuDuChinese.Views
                 defaultView.Visibility = Visibility.Visible;
                 expandedView.Visibility = Visibility.Collapsed;
                 actionPanel.Visibility = Visibility.Collapsed;
-            }
-        }
-    }
-
-    public class VisualTreeHelperHelper
-    {
-        public static T FindFrameworkElementByName<T>(DependencyObject parent, string name) where T : FrameworkElement
-        {
-            try
-            {
-                var count = VisualTreeHelper.GetChildrenCount(parent);
-                for (int i = 0; i < count; i++)
-                {
-                    var child = VisualTreeHelper.GetChild(parent, i);
-                    if (child != null && child is T && ((FrameworkElement)child).Name.Equals(name))
-                        return (T)child;
-                    var result = FindFrameworkElementByName<T>(child, name);
-                    if (result != null)
-                        return result;
-                }
-                return null;
-            }
-            catch (Exception)
-            {
-                return null;
             }
         }
     }
