@@ -1,4 +1,4 @@
-<Page x:Class="DuDuChinese.Views.MainPage"
+﻿<Page x:Class="DuDuChinese.Views.MainPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:Behaviors="using:Template10.Behaviors"
@@ -61,29 +61,72 @@
 
         </controls:PageHeader>
 
-        <StackPanel>
-            <Grid Margin="50" HorizontalAlignment="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="75" />
-                    <RowDefinition Height="75" />
-                    <RowDefinition Height="75" />
-                    <RowDefinition Height="75" />
-                </Grid.RowDefinitions>
-                <TextBlock HorizontalAlignment="Center" Margin="0,30,0,10" Grid.Row="0" Text="Select what you want to do today:" />
-                <Button FontSize="20" HorizontalAlignment="Center" Width="150" Height="50" Grid.Row="1"
+        <Pivot x:Name="pivot" Title=" " SelectionChanged="pivot_SelectionChanged">
+            <PivotItem x:Name="SearchPane" Header="Search">
+                <!-- Search pivot content goes here-->
+                <Grid Margin="0,-12,-12,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Vertical" Grid.Row="0">
+                        <TextBox x:Name="Query" InputScope="Search" GotFocus="Query_GotFocus" LostFocus="Query_LostFocus" KeyDown="Query_KeyDown" Text="english, pin1yin1 or 中文"/>
+                        <TextBlock x:Name="Status" Text="" TextWrapping="Wrap" Visibility="Collapsed" />
+                        <ProgressBar x:Name="Progress" Visibility="Collapsed" />
+                    </StackPanel>
+                    <ListBox x:Name="Results" ItemsSource="{Binding Items}" Grid.Row="1" VirtualizingStackPanel.VirtualizationMode="Standard" SelectionChanged="ListBox_SelectionChanged">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <StackPanel x:Name="DefaultView" Margin="0,0,0,12">
+                                        <TextBlock Text="{Binding Pinyin}" Loaded="Pinyin_Loaded" TextWrapping="NoWrap" TextTrimming="WordEllipsis" />
+                                        <TextBlock Text="{Binding English}" TextWrapping="NoWrap" TextTrimming="WordEllipsis" Margin="12,-4,0,5" />
+                                        <TextBlock Text="{Binding Chinese}" TextWrapping="NoWrap" TextTrimming="WordEllipsis" Margin="12,-6,0,0" />
+                                    </StackPanel>
+                                    <StackPanel x:Name="ExpandedView" Margin="0,0,0,12" Visibility="Collapsed">
+                                        <TextBlock Text="{Binding Pinyin}" Loaded="Pinyin_Loaded" TextWrapping="Wrap" TextTrimming="WordEllipsis" />
+                                        <TextBlock Text="{Binding EnglishWithNewlines}" TextWrapping="Wrap" TextTrimming="WordEllipsis" Margin="12,-4,0,5" />
+                                        <TextBlock Text="{Binding Chinese}" TextWrapping="Wrap" TextTrimming="WordEllipsis" Margin="12,-6,0,0" />
+                                    </StackPanel>
+                                    <StackPanel x:Name="ActionPanel" Margin="0,-5,0,0" Orientation="Horizontal" Visibility="Collapsed">
+                                        <!--<c4f:RoundButton x:Name="PlayButton" ImageSource="/kuaishuo2;component/images/appbar.transport.play.rest.png" IsEnabled="{Binding ElementName=SearchPane, Path=DataContext.NetworkAvailable}" Tag="{Binding Index}" Margin="0,0,0,0" Click="PlayButton_Click"/>
+                                        <c4f:RoundButton x:Name="CopyButton" ImageSource="/kuaishuo2;component/images/CopyButton.png" Tag="{Binding Index}" Margin="0,0,0,0" Click="CopyButton_Click"/>
+                                        <c4f:RoundButton x:Name="AddToListButton" ImageSource="/kuaishuo2;component/images/feature.add.png" Tag="{Binding Index}" IsEnabled="{Binding Index, Converter={StaticResource NotepadLookup}}" Margin="0,0,0,0" Click="AddToListButton_Click"/>
+                                        <c4f:RoundButton x:Name="SearchButton" ImageSource="/kuaishuo2;component/images/appbar.feature.search.rest.png" Tag="{Binding Index}" Margin="0,0,0,0" Click="SearchButton_Click"/>
+                                        <c4f:RoundButton x:Name="DecomposeButton" ImageSource="/kuaishuo2;component/images/Scissors.png" Tag="{Binding Index}" Margin="0,0,0,0" Click="DecomposeButton_Click" IsEnabled="{Binding Chinese, Converter={StaticResource MinLengthChecker}}"/>-->
+                                    </StackPanel>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </PivotItem>
+            <PivotItem Header="Learn">
+                <!-- Learn pivot content goes here-->
+                <StackPanel>
+                    <Grid Margin="50" HorizontalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="75" />
+                            <RowDefinition Height="75" />
+                            <RowDefinition Height="75" />
+                            <RowDefinition Height="75" />
+                        </Grid.RowDefinitions>
+                        <TextBlock HorizontalAlignment="Center" Margin="0,0,0,10" Grid.Row="0" Text="Select what you want to do today:" />
+                        <Button FontSize="20" HorizontalAlignment="Center" Width="150" Height="50" Grid.Row="1"
                         Content="Revision"
                         Click="{x:Bind ViewModel.GotoRevision}" />
-                <Button FontSize="20" HorizontalAlignment="Center" Width="150" Height="50" Grid.Row="2"
+                        <Button FontSize="20" HorizontalAlignment="Center" Width="150" Height="50" Grid.Row="2"
                         Content="New Material"
                         Click="{x:Bind ViewModel.GotoNewMaterial}" />
-                <Button FontSize="20" HorizontalAlignment="Center" Width="150" Height="50" Grid.Row="3"
+                        <Button FontSize="20" HorizontalAlignment="Center" Width="150" Height="50" Grid.Row="3"
                         Content="Lists"
                         Click="{x:Bind ViewModel.GotoLists}"/>
-            </Grid>
-            <TextBlock x:Name="stateTextBox" />
+                    </Grid>
+                    <TextBlock x:Name="stateTextBox" />
 
-        </StackPanel>
-
+                </StackPanel>
+            </PivotItem>
+        </Pivot>
     </RelativePanel>
 </Page>
 

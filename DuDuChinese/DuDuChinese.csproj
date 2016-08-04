@@ -90,6 +90,18 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <EmbeddedResource Include="Assets\cedict_ts.u8">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\hsklevel1.list">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\hsklevel2.list">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\SogouLabDic.dic">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <None Include="DuDuChinese_TemporaryKey.pfx" />
     <None Include="project.json" />
   </ItemGroup>
@@ -97,6 +109,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DictionaryRecordList.cs" />
+    <Compile Include="ListManager.cs" />
     <Compile Include="Models\DictionaryItem.cs" />
     <Compile Include="Models\DictionaryItemList.cs" />
     <Compile Include="Models\DictionaryManager.cs" />
@@ -108,6 +122,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\SettingsServices\SettingsService.cs" />
     <Compile Include="ViewModels\ExercisePageViewModel.cs" />
+    <Compile Include="ViewModels\ItemViewModel.cs" />
     <Compile Include="ViewModels\ProgressPageViewModel.cs" />
     <Compile Include="ViewModels\ListPageViewModel.cs" />
     <Compile Include="ViewModels\ListsPageViewModel.cs" />
@@ -242,6 +257,10 @@
     <ProjectReference Include="..\CC-CEDICT.Universal\CC-CEDICT.Universal.csproj">
       <Project>{1354c4ff-a8b8-4d83-8463-55d7141a396f}</Project>
       <Name>CC-CEDICT.Universal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SevenZip.Compression.LZMA.Universal\SevenZip.Compression.LZMA.Universal.csproj">
+      <Project>{fe52e7b6-491c-46d8-aa43-7a8a87c55598}</Project>
+      <Name>SevenZip.Compression.LZMA.Universal</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

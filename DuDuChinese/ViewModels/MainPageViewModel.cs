@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Navigation;
+using System.Collections.ObjectModel;
+using CC_CEDICT.Universal;
 
 namespace DuDuChinese.ViewModels
 {
@@ -16,6 +18,9 @@ namespace DuDuChinese.ViewModels
             {
                 //Value = "Designtime value";
             }
+
+            this.Items = new ObservableCollection<ItemViewModel>();
+            //this.NetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
         }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
@@ -60,6 +65,62 @@ namespace DuDuChinese.ViewModels
 
         public void GotoLists() =>
             NavigationService.Navigate(typeof(Views.ListsPage));
+
+        public ObservableCollection<ItemViewModel> Items { get; private set; }
+
+        public bool IsDataLoaded { get; private set; }
+
+        public void LoadData(List<DictionaryRecord> items)
+        {
+            ClearData();
+            //this.NetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
+
+            //Settings settings = new Settings();
+            //bool trad = settings.TraditionalChineseSetting;
+            bool trad = false;
+
+            foreach (DictionaryRecord r in items)
+            {
+                // determine what Hanzi to show to the user
+                string chinese = (!trad || r.Chinese.Simplified.Equals(r.Chinese.Traditional))
+                    ? r.Chinese.Simplified                                                     // show only simplified
+                    : String.Format("{0} ({1})", r.Chinese.Simplified, r.Chinese.Traditional); // else "simple (trad)"
+
+                this.Items.Add(new ItemViewModel()
+                {
+                    Record = r,
+                    Pinyin = r.Chinese.Pinyin,
+                    English = String.Join("; ", r.English),
+                    EnglishWithNewlines = String.Join("\n", r.English),
+                    Chinese = chinese,
+                    Index = r.Index
+                });
+            }
+            this.IsDataLoaded = true;
+        }
+
+        public void ClearData()
+        {
+            this.Items.Clear();
+        }
+
+        //// TODO: enable play buttons for those where the audio has already been downloaded (even in no-network scenario)
+        //public bool NetworkAvailable { get; private set; }
+        //public void UpdateNetworkStatus(bool status)
+        //{
+        //    this.NetworkAvailable = status;
+        //    NotifyPropertyChanged("NetworkAvailable");
+        //}
+
+        //public event PropertyChangedEventHandler PropertyChanged;
+        //private void NotifyPropertyChanged(String propertyName)
+        //{
+        //    PropertyChangedEventHandler handler = PropertyChanged;
+        //    if (null != handler)
+        //    {
+        //        handler(this, new PropertyChangedEventArgs(propertyName));
+        //    }
+        //}
 
     }
 }

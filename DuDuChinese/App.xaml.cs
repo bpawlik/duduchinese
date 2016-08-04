@@ -7,6 +7,7 @@ using Template10.Common;
 using System;
 using System.Linq;
 using Windows.UI.Xaml.Data;
+using CC_CEDICT.Universal;
 
 namespace DuDuChinese
 {
@@ -30,6 +31,22 @@ namespace DuDuChinese
 
             #endregion
         }
+
+        ListManager _ListManager;
+        public ListManager ListManager
+        {
+            get
+            {
+                if (_ListManager == null)
+                    _ListManager = new ListManager();
+                return _ListManager;
+            }
+        }
+
+        /// <summary>
+        /// CC_CEDICT.Dictionary shared between search and list pages (latter for email).
+        /// </summary>
+        public Dictionary Dictionary;
 
         public override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
