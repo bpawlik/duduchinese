@@ -139,7 +139,6 @@ namespace DuDuChinese.ViewModels
         public void listView_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
         {
             // Color green all passed items
-
             for (int i = 0; i < LearningEngine.CurrentExerciseIndex; i++)
                     ProgressItems[i].ForegroundColor = Windows.UI.Colors.Green;
         }

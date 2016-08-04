@@ -39,13 +39,11 @@ namespace DuDuChinese.ViewModels
             // Reset learning engine
             LearningEngine.Reset();
 
-            if (this.Lists == null)
-                this.Lists = new ObservableCollection<DictionaryItemList>();
-
-            // Refresh list (always)
-            this.Lists.Clear();
-            foreach (var key in DictionaryManager.Lists.Keys)
-                this.Lists.Add(DictionaryManager.Lists[key]);
+            // Refresh lists
+            this.Lists = new ObservableCollection<DictionaryItemList>();
+            if (this.Lists.Count == 0)
+                foreach (var key in DictionaryManager.Lists.Keys)
+                    this.Lists.Add(DictionaryManager.Lists[key]);
 
             // Select index
             if (this.Lists.Count > 0)

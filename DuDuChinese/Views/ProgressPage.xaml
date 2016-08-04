@@ -53,23 +53,18 @@
                              RelativePanel.AlignTopWithPanel="True" Text="Progress Page" />
 
         <!--  content  -->
-        <ScrollViewer Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"
-                      RelativePanel.AlignLeftWithPanel="True"
-                      RelativePanel.AlignRightWithPanel="True"
-                      RelativePanel.Below="pageHeader"
-                      VerticalScrollBarVisibility="Auto">
-            <StackPanel Margin="25">
-                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="List of exercises:" />
-                <!--<ListView x:Name="listView"
-                          Margin="25"
-                          ItemsSource="{x:Bind ViewModel.ExerciseList}"
-                          SelectedIndex="{x:Bind ViewModel.SelectedItemIndex}">
-                </ListView>-->
+        <StackPanel Margin="25, 50">
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="List of exercises:" />
+            <ScrollViewer Margin="25" RelativePanel.AlignBottomWithPanel="True"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignRightWithPanel="True"
+                        RelativePanel.Below="pageHeader"
+                        VerticalScrollBarVisibility="Auto">
                 <ListView x:Name="listView" ItemsSource="{x:Bind ViewModel.ProgressItems}"
-                          Margin="25"
                           HorizontalContentAlignment="Stretch"
                           SelectionChanged="{x:Bind ViewModel.listView_SelectionChanged}"
-                          SelectedIndex="{x:Bind ViewModel.SelectedItemIndex}" Background="{ThemeResource ButtonDisabledBackgroundThemeBrush}" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False" IsTapEnabled="False">
+                          SelectedIndex="{x:Bind ViewModel.SelectedItemIndex}"
+                          Background="{ThemeResource ButtonDisabledBackgroundThemeBrush}">
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="vm:ProgressItem">
                             <TextBlock Text="{x:Bind Text, Mode=TwoWay}">
@@ -80,26 +75,26 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                <TextBlock Margin="20, 50" Text="{x:Bind ViewModel.Text, Mode=TwoWay}" />
-                <Grid Margin="0, 10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="150" />
-                        <ColumnDefinition Width="150" />
-                    </Grid.ColumnDefinitions>
-                    <Button x:Name="continueButton" Grid.Column="1" Content="Continue"
-                            HorizontalAlignment="Center" Click="{x:Bind ViewModel.Continue_Click}">
-                        <Interactivity:Interaction.Behaviors>
-                            <!--  focus on textbox when page loads  -->
-                            <Core:EventTriggerBehavior>
-                                <Behaviors:FocusAction />
-                            </Core:EventTriggerBehavior>
-                        </Interactivity:Interaction.Behaviors>
-                    </Button>
-                    <Button x:Name="cancelButton" Grid.Column="0" Content="Cancel" HorizontalAlignment="Center" Click="{x:Bind ViewModel.Cancel_Click}" IsEnabled="{x:Bind ViewModel.CancelEnabled, Mode=TwoWay}"/>
-                </Grid>
+            </ScrollViewer>
+            <TextBlock Margin="20, 50" Text="{x:Bind ViewModel.Text, Mode=TwoWay}" />
+            <Grid Margin="0, 10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="150" />
+                </Grid.ColumnDefinitions>
+                <Button x:Name="continueButton" Grid.Column="1" Content="Continue"
+                        HorizontalAlignment="Center" Click="{x:Bind ViewModel.Continue_Click}">
+                    <Interactivity:Interaction.Behaviors>
+                        <!--  focus on textbox when page loads  -->
+                        <Core:EventTriggerBehavior>
+                            <Behaviors:FocusAction />
+                        </Core:EventTriggerBehavior>
+                    </Interactivity:Interaction.Behaviors>
+                </Button>
+                <Button x:Name="cancelButton" Grid.Column="0" Content="Cancel" HorizontalAlignment="Center" Click="{x:Bind ViewModel.Cancel_Click}" IsEnabled="{x:Bind ViewModel.CancelEnabled, Mode=TwoWay}"/>
+            </Grid>
                 
-            </StackPanel>
-        </ScrollViewer>
+        </StackPanel>
 
     </RelativePanel>
 </Page>
