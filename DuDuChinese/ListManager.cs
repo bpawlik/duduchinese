@@ -9,6 +9,7 @@ using System.IO;
 using System.Diagnostics;
 using System.IO.IsolatedStorage;
 using System.Threading;
+using Windows.Storage;
 
 namespace DuDuChinese
 {
@@ -45,7 +46,7 @@ namespace DuDuChinese
                 }
             }
 
-            public void Save()
+            public async void Save()
             {
                 try
                 {
@@ -53,18 +54,17 @@ namespace DuDuChinese
                         return;
 
                     Debug.WriteLine("ManagedList.Save(): {0} ({1} entries)", SavePath, this.Count);
-                    using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForApplication())
+                    StorageFolder dataFolder = ApplicationData.Current.LocalFolder;
+                    StorageFolder listsFolder = await dataFolder.GetFolderAsync(_ListsDirectory);
+                    StorageFile file = await listsFolder.CreateFileAsync(SavePath, CreationCollisionOption.ReplaceExisting);
+                    using (Stream stream = await file.OpenStreamForWriteAsync())
                     {
-                        if (store.FileExists(SavePath))
-                            store.DeleteFile(SavePath);
-
-                        IsolatedStorageFileStream stream = store.CreateFile(SavePath);
                         byte[] data = Encoding.UTF8.GetBytes(this.ToString());
                         stream.Write(data, 0, data.Length);
-                        //stream.Close();
                     }
 
                     IsModified = false;
+
                 }
                 catch (Exception ex)
                 {
@@ -137,7 +137,7 @@ namespace DuDuChinese
                 if (!this.ContainsKey(name)) // auto-create list
                 {
                     ManagedList list = new ManagedList(name);
-                    list.SavePath = String.Format("{0}/{1}.list", ListsDirectory, ++MaxListIdentifier);
+                    list.SavePath = String.Format("{0}.list", ++MaxListIdentifier);
                     base.Add(name, list);
                 }
                 return base[name];
