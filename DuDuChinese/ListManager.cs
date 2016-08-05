@@ -73,6 +73,39 @@ namespace DuDuChinese
                 }
             }
 
+            public void Save(Stream stream)
+            {
+                try
+                {
+                    byte[] data = Encoding.UTF8.GetBytes(this.ToString());
+                    stream.Write(data, 0, data.Length);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Couldn't save list: {0}", ex.Message);
+                }
+            }
+
+            public async void Delete(string name)
+            {
+                try
+                {
+                    if (!IsDeleted)
+                        return;
+
+                    Debug.WriteLine("ManagedList.Delete(): {0}", SavePath);
+
+                    StorageFolder dataFolder = ApplicationData.Current.LocalFolder;
+                    StorageFolder listsFolder = await dataFolder.GetFolderAsync(_ListsDirectory);
+                    StorageFile file = await listsFolder.GetFileAsync(SaveFilename);
+                    await file.DeleteAsync();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Couldn't delete list: {0}", ex.Message);
+                }
+            }
+
             public void Delete()
             {
                 try
@@ -158,7 +191,22 @@ namespace DuDuChinese
         /// <param name="key">Name of the list to mark as deleted</param>
         public new void Remove(string key)
         {
-            this[key].IsDeleted = true;
+            if (this.ContainsKey(key))
+            {
+                this[key].IsDeleted = true;
+                ManagedList list = (ManagedList)this[key];
+                list.Delete(key);
+                base.Remove(key);
+            }
+        }
+
+        public void Save(Stream stream, string name)
+        {
+            if (this.ContainsKey(name))
+            {
+                ManagedList list = (ManagedList)this[name];
+                list.Save(stream);
+            }
         }
 
         /// <summary>

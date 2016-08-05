@@ -20,12 +20,24 @@ namespace CC_CEDICT.Universal
                 Read(new IsolatedStorageFileStream(path, FileMode.Open, store));
         }
 
+        public Dictionary(Stream stream)
+        {
+            Read(stream);
+        }
+
         private async void ReadFile(string path)
         {
-            StorageFolder data_folder = ApplicationData.Current.LocalFolder;
-            if (File.Exists(Path.Combine(data_folder.Path, path)))
+            StorageFolder store = ApplicationData.Current.LocalFolder;
+            string folderName = Path.GetDirectoryName(path);
+            string fileName = Path.GetFileName(path);
+            StorageFolder listStorage = null;
+            if (String.IsNullOrWhiteSpace(folderName))
+                listStorage = store;
+            else
+                listStorage = await store.GetFolderAsync(folderName);
+            if (File.Exists(Path.Combine(listStorage.Path, fileName)))
             {
-                StorageFile file = await data_folder.GetFileAsync(path);
+                StorageFile file = await listStorage.GetFileAsync(fileName);
                 using (Stream stream = await file.OpenStreamForReadAsync())
                 {
                     if (stream.CanRead)

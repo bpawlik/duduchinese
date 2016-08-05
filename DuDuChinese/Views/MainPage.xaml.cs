@@ -572,9 +572,39 @@ namespace DuDuChinese.Views
             ListListBox.ScrollIntoView(ListListBox.Items[0]);
         }
 
-        private void AppBarUploadButton_Click(object sender, RoutedEventArgs e)
+        private async void AppBarUploadButton_Click(object sender, RoutedEventArgs e)
         {
+            var picker = new Windows.Storage.Pickers.FileOpenPicker();
+            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
+            picker.SuggestedStartLocation =
+                Windows.Storage.Pickers.PickerLocationId.Downloads;
+            picker.FileTypeFilter.Add(".txt");
+            picker.FileTypeFilter.Add(".u8");
+            picker.FileTypeFilter.Add(".msg");
+            picker.FileTypeFilter.Add(".list");
 
+            Windows.Storage.StorageFile file = await picker.PickSingleFileAsync();
+            if (file != null)
+            {
+                // Create new list
+                ListViewModel lvm = (ListViewModel)ListsPane.DataContext;
+                string name = Path.GetFileNameWithoutExtension(file.Name);
+                ListItemViewModel item = new ListItemViewModel { Name = name, LineTwo = "", IsEditable = true };
+                lvm.Items.Insert(0, item);
+                //((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = false; // disable "multi-add"
+                ListListBox.ScrollIntoView(ListListBox.Items[0]);
+
+                // Read file and add items to the list
+                App app = (App)Application.Current;
+                using (Stream stream = await file.OpenStreamForReadAsync())
+                {
+                    Dictionary list = new Dictionary(stream);
+                    if (!app.ListManager.ContainsKey(name))
+                        foreach (DictionaryRecord r in list)
+                            app.ListManager[name].Add(r);
+                }
+                   
+            }
         }
 
         private void AppBarAddButton_Click(object sender, RoutedEventArgs e)
@@ -591,6 +621,30 @@ namespace DuDuChinese.Views
             }
         }
 
+        private async void SaveList_Click(object sender, RoutedEventArgs e)
+        {
+            var datacontext = (e.OriginalSource as FrameworkElement).DataContext;
+            ListBoxItem lbItem = (ListBoxItem)ListListBox.ItemContainerGenerator.ContainerFromItem(datacontext);
+            ListItemViewModel listItem = (ListItemViewModel)lbItem.DataContext;
+
+            var picker = new Windows.Storage.Pickers.FileSavePicker();
+            picker.SuggestedStartLocation =
+                Windows.Storage.Pickers.PickerLocationId.Downloads;
+            picker.FileTypeChoices.Add("List file", new List<string>() { ".list" });
+            picker.SuggestedFileName = listItem.Name;
+
+            Windows.Storage.StorageFile file = await picker.PickSaveFileAsync();
+            if (file != null)
+            {
+                // Read file and add items to the list
+                using (Stream stream = await file.OpenStreamForWriteAsync())
+                {
+                    App app = (App)Application.Current;
+                    app.ListManager.Save(stream, listItem.Name);
+                }
+            }
+        }
+
         bool RenameListMode = false;
         string OldName;
         private void RenameList_Click(object sender, RoutedEventArgs e)
@@ -603,7 +657,7 @@ namespace DuDuChinese.Views
             OldName = listItem.Name;
             RenameListMode = true; // turn on editing mode
             listItem.IsEditable = true;
-            //((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = false; // disable add during rename
+            lvm.IsActive = true;
         }
 
         private void DeleteList_Click(object sender, RoutedEventArgs e)
@@ -614,6 +668,8 @@ namespace DuDuChinese.Views
             App app = (App)Application.Current;
             app.ListManager.Remove(listItem.Name);
             LoadLists();
+            ListViewModel lvm = (ListViewModel)ListsPane.DataContext;
+            lvm.IsActive = true;
         }
 
         private void ListItem_RightTapped(object sender, RightTappedRoutedEventArgs e)

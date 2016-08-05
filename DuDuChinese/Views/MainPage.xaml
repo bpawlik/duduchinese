@@ -188,6 +188,9 @@
                                             <MenuFlyoutItem x:Name="DeleteButton"
                                                         Text="Delete"
                                                         Click="DeleteList_Click"/>
+                                            <MenuFlyoutItem x:Name="SaveButton"
+                                                        Text="Save as..."
+                                                        Click="SaveList_Click"/>
                                             <ToggleMenuFlyoutItem x:Name="SetAsDefault"
                                                         Text="Set as default"
                                                         Click="SetAsDefaultList_Click"
