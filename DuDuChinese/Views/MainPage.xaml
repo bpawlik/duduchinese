@@ -64,6 +64,13 @@
                              RelativePanel.AlignRightWithPanel="True"
                              RelativePanel.AlignTopWithPanel="True" Text="Main Page">
 
+            <!-- primary commands -->
+            <controls:PageHeader.PrimaryCommands>
+                <AppBarButton Click="AppBarAddButton_Click" Label="Add">
+                    <SymbolIcon Symbol="Add" Height="20" VerticalAlignment="Top" />
+                </AppBarButton>
+            </controls:PageHeader.PrimaryCommands>
+
             <!--  secondary commands  -->
             <controls:PageHeader.SecondaryCommands>
                 <AppBarButton Click="{x:Bind ViewModel.GotoSettings}" Label="Settings" />
@@ -73,7 +80,7 @@
 
         </controls:PageHeader>
 
-        <Pivot x:Name="pivot" Title=" " SelectionChanged="pivot_SelectionChanged">
+        <Pivot x:Name="pivot" Title=" " Padding="0,-53,0,0" Margin="0,53,0,0" SelectionChanged="pivot_SelectionChanged">
             <PivotItem x:Name="SearchPane" Header="Search">
                 <!-- Search pivot content goes here-->
                 <Grid>
@@ -140,7 +147,7 @@
             <PivotItem Header="Learn">
                 <!-- Learn pivot content goes here-->
                 <StackPanel>
-                    <Grid Margin="50" HorizontalAlignment="Center">
+                    <Grid Margin="0" HorizontalAlignment="Center">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="75" />
                             <RowDefinition Height="75" />
@@ -190,6 +197,15 @@
                                             HorizontalAlignment="Center"
                                             TextWrapping="NoWrap"
                                             TextTrimming="WordEllipsis"/>
+                                        <TextBox
+                                            Text="{Binding Name}"
+                                            Visibility="{Binding IsEditable, Converter={StaticResource VisibilityConverter}}"
+                                            Margin="0,0,0,0"
+                                            InputScope="Search"
+                                            Loaded="ListEdit_Loaded"
+                                            GotFocus="ListEdit_GotFocus"
+                                            LostFocus="ListEdit_LostFocus"
+                                            KeyDown="ListEdit_KeyDown"/>
                                     </StackPanel>
                                 </StackPanel>
                             </DataTemplate>

@@ -529,6 +529,20 @@ namespace DuDuChinese.Views
             ListListBox.ScrollIntoView(ListListBox.Items[0]);
         }
 
+        private void AppBarAddButton_Click(object sender, RoutedEventArgs e)
+        {
+            // If we are in the list view then add new list
+            if (pivot.SelectedItem.Equals(ListsPane))
+            {
+                ListViewModel lvm = (ListViewModel)ListsPane.DataContext;
+                lvm.EditInProgress = true;
+                ListItemViewModel item = new ListItemViewModel { Name = "", LineTwo = "", IsEditable = true };
+                lvm.Items.Insert(0, item);
+                //((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = false; // disable "multi-add"
+                ListListBox.ScrollIntoView(ListListBox.Items[0]);
+            }
+        }
+
         bool RenameListMode = false;
         string OldName;
         private void RenameList_Click(object sender, RoutedEventArgs e)
@@ -576,54 +590,54 @@ namespace DuDuChinese.Views
         // LostFocus means "cancel"
         private void ListEdit_LostFocus(object sender, RoutedEventArgs e)
         {
-            //ListViewModel lvm = (ListViewModel)ListListBox.DataContext;
-            //if (RenameListMode) // user was editing an existing list
-            //{
-            //    TextBox textBox = (TextBox)sender;
-            //    textBox.Text = OldName; // reset
-            //    foreach (ListItemViewModel item in lvm.Items)
-            //        item.IsEditable = false;
-            //}
-            //else // user was creating a new list
-            //{
-            //    LoadLists(); // to wipe out new/blank one
-            //}
-            //RenameListMode = false; // turn off renaming mode
-            //lvm.EditInProgress = false; // to reenable context menu
-            //if (pivot.SelectedItem.Equals(ListsPane)) // check they didn't pivot away
-            //{
-            //    ApplicationBar.IsVisible = true;
-            //    ((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = true; // re-enable add list
-            //}
+            ListViewModel lvm = (ListViewModel)ListListBox.DataContext;
+            if (RenameListMode) // user was editing an existing list
+            {
+                TextBox textBox = (TextBox)sender;
+                textBox.Text = OldName; // reset
+                foreach (ListItemViewModel item in lvm.Items)
+                    item.IsEditable = false;
+            }
+            else // user was creating a new list
+            {
+                LoadLists(); // to wipe out new/blank one
+            }
+            RenameListMode = false; // turn off renaming mode
+            lvm.EditInProgress = false; // to reenable context menu
+            if (pivot.SelectedItem.Equals(ListsPane)) // check they didn't pivot away
+            {
+                //ApplicationBar.IsVisible = true;
+                //((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = true; // re-enable add list
+            }
         }
 
-        private void ListEdit_KeyDown(object sender, KeyEventArgs e)
+        private void ListEdit_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
-            //if (e.Key != Key.Enter)
-            //    return;
-            //TextBox textBox = (TextBox)sender;
-            //string name = textBox.Text.Trim();
-            //if (name.Length == 0)
-            //    return;
-            //App app = (App)Application.Current;
-            //if (name != OldName && app.ListManager.ContainsKey(name))
-            //{
-            //    MessageBox.Show(String.Format("There is already a list called '{0}'. Please choose another name.", name));
-            //    return;
-            //}
-            //if (RenameListMode)
-            //{
-            //    if (name != OldName)
-            //        app.ListManager.Rename(OldName, name);
-            //}
-            //else // create a new list
-            //{
-            //    DictionaryRecordList list = app.ListManager[name];
-            //}
-            //LoadLists();
-            //ListListBox.UpdateLayout();
-            //int index = FindListItemIndexByName(ListListBox, name);
-            //ListListBox.ScrollIntoView(ListListBox.Items[index]);
+            if (e.Key != Windows.System.VirtualKey.Enter)
+                return;
+            TextBox textBox = (TextBox)sender;
+            string name = textBox.Text.Trim();
+            if (name.Length == 0)
+                return;
+            App app = (App)Application.Current;
+            if (name != OldName && app.ListManager.ContainsKey(name))
+            {
+                //MessageBox.Show(String.Format("There is already a list called '{0}'. Please choose another name.", name));
+                return;
+            }
+            if (RenameListMode)
+            {
+                if (name != OldName)
+                    app.ListManager.Rename(OldName, name);
+            }
+            else // create a new list
+            {
+                DictionaryRecordList list = app.ListManager[name];
+            }
+            LoadLists();
+            ListListBox.UpdateLayout();
+            int index = FindListItemIndexByName(ListListBox, name);
+            ListListBox.ScrollIntoView(ListListBox.Items[index]);
         }
 
         private int FindListItemIndexByName(ListBox list, string name)
@@ -647,29 +661,27 @@ namespace DuDuChinese.Views
             if (item == -1)
                 return;
 
+            
+            ListViewModel lvm = (ListViewModel)ListsPane.DataContext;
+            if (lvm.EditInProgress) // don't open lists while adding/renaming
+                return;
+
             ListItemViewModel ivm = (ListItemViewModel)list.Items[item];
+            if (RecordToAdd != null) // user is selecting a target list to add an entry
+            {
+                App app = (App)Application.Current;
+                DictionaryRecordList target = app.ListManager[ivm.Name];
+                if (target.IsDeleted)
+                    return; // can't add items to a deleted list
+                target.Add(RecordToAdd);
+                //app.Transition = App.TransitionType.PostAdd;
+                //app.TransitionData = RecordToAdd;
+                RecordToAdd = null; // come out of add-to-list mode
+                LoadLists();
+            }
+
+            lvm.AddInProgress = false;
             OpenList(ivm.Name);
-
-
-            //if (lvm.EditInProgress) // don't open lists while adding/renaming
-            //    return;
-
-            //ListItemViewModel ivm = (ListItemViewModel)list.Items[item];
-            //if (RecordToAdd != null) // user is selecting a target list to add an entry
-            //{
-            //    App app = (App)Application.Current;
-            //    DictionaryRecordList target = app.ListManager[ivm.Name];
-            //    if (target.IsDeleted)
-            //        return; // can't add items to a deleted list
-            //    target.Add(RecordToAdd);
-            //    app.Transition = App.TransitionType.PostAdd;
-            //    app.TransitionData = RecordToAdd;
-            //    RecordToAdd = null; // come out of add-to-list mode
-            //    LoadLists();
-            //}
-
-            //lvm.AddInProgress = false;
-            //OpenList(ivm.Name);
         }
 
         void OpenList(string name)
