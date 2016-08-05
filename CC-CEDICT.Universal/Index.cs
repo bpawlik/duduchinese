@@ -6,6 +6,7 @@ using System.IO;
 using System.IO.IsolatedStorage;
 using System.Text;
 using System.Threading;
+using Windows.Storage;
 
 namespace CC_CEDICT.Universal
 {
@@ -14,14 +15,36 @@ namespace CC_CEDICT.Universal
         bool loaded = false;
         Dictionary<string, int> lookup = new Dictionary<string, int>();
 
-        public Index(string path)
+        public Index(string name)
         {
+            //// Get the local folder.
+            //StorageFolder data_folder = ApplicationData.Current.LocalFolder;
+
+            //if (File.Exists(Path.Combine(data_folder.Path, name)))
+            //{
+            //    Action readFile = async () =>
+            //    {
+            //        // Create a new file named data_file.xml
+            //        StorageFile file = await data_folder.GetFileAsync(name);
+
+            //        // Write the data
+            //        using (Stream stream = await file.OpenStreamForReadAsync())
+            //        {
+            //            if (stream.CanRead)
+            //            {
+            //                loaded = Read(stream);
+            //            }
+            //        }
+            //    };
+            //    readFile.Invoke();
+            //}
+
             using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForApplication())
             {
-                if (store.FileExists(path))
+                if (store.FileExists(name))
                 {
-                    Debug.WriteLine(String.Format("Loading index file: {0}", path));
-                    Stream stream = new IsolatedStorageFileStream(path, FileMode.Open, store);
+                    Debug.WriteLine(String.Format("Loading index file: {0}", name));
+                    Stream stream = new IsolatedStorageFileStream(name, FileMode.Open, store);
                     if (!stream.CanRead)
                         return;
                     loaded = Read(stream);

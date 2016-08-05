@@ -7,8 +7,20 @@
       xmlns:controls="using:Template10.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="using:DuDuChinese.Views"
+      xmlns:c="using:DuDuChinese.Converters"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:vm="using:DuDuChinese.ViewModels" mc:Ignorable="d">
+
+    <Page.Resources>
+        <c:BooleanDoubleConverter x:Key="SmallFontSize" True="24" />
+        <c:BooleanDoubleConverter x:Key="ChineseFontSize" True="36"/>
+        <c:NotepadLookupConvertor x:Key="NotepadLookup"/>
+        <c:MinimumLengthConverter x:Key="MinLengthChecker"/>
+        <c:VisibilityConverter x:Key="VisibilityConverter" True="Visible" False="Collapsed"/>
+        <c:VisibilityConverter x:Key="InvertedVisibility" True="Collapsed" False="Visible"/>
+        <c:InvertedBooleanConverter x:Key="InvertedBoolean"/>
+        <c:BooleanColorConverter x:Key="ListItemColor" True="Gray" />
+    </Page.Resources>
 
     <Page.DataContext>
         <vm:MainPageViewModel x:Name="ViewModel" />
@@ -89,11 +101,35 @@
                                         <TextBlock Text="{Binding Chinese}" TextWrapping="Wrap" TextTrimming="WordEllipsis" Margin="12,-6,0,0" />
                                     </StackPanel>
                                     <StackPanel x:Name="ActionPanel" Margin="0,-5,0,0" Orientation="Horizontal" Visibility="Collapsed">
-                                        <!--<c4f:RoundButton x:Name="PlayButton" ImageSource="/kuaishuo2;component/images/appbar.transport.play.rest.png" IsEnabled="{Binding ElementName=SearchPane, Path=DataContext.NetworkAvailable}" Tag="{Binding Index}" Margin="0,0,0,0" Click="PlayButton_Click"/>
-                                        <c4f:RoundButton x:Name="CopyButton" ImageSource="/kuaishuo2;component/images/CopyButton.png" Tag="{Binding Index}" Margin="0,0,0,0" Click="CopyButton_Click"/>
-                                        <c4f:RoundButton x:Name="AddToListButton" ImageSource="/kuaishuo2;component/images/feature.add.png" Tag="{Binding Index}" IsEnabled="{Binding Index, Converter={StaticResource NotepadLookup}}" Margin="0,0,0,0" Click="AddToListButton_Click"/>
-                                        <c4f:RoundButton x:Name="SearchButton" ImageSource="/kuaishuo2;component/images/appbar.feature.search.rest.png" Tag="{Binding Index}" Margin="0,0,0,0" Click="SearchButton_Click"/>
-                                        <c4f:RoundButton x:Name="DecomposeButton" ImageSource="/kuaishuo2;component/images/Scissors.png" Tag="{Binding Index}" Margin="0,0,0,0" Click="DecomposeButton_Click" IsEnabled="{Binding Chinese, Converter={StaticResource MinLengthChecker}}"/>-->
+                                        <!--<c4f:RoundButton x:Name="PlayButton" ImageSource="/kuaishuo2;component/images/appbar.transport.play.rest.png" IsEnabled="{Binding ElementName=SearchPane, Path=DataContext.NetworkAvailable}" Tag="{Binding Index}" Margin="0,0,0,0" Click="PlayButton_Click"/>-->
+                                        <!--<c4f:RoundButton x:Name="CopyButton" ImageSource="/kuaishuo2;component/images/CopyButton.png" Tag="{Binding Index}" Margin="0,0,0,0" Click="CopyButton_Click"/>-->
+                                        <Button x:Name="PlayButton" Margin="0,0,0,0" Click="PlayButton_Click" Background="Transparent">
+                                            <Button.Content>
+                                                <SymbolIcon Symbol="Play" />
+                                            </Button.Content>
+                                        </Button>
+                                        <Button x:Name="CopyButton" Margin="0,0,0,0" Background="Transparent" Click="CopyButton_Click">
+                                            <Button.Content>
+                                                <SymbolIcon Symbol="Copy" />
+                                            </Button.Content>
+                                        </Button>
+                                        <Button x:Name="AddToListButton" Margin="0,0,0,0" Background="Transparent" Click="AddToListButton_Click" Tag="{Binding Index}">
+                                            <Button.Content>
+                                                <SymbolIcon Symbol="Add" />
+                                            </Button.Content>
+                                        </Button>
+                                        <Button x:Name="SearchButton" Margin="0,0,0,0" Background="Transparent" Click="SearchButton_Click">
+                                            <Button.Content>
+                                                <SymbolIcon Symbol="Find" />
+                                            </Button.Content>
+                                        </Button>
+                                        <Button x:Name="DecomposeButton" Margin="0,0,0,0" Background="Transparent" Click="DecomposeButton_Click">
+                                            <Button.Content>
+                                                <SymbolIcon Symbol="Cut" />
+                                            </Button.Content>
+                                        </Button>
+                                        <!--<c4f:RoundButton x:Name="SearchButton" ImageSource="/kuaishuo2;component/images/appbar.feature.search.rest.png" Tag="{Binding Index}" Margin="0,0,0,0" Click="SearchButton_Click"/>-->
+                                        <!--<c4f:RoundButton x:Name="DecomposeButton" ImageSource="/kuaishuo2;component/images/Scissors.png" Tag="{Binding Index}" Margin="0,0,0,0" Click="DecomposeButton_Click" IsEnabled="{Binding Chinese, Converter={StaticResource MinLengthChecker}}"/>-->
                                     </StackPanel>
                                 </StackPanel>
                             </DataTemplate>
@@ -118,12 +154,47 @@
                         <Button FontSize="20" HorizontalAlignment="Center" Width="150" Height="50" Grid.Row="2"
                         Content="New Material"
                         Click="{x:Bind ViewModel.GotoNewMaterial}" />
-                        <Button FontSize="20" HorizontalAlignment="Center" Width="150" Height="50" Grid.Row="3"
-                        Content="Lists"
-                        Click="{x:Bind ViewModel.GotoLists}"/>
                     </Grid>
                     <TextBlock x:Name="stateTextBox" />
 
+                </StackPanel>
+            </PivotItem>
+            <PivotItem x:Name="ListsPane" Header="Lists" Margin="12,8,12,0" >
+                <StackPanel x:Name="ListsPaneContent" Orientation="Vertical">
+                    <ListBox x:Name="ListListBox" VirtualizingStackPanel.VirtualizationMode="Standard" Margin="0,0,0,0"
+                             ItemsSource="{Binding Items}"
+                             SelectionChanged="ListListBox_SelectionChanged">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" >
+                                    <FlyoutBase.AttachedFlyout>
+                                        <MenuFlyout >
+                                            <MenuFlyoutItem Text="rename" Click="RenameList_Click"/>
+                                            <MenuFlyoutItem Text="delete" Click="DeleteList_Click" IsEnabled="{Binding IsDeleted, Converter={StaticResource InvertedBoolean}}"/>
+                                        </MenuFlyout>
+                                    </FlyoutBase.AttachedFlyout>
+                                    <Border Width="76" Background="Transparent">
+                                        <StackPanel>
+                                            <TextBlock
+                                                Text="{Binding LineTwo}"
+                                                Width="75"
+                                                TextAlignment="Center"
+                                                Visibility="{Binding ElementName=ListsPane, Path=DataContext.AddInProgress, Converter={StaticResource InvertedVisibility}}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <StackPanel>
+                                        <TextBlock
+                                            Text="{Binding Name}"
+                                            Visibility="{Binding IsEditable, Converter={StaticResource InvertedVisibility}}"
+                                            Margin="12,0,0,0"
+                                            HorizontalAlignment="Center"
+                                            TextWrapping="NoWrap"
+                                            TextTrimming="WordEllipsis"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </StackPanel>
             </PivotItem>
         </Pivot>

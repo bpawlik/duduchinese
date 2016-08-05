@@ -20,17 +20,9 @@ namespace DuDuChinese.Views
         private void Pinyin_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             TextBlock textBlock = (TextBlock)sender;
+            ItemViewModel item = (ItemViewModel)textBlock.DataContext;
+            DictionaryRecord record = item.Record;
             PinyinColorizer p = new PinyinColorizer();
-            DictionaryItem item = (DictionaryItem)textBlock.DataContext;
-
-            string traditional = item.Traditional;
-            string simplified = item.Simplified;
-            string pinyin = string.Join(" ", item.Pinyin.ToArray());
-
-            DictionaryRecord record = new DictionaryRecord();
-            record.Chinese = new Chinese(traditional, simplified, pinyin);
-            record.English = item.Translation;
-
             p.Colorize(textBlock, record);
 
         }

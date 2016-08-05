@@ -13,6 +13,7 @@ using DuDuChinese.Models;
 using SevenZip.Compression.LZMA.WindowsPhone;
 using System.Reflection;
 using System.IO;
+using Template10.Services.NavigationService;
 
 namespace DuDuChinese.Views
 {
@@ -49,7 +50,10 @@ namespace DuDuChinese.Views
                         ExtractFile(file);
 
             if (inProgress == 0)
+            {
                 LoadDictionary();
+                RealizePreinstalledLists();
+            }  
 
             Query.Focus(FocusState.Programmatic);
         }
@@ -123,6 +127,12 @@ namespace DuDuChinese.Views
             Assembly assembly = this.GetType().GetTypeInfo().Assembly;
             AssemblyName assemblyName = new AssemblyName(assembly.FullName);
             Stream resourceStream = assembly.GetManifestResourceStream(assemblyName.Name + ".Assets." + file + ".lzma");
+
+            if (resourceStream == null)
+            {
+                var items = assembly.GetManifestResourceNames();
+                return;
+            }
 
             decoder.DecodeAsync(resourceStream, file);
         }
@@ -263,10 +273,10 @@ namespace DuDuChinese.Views
                         RecordToAdd = null; // cancel the incomplete add-to-list action
                     Query.Focus(FocusState.Programmatic);
                     break;
-                case 1: // Learn page
+                case 2: // List page
                     //ApplicationBar = ((ApplicationBar)Resources["AppBar_ListsPivotPage"]);
-                    //CreateDefaultList();
-                    //LoadLists();
+                    CreateDefaultList();
+                    LoadLists();
                     //if (RecordToAdd != null) // disable list creation while adding
                     //{
                     //    ((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = false;
@@ -360,27 +370,27 @@ namespace DuDuChinese.Views
 
         private void AddToListButton_Click(object sender, RoutedEventArgs e)
         {
-            //Button button = (Button)sender;
-            //int i = int.Parse(button.Tag.ToString());
-            //DictionaryRecord record = d[i];
-            //App app = (App)Application.Current;
-            //switch (app.ListManager.CountWriteable)
-            //{
-            //    case 0:
-            //        MessageBox.Show("You need to create a list before you can save items to it.");
-            //        return;
-            //    case 1:
-            //        DictionaryRecordList list = app.ListManager.DefaultList();
-            //        list.Add(record);
-            //        app.Transition = App.TransitionType.PostAdd;
-            //        app.TransitionData = record;
-            //        OpenList(list.Name);
-            //        break;
-            //    default:
-            //        RecordToAdd = record;
-            //        pivot.SelectedIndex = pivot.Items.IndexOf(ListsPane);
-            //        break;
-            //}
+            Button button = (Button)sender;
+            int i = int.Parse(button.Tag.ToString());
+            DictionaryRecord record = d[i];
+            App app = (App)Application.Current;
+            switch (app.ListManager.CountWriteable)
+            {
+                case 0:
+                    //MessageBox.Show("You need to create a list before you can save items to it.");
+                    return;
+                case 1:
+                    DictionaryRecordList list = app.ListManager.DefaultList();
+                    list.Add(record);
+                    //app.Transition = App.TransitionType.PostAdd;
+                    //app.TransitionData = record;
+                    OpenList(list.Name);
+                    break;
+                default:
+                    RecordToAdd = record;
+                    pivot.SelectedIndex = pivot.Items.IndexOf(ListsPane);
+                    break;
+            }
         }
 
         #endregion
@@ -480,48 +490,48 @@ namespace DuDuChinese.Views
 
         void RealizePreinstalledLists()
         {
-            //App app = (App)Application.Current;
-            //using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForApplication())
-            //{
-            //    foreach (string file in store.GetFileNames("*.list"))
-            //    {
-            //        Dictionary list = new Dictionary(file);
-            //        string name = list.Header[DictionaryRecordList.NameHeaderKey];
-            //        if (app.ListManager.ContainsKey(name))
-            //            continue;
-            //        foreach (DictionaryRecord r in list)
-            //            app.ListManager[name].Add(r);
-            //    }
-            //}
+            App app = (App)Application.Current;
+            using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForApplication())
+            {
+                foreach (string file in store.GetFileNames("*.list"))
+                {
+                    Dictionary list = new Dictionary(file);
+                    string name = list.Header[DictionaryRecordList.NameHeaderKey];
+                    if (app.ListManager.ContainsKey(name))
+                        continue;
+                    foreach (DictionaryRecord r in list)
+                        app.ListManager[name].Add(r);
+                }
+            }
         }
 
         void LoadLists()
         {
-            //ListViewModel lvm = new ListViewModel();
-            //lvm.LoadData();
-            //ListsPane.DataContext = lvm;
-            //if (pivot.SelectedItem.Equals(ListsPane))
-            //{
-            //    ((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = true; // (re-)enable add new list
-            //    ApplicationBar.IsVisible = true;
-            //    if (RecordToAdd != null)
-            //        lvm.AddInProgress = true;
-            //}
+            ListViewModel lvm = new ListViewModel();
+            lvm.LoadData();
+            ListsPane.DataContext = lvm;
+            if (pivot.SelectedItem.Equals(ListsPane))
+            {
+                //((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = true; // (re-)enable add new list
+                //ApplicationBar.IsVisible = true;
+                if (RecordToAdd != null)
+                    lvm.AddInProgress = true;
+            }
         }
 
         private void NewList_Click(object sender, EventArgs e)
         {
-            //ListViewModel lvm = (ListViewModel)ListsPane.DataContext;
-            //lvm.EditInProgress = true;
-            //ListItemViewModel item = new ListItemViewModel { Name = "", LineTwo = "", IsEditable = true };
-            //lvm.Items.Insert(0, item);
+            ListViewModel lvm = (ListViewModel)ListsPane.DataContext;
+            lvm.EditInProgress = true;
+            ListItemViewModel item = new ListItemViewModel { Name = "", LineTwo = "", IsEditable = true };
+            lvm.Items.Insert(0, item);
             //((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = false; // disable "multi-add"
-            //ListListBox.ScrollIntoView(ListListBox.Items[0]);
+            ListListBox.ScrollIntoView(ListListBox.Items[0]);
         }
 
         bool RenameListMode = false;
         string OldName;
-        private void RenameList_Click(object sender, EventArgs e)
+        private void RenameList_Click(object sender, RoutedEventArgs e)
         {
             //ListViewModel lvm = (ListViewModel)ListsPane.DataContext;
             //lvm.EditInProgress = true;
@@ -534,7 +544,7 @@ namespace DuDuChinese.Views
             //((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = false; // disable add during rename
         }
 
-        private void DeleteList_Click(object sender, EventArgs e)
+        private void DeleteList_Click(object sender, RoutedEventArgs e)
         {
             //MenuItem menuItem = (MenuItem)sender;
             //ListBoxItem lbItem = (ListBoxItem)ListListBox.ItemContainerGenerator.ContainerFromItem(menuItem.DataContext);
@@ -618,26 +628,29 @@ namespace DuDuChinese.Views
 
         private int FindListItemIndexByName(ListBox list, string name)
         {
-            //ListViewModel lvm = (ListViewModel)list.DataContext;
-            //int index = 0;
-            //foreach (ListItemViewModel item in lvm.Items)
-            //{
-            //    if (item.Name.Equals(name))
-            //        return index;
-            //    index++;
-            //}
+            ListViewModel lvm = (ListViewModel)list.DataContext;
+            int index = 0;
+            foreach (ListItemViewModel item in lvm.Items)
+            {
+                if (item.Name.Equals(name))
+                    return index;
+                index++;
+            }
             return -1;
         }
 
         private void ListListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //ListBox list = (ListBox)sender;
-            //int item = list.SelectedIndex;
-            //list.SelectedIndex = -1; // reset
-            //if (item == -1)
-            //    return;
+            ListBox list = (ListBox)sender;
+            int item = list.SelectedIndex;
+            list.SelectedIndex = -1; // reset
+            if (item == -1)
+                return;
 
-            //ListViewModel lvm = (ListViewModel)ListsPane.DataContext;
+            ListItemViewModel ivm = (ListItemViewModel)list.Items[item];
+            OpenList(ivm.Name);
+
+
             //if (lvm.EditInProgress) // don't open lists while adding/renaming
             //    return;
 
@@ -661,15 +674,17 @@ namespace DuDuChinese.Views
 
         void OpenList(string name)
         {
-            //App app = (App)Application.Current;
-            //if (!app.ListManager.ContainsKey(name))
-            //    return;
+            App app = (App)Application.Current;
+            if (!app.ListManager.ContainsKey(name))
+                return;
 
-            //if (app.ListManager[name].IsDeleted)
-            //{
-            //    app.ListManager[name].IsDeleted = false; // opening restores a deleted list
-            //    LoadLists(); // refresh to catch undelete
-            //}
+            if (app.ListManager[name].IsDeleted)
+            {
+                app.ListManager[name].IsDeleted = false; // opening restores a deleted list
+                LoadLists(); // refresh to catch undelete
+            }
+
+            ViewModel.GotoList(name);
 
             //string uri = String.Format("/ListPage.xaml?name={0}", name);
             //NavigationService.Navigate(new Uri(uri, UriKind.Relative));

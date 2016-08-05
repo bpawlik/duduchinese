@@ -102,6 +102,12 @@
     <EmbeddedResource Include="Assets\SogouLabDic.dic">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Assets\cedict_ts.u8.lzma" />
+    <EmbeddedResource Include="Assets\english.index.lzma" />
+    <EmbeddedResource Include="Assets\hanzi.index.lzma" />
+    <EmbeddedResource Include="Assets\hsklevel1.list.lzma" />
+    <EmbeddedResource Include="Assets\hsklevel2.list.lzma" />
+    <EmbeddedResource Include="Assets\pinyin.index.lzma" />
     <None Include="DuDuChinese_TemporaryKey.pfx" />
     <None Include="project.json" />
   </ItemGroup>
@@ -109,7 +115,13 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\BooleanColorConverter.cs" />
+    <Compile Include="Converters\BooleanDoubleConverter.cs" />
+    <Compile Include="Converters\MinimumLengthConverter.cs" />
+    <Compile Include="Converters\NotepadLookupConvertor.cs" />
+    <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="DictionaryRecordList.cs" />
+    <Compile Include="Converters\InvertedBoolConverter.cs" />
     <Compile Include="ListManager.cs" />
     <Compile Include="Models\DictionaryItem.cs" />
     <Compile Include="Models\DictionaryItemList.cs" />
@@ -123,6 +135,8 @@
     <Compile Include="Services\SettingsServices\SettingsService.cs" />
     <Compile Include="ViewModels\ExercisePageViewModel.cs" />
     <Compile Include="ViewModels\ItemViewModel.cs" />
+    <Compile Include="ViewModels\ListItemViewModel.cs" />
+    <Compile Include="ViewModels\ListViewModel.cs" />
     <Compile Include="ViewModels\ProgressPageViewModel.cs" />
     <Compile Include="ViewModels\ListPageViewModel.cs" />
     <Compile Include="ViewModels\ListsPageViewModel.cs" />
@@ -195,6 +209,10 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <None Include="SampleData\ListViewModelSampleData.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
     <Page Include="Styles\Custom.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

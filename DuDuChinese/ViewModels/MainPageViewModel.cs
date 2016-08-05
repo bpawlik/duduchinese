@@ -66,6 +66,11 @@ namespace DuDuChinese.ViewModels
         public void GotoLists() =>
             NavigationService.Navigate(typeof(Views.ListsPage));
 
+        public void GotoList(string name)
+        {
+            NavigationService.Navigate(typeof(Views.ListPage), name);
+        }
+
         public ObservableCollection<ItemViewModel> Items { get; private set; }
 
         public bool IsDataLoaded { get; private set; }

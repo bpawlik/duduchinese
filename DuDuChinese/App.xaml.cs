@@ -48,6 +48,9 @@ namespace DuDuChinese
         /// </summary>
         public Dictionary Dictionary;
 
+        // Learning engine shared between all pages
+        // LearningEngine
+
         public override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
             if (Window.Current.Content as ModalDialog == null)

@@ -164,6 +164,11 @@ namespace DuDuChinese.ViewModels
             //}
         }
 
+        public void OpenList(string name)
+        {
+
+        }
+
         public void GotoListPage() =>
             NavigationService.Navigate(typeof(Views.ListPage), selectedList);
 

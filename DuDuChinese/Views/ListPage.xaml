@@ -8,6 +8,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="using:DuDuChinese.Views"
       xmlns:m="using:DuDuChinese.Models"
+      xmlns:cc="using:CC_CEDICT.Universal"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:vm="using:DuDuChinese.ViewModels" x:Name="ThisPage"
       mc:Ignorable="d">
@@ -65,31 +66,51 @@
                       RelativePanel.Below="pageHeader"
                       VerticalScrollBarVisibility="Auto">
             <StackPanel>
-                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="List name:" />
                 <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{x:Bind ViewModel.Title, Mode=OneWay, FallbackValue=DesigntimeValue}" />
-                <ListBox x:Name="listView" ItemsSource="{x:Bind ViewModel.Words}"
+                <ListBox x:Name="listView" ItemsSource="{Binding Items}"
                          SelectionChanged="listView_SelectionChanged"
-                        HorizontalAlignment="Left"
-                        xmlns:m="using:DuDuChinese.Models">
+                        HorizontalAlignment="Left">
                     <ListBox.ItemTemplate>
-                        <DataTemplate x:DataType="m:DictionaryItem">
+                        <DataTemplate>
                             <StackPanel>
-                                <StackPanel x:Name="DefaultView">
-                                    <TextBlock Text="{x:Bind Pinyin, Converter={StaticResource StringFormatterValueConverter}}" Loaded="Pinyin_Loaded"  TextWrapping="NoWrap" TextTrimming="WordEllipsis" FontWeight="Bold" FontSize="16" />
-                                    <TextBlock Text="{x:Bind Translation, Converter={StaticResource StringFormatterValueConverter}}"  TextWrapping="NoWrap" TextTrimming="WordEllipsis" FontSize="12" />
-                                    <TextBlock Text="{x:Bind Simplified}" TextWrapping="NoWrap" TextTrimming="WordEllipsis" FontWeight="Bold" FontSize="16"/>
+                                <StackPanel x:Name="DefaultView" Margin="0,0,0,12">
+                                    <TextBlock Text="{Binding Pinyin}" Loaded="Pinyin_Loaded" TextWrapping="NoWrap" TextTrimming="WordEllipsis" />
+                                    <TextBlock Text="{Binding English}" TextWrapping="NoWrap" TextTrimming="WordEllipsis" Margin="12,-4,0,5" />
+                                    <TextBlock Text="{Binding Chinese}" TextWrapping="NoWrap" TextTrimming="WordEllipsis" Margin="12,-6,0,0" />
                                 </StackPanel>
-                                <StackPanel x:Name="ExpandedView" Visibility="Collapsed">
-                                    <TextBlock Text="{x:Bind Pinyin, Converter={StaticResource StringFormatterValueConverter}}" Loaded="Pinyin_Loaded" FontWeight="Bold" FontSize="16"/>
-                                    <TextBlock Text="{x:Bind Translation, Converter={StaticResource StringFormatterValueConverter}, ConverterParameter=N}" FontSize="12"/>
-                                    <TextBlock Text="{x:Bind Simplified}" FontWeight="Bold" FontSize="16"/>
+                                <StackPanel x:Name="ExpandedView" Margin="0,0,0,12" Visibility="Collapsed">
+                                    <TextBlock Text="{Binding Pinyin}" Loaded="Pinyin_Loaded" TextWrapping="Wrap" TextTrimming="WordEllipsis" />
+                                    <TextBlock Text="{Binding EnglishWithNewlines}" TextWrapping="Wrap" TextTrimming="WordEllipsis" Margin="12,-4,0,5" />
+                                    <TextBlock Text="{Binding Chinese}" TextWrapping="Wrap" TextTrimming="WordEllipsis" Margin="12,-6,0,0" />
                                 </StackPanel>
                                 <StackPanel x:Name="ActionPanel" Margin="0,-5,0,0" Orientation="Horizontal" Visibility="Collapsed">
-                                    <!--<c4f:RoundButton x:Name="PlayButton" ImageSource="/kuaishuo2;component/images/appbar.transport.play.rest.png" IsEnabled="{Binding ElementName=NotepadPane, Path=DataContext.NetworkAvailable}" Margin="0,0,0,0" Click="PlayButton_Click"/>
-                                    <c4f:RoundButton x:Name="CopyButton" ImageSource="/kuaishuo2;component/images/CopyButton.png" Margin="0,0,0,0" Click="CopyButton_Click"/>
-                                    <c4f:RoundButton x:Name="DeleteButton" ImageSource="/kuaishuo2;component/images/feature.delete.png" Margin="0,0,0,0" Click="DeleteButton_Click"/>
-                                    <c4f:RoundButton x:Name="SearchButton" ImageSource="/kuaishuo2;component/images/appbar.feature.search.rest.png" Tag="{Binding Index}" Margin="0,0,0,0" Click="SearchButton_Click"/>
-                                    <c4f:RoundButton x:Name="DecomposeButton" ImageSource="/kuaishuo2;component/images/Scissors.png" Margin="0,0,0,0" Click="DecomposeButton_Click" IsEnabled="{Binding Chinese, Converter={StaticResource MinLengthChecker}}"/>-->
+
+                                    <!--<Button x:Name="PlayButton" Margin="0,0,0,0" Click="PlayButton_Click" Background="Transparent">
+                                        <Button.Content>
+                                            <SymbolIcon Symbol="Play" />
+                                        </Button.Content>
+                                    </Button>
+                                    <Button x:Name="CopyButton" Margin="0,0,0,0" Background="Transparent" Click="CopyButton_Click">
+                                        <Button.Content>
+                                            <SymbolIcon Symbol="Copy" />
+                                        </Button.Content>
+                                    </Button>
+                                    <Button x:Name="AddToListButton" Margin="0,0,0,0" Background="Transparent" Click="AddToListButton_Click" Tag="{Binding Index}">
+                                        <Button.Content>
+                                            <SymbolIcon Symbol="Add" />
+                                        </Button.Content>
+                                    </Button>
+                                    <Button x:Name="SearchButton" Margin="0,0,0,0" Background="Transparent" Click="SearchButton_Click">
+                                        <Button.Content>
+                                            <SymbolIcon Symbol="Find" />
+                                        </Button.Content>
+                                    </Button>
+                                    <Button x:Name="DecomposeButton" Margin="0,0,0,0" Background="Transparent" Click="DecomposeButton_Click">
+                                        <Button.Content>
+                                            <SymbolIcon Symbol="Cut" />
+                                        </Button.Content>
+                                    </Button>-->
+                                    
                                 </StackPanel>
                             </StackPanel>
                         </DataTemplate>

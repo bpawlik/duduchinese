@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.IsolatedStorage;
+using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace CC_CEDICT.Universal
 {
@@ -12,8 +14,28 @@ namespace CC_CEDICT.Universal
 
         public Dictionary(string path)
         {
+            //ReadFile(path);
+
             using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForApplication())
                 Read(new IsolatedStorageFileStream(path, FileMode.Open, store));
+        }
+
+        private async void ReadFile(string path)
+        {
+            StorageFolder data_folder = ApplicationData.Current.LocalFolder;
+            if (File.Exists(Path.Combine(data_folder.Path, path)))
+            {
+                StorageFile file = await data_folder.GetFileAsync(path);
+                using (Stream stream = await file.OpenStreamForReadAsync())
+                {
+                    if (stream.CanRead)
+                    {
+                        Read(stream);
+                    }
+                }
+            }
+
+            await Task.CompletedTask;
         }
 
         protected override bool ProcessHeader(ref byte[] data, int offset, int length)

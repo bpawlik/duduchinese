@@ -94,34 +94,18 @@
                       Tapped="{x:Bind ViewModel.OnItemClick}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="m:DictionaryItemList" >
-                        <TextBlock Text="{x:Bind Title}" />
-                        <!--<Grid RightTapped="Grid_RightTapped" >
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,14" >
+                            <TextBlock Text="{x:Bind Title}" />
                             <FlyoutBase.AttachedFlyout>
-                                <MenuFlyout>
-                                    <MenuFlyoutItem x:Name="EditButton"
-                                                            Text="Edit"
-                                                            Click="EditButton_Click"/>
-                                    <MenuFlyoutItem x:Name="DeleteButton"
-                                                            Text="Delete"
-                                                            Click="DeleteButton_Click"/>
+                                <MenuFlyout >
+                                    <MenuFlyoutItem Text="Rename" Click="RenameList_Click"/>
+                                    <MenuFlyoutItem Text="Delete" Click="DeleteList_Click" />
                                 </MenuFlyout>
                             </FlyoutBase.AttachedFlyout>
-                            <TextBlock Text="{x:Bind Title}" />
-                        </Grid>-->
-
+                        </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-
-            <!--<ListView x:Name="listView" ItemsSource="{x:Bind ViewModel.Words}" Grid.Column="1"
-                     xmlns:m="using:DuDuChinese.Models" >
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="m:DictionaryItem">
-                        <TextBlock Text="{x:Bind LastName}"/>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>-->
-
         </Grid>
     </RelativePanel>
 </Page>

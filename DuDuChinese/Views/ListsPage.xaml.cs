@@ -44,5 +44,15 @@ namespace DuDuChinese.Views
         {
 
         }
+
+        private void RenameList_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DeleteList_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
