@@ -8,6 +8,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="using:DuDuChinese.Views"
       xmlns:c="using:DuDuChinese.Converters"
+      xmlns:core="using:Template10.Services.PopupService"
+      xmlns:behaviors="using:Template10.Behaviors"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:vm="using:DuDuChinese.ViewModels" mc:Ignorable="d">
 
@@ -173,14 +175,31 @@
                              SelectionChanged="ListListBox_SelectionChanged">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" >
+                                <StackPanel Holding="ListItem_Holding"  RightTapped="ListItem_RightTapped"  Orientation="Horizontal" >
                                     <FlyoutBase.AttachedFlyout>
-                                        <MenuFlyout >
-                                            <MenuFlyoutItem Text="rename" Click="RenameList_Click"/>
-                                            <MenuFlyoutItem Text="delete" Click="DeleteList_Click" IsEnabled="{Binding IsDeleted, Converter={StaticResource InvertedBoolean}}"/>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem x:Name="EditButton"
+                                                        Text="Rename"
+                                                        Click="RenameList_Click"/>
+                                            <MenuFlyoutItem x:Name="DeleteButton"
+                                                        Text="Delete"
+                                                        Click="DeleteList_Click"/>
+                                            <ToggleMenuFlyoutItem x:Name="SetAsDefault"
+                                                        Text="Set as default"
+                                                        Click="SetAsDefaultList_Click"
+                                                        IsChecked="{Binding IsDefault}" />
                                         </MenuFlyout>
                                     </FlyoutBase.AttachedFlyout>
-                                    <Border Width="76" Background="Transparent">
+                                    <Border Width="76" Background="Transparent" Visibility="{Binding IsDefault, Converter={StaticResource InvertedVisibility}}">
+                                        <StackPanel>
+                                            <TextBlock
+                                                Text="{Binding LineTwo}"
+                                                Width="75"
+                                                TextAlignment="Center"
+                                                Visibility="{Binding ElementName=ListsPane, Path=DataContext.AddInProgress, Converter={StaticResource InvertedVisibility}}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Width="76" Background="LightSalmon" Visibility="{Binding IsDefault, Converter={StaticResource VisibilityConverter}}">
                                         <StackPanel>
                                             <TextBlock
                                                 Text="{Binding LineTwo}"

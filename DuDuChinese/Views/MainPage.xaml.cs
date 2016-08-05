@@ -14,6 +14,8 @@ using SevenZip.Compression.LZMA.WindowsPhone;
 using System.Reflection;
 using System.IO;
 using Template10.Services.NavigationService;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace DuDuChinese.Views
 {
@@ -367,13 +369,27 @@ namespace DuDuChinese.Views
         /// Defines the record to be added to a list. While non-null we are in "add-to-list" mode.
         /// </summary>
         DictionaryRecord RecordToAdd = null;
+        public string TextNotification { get; set; } = "";
 
-        private void AddToListButton_Click(object sender, RoutedEventArgs e)
+        private async void AddToListButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
             int i = int.Parse(button.Tag.ToString());
             DictionaryRecord record = d[i];
             App app = (App)Application.Current;
+
+            // Find default list
+            ListViewModel lvm = (ListViewModel)ListListBox.DataContext;
+            ListItemViewModel defaultList = null;
+            foreach (ListItemViewModel item in lvm.Items)
+            {
+                if (item.IsDefault)
+                {
+                    defaultList = item;
+                    break;
+                }
+            }
+
             switch (app.ListManager.CountWriteable)
             {
                 case 0:
@@ -387,8 +403,29 @@ namespace DuDuChinese.Views
                     OpenList(list.Name);
                     break;
                 default:
-                    RecordToAdd = record;
-                    pivot.SelectedIndex = pivot.Items.IndexOf(ListsPane);
+                    if (defaultList != null)
+                    {
+                        DictionaryRecordList target = app.ListManager[defaultList.Name];
+                        if (target.IsDeleted)
+                            return;
+                        target.Add(record);
+                        LoadLists();
+                        TextNotification = "Item added to the default list: " + defaultList.Name;
+
+                        ContentDialog dialog = new ContentDialog();
+                        dialog.Content = "Item added to the default list: " + defaultList.Name;
+                        dialog.Title = "Success";
+                        dialog.PrimaryButtonText = "OK";
+                        dialog.CanDrag = true;
+
+                        await dialog.ShowAsync();
+                    }
+                    else
+                    {
+                        RecordToAdd = record;
+                        pivot.SelectedIndex = pivot.Items.IndexOf(ListsPane);
+                    }
+
                     break;
             }
         }
@@ -547,26 +584,74 @@ namespace DuDuChinese.Views
         string OldName;
         private void RenameList_Click(object sender, RoutedEventArgs e)
         {
-            //ListViewModel lvm = (ListViewModel)ListsPane.DataContext;
-            //lvm.EditInProgress = true;
-            //MenuItem menuItem = (MenuItem)sender;
-            //ListBoxItem lbItem = (ListBoxItem)ListListBox.ItemContainerGenerator.ContainerFromItem(menuItem.DataContext);
-            //ListItemViewModel listItem = (ListItemViewModel)lbItem.DataContext;
-            //OldName = listItem.Name;
-            //RenameListMode = true; // turn on editing mode
-            //listItem.IsEditable = true;
+            ListViewModel lvm = (ListViewModel)ListsPane.DataContext;
+            lvm.EditInProgress = true;
+            var datacontext = (e.OriginalSource as FrameworkElement).DataContext;
+            ListBoxItem lbItem = (ListBoxItem)ListListBox.ItemContainerGenerator.ContainerFromItem(datacontext);
+            ListItemViewModel listItem = (ListItemViewModel)lbItem.DataContext;
+            OldName = listItem.Name;
+            RenameListMode = true; // turn on editing mode
+            listItem.IsEditable = true;
             //((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = false; // disable add during rename
         }
 
         private void DeleteList_Click(object sender, RoutedEventArgs e)
         {
-            //MenuItem menuItem = (MenuItem)sender;
-            //ListBoxItem lbItem = (ListBoxItem)ListListBox.ItemContainerGenerator.ContainerFromItem(menuItem.DataContext);
-            //ListItemViewModel listItem = (ListItemViewModel)lbItem.DataContext;
-            //App app = (App)Application.Current;
-            //app.ListManager.Remove(listItem.Name);
-            //LoadLists();
+            var datacontext = (e.OriginalSource as FrameworkElement).DataContext;
+            ListBoxItem lbItem = (ListBoxItem)ListListBox.ItemContainerGenerator.ContainerFromItem(datacontext);
+            ListItemViewModel listItem = (ListItemViewModel)lbItem.DataContext;
+            App app = (App)Application.Current;
+            app.ListManager.Remove(listItem.Name);
+            LoadLists();
         }
+
+        private void ListItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            FlyoutBase flyoutBase = FlyoutBase.GetAttachedFlyout(senderElement);
+            flyoutBase.ShowAt(senderElement);
+        }
+
+        private void ListItem_Holding(object sender, HoldingRoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            FlyoutBase flyoutBase = FlyoutBase.GetAttachedFlyout(senderElement);
+            flyoutBase.ShowAt(senderElement);
+        }
+
+        private void SetAsDefaultList_Click(object sender, RoutedEventArgs e)
+        {
+            // Iterate through all item list and remove default options
+            ListViewModel lvm = (ListViewModel)ListListBox.DataContext;
+            foreach (ListItemViewModel item in lvm.Items)
+            {
+                //FrameworkElement senderElement = item as FrameworkElement;
+                //FlyoutBase flyoutBase = FlyoutBase.GetAttachedFlyout(senderElement);
+                //bool isChecked = (bool)flyoutBase.ReadLocalValue(ToggleMenuFlyoutItem.IsCheckedProperty);
+
+                //if (isChecked)
+                //{
+                //    flyoutBase.SetValue(ToggleMenuFlyoutItem.IsCheckedProperty, false);
+                //}
+
+                item.IsDefault = false;
+            }
+
+            var datacontext = (e.OriginalSource as FrameworkElement).DataContext;
+            ListBoxItem lbItem = (ListBoxItem)ListListBox.ItemContainerGenerator.ContainerFromItem(datacontext);
+            ListItemViewModel listItem = (ListItemViewModel)lbItem.DataContext;
+            listItem.IsDefault = true;
+
+            //ToggleMenuFlyoutItem flyoutItem = sender as ToggleMenuFlyoutItem;
+            //flyoutItem.IsChecked = true;
+        }
+
+        //private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    var datacontext = (e.OriginalSource as FrameworkElement).DataContext;
+
+        //    //this datacontext is probably some object of some type T
+        //}
 
         void ListEdit_Loaded(object sender, RoutedEventArgs e)
         {
@@ -678,6 +763,7 @@ namespace DuDuChinese.Views
                 //app.TransitionData = RecordToAdd;
                 RecordToAdd = null; // come out of add-to-list mode
                 LoadLists();
+                TextNotification = "Item added to the list: " + ivm.Name;
             }
 
             lvm.AddInProgress = false;

@@ -76,5 +76,20 @@ namespace DuDuChinese.ViewModels
                     Set(ref _isDeleted, value);
             }
         }
+
+
+        private bool _isDefault = false;
+        public bool IsDefault
+        {
+            get
+            {
+                return _isDefault;
+            }
+            set
+            {
+                if (value != _isDefault)
+                    Set(ref _isDefault, value);
+            }
+        }
     }
 }
