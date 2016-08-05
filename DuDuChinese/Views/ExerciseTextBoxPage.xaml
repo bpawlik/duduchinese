@@ -62,37 +62,41 @@
                       RelativePanel.AlignLeftWithPanel="True"
                       RelativePanel.AlignRightWithPanel="True"
                       RelativePanel.Below="pageHeader"
+                      Background="Transparent"
+                      Width="Auto"
                       VerticalScrollBarVisibility="Auto">
-            <Grid HorizontalAlignment="Left" Margin="50, 0">
+            <Grid HorizontalAlignment="Left" Margin="10, 0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50" />
-                    <RowDefinition Height="250"/>
+                    <RowDefinition MinHeight="350"/>
                     <RowDefinition Height="80"/>
                     <RowDefinition Height="50"/>
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <TextBlock x:Name="statusTextBlock" Grid.Row="0" Text="{x:Bind ViewModel.Status, Mode=TwoWay}" Foreground="{x:Bind ViewModel.FgColour, Mode=TwoWay}" FontSize="20"/>
-                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="20">
-                    <ScrollViewer>
-                        <ListBox x:Name="Results" ItemsSource="{Binding Items}"
-                             Grid.Row="1" VirtualizingStackPanel.VirtualizationMode="Standard">
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10">
+                    <ScrollViewer Background="Transparent" MinWidth="300">
+                        <ListBox x:Name="Results" ItemsSource="{x:Bind ViewModel.Items}"
+                                 d:DataContext="{d:DesignData SampleData/MainViewModelSampleData.xaml}"
+                                 Grid.Row="1" VirtualizingStackPanel.VirtualizationMode="Standard"
+                                 Background="Transparent" >
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel>
-                                        <StackPanel x:Name="ExpandedView" Margin="0,0,0,12">
+                                        <StackPanel x:Name="ExpandedView" >
                                             <TextBlock Text="{Binding Pinyin}"
                                                        Loaded="Pinyin_Loaded"
                                                        Visibility="{Binding PinyinVisible, Mode=TwoWay}"
-                                                       TextWrapping="Wrap" TextTrimming="WordEllipsis" />
+                                                       TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="26"  />
                                             <TextBlock Text="{Binding EnglishWithNewlines}"
                                                        Visibility="{Binding TranslationVisible, Mode=TwoWay}"
-                                                       TextWrapping="Wrap" TextTrimming="WordEllipsis" Margin="12,-4,0,5" />
+                                                       TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="22" />
                                             <TextBlock Text="{Binding Chinese}"
                                                        Visibility="{Binding SimplifiedVisible, Mode=TwoWay}"
-                                                       TextWrapping="Wrap" TextTrimming="WordEllipsis" Margin="12,-6,0,0" />
+                                                       TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="26" />
                                         </StackPanel>
                                     </StackPanel>
                                 </DataTemplate>
@@ -100,7 +104,8 @@
                         </ListBox>
                     </ScrollViewer>
                 </StackPanel>
-                <TextBox x:Name="inputTextBox" Grid.Row="2" Margin="20"
+                <TextBox x:Name="inputTextBox" Grid.Row="2" Margin="20" Width="200"
+                         HorizontalAlignment="Left"
                          KeyUp="{x:Bind TextBox_KeyDown}"
                          Background="{x:Bind ViewModel.BgColour, Mode=TwoWay}"
                          Text="{x:Bind ViewModel.InputText, Mode=TwoWay}"

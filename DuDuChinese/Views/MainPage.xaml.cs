@@ -27,6 +27,7 @@ namespace DuDuChinese.Views
             NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
 
             SearchPane.DataContext = ViewModel;
+
             //TextToSpeech dummy = new TextToSpeech(null); // to initialise XNA framework
             this.Loaded += new RoutedEventHandler(MainPage_Loaded);
         }
@@ -55,6 +56,7 @@ namespace DuDuChinese.Views
             {
                 LoadDictionary();
                 RealizePreinstalledLists();
+                LoadLists();
             }  
 
             Query.Focus(FocusState.Programmatic);
@@ -274,21 +276,18 @@ namespace DuDuChinese.Views
                     if (RecordToAdd != null)
                         RecordToAdd = null; // cancel the incomplete add-to-list action
                     Query.Focus(FocusState.Programmatic);
+                    if (ListsPane.DataContext != null && ListsPane.DataContext is ListViewModel)
+                        (ListsPane.DataContext as ListViewModel).IsActive = false;
+                    break;
+                case 1:
+                    if (ListsPane.DataContext != null && ListsPane.DataContext is ListViewModel)
+                        (ListsPane.DataContext as ListViewModel).IsActive = false;
                     break;
                 case 2: // List page
                     //ApplicationBar = ((ApplicationBar)Resources["AppBar_ListsPivotPage"]);
                     CreateDefaultList();
                     LoadLists();
-                    //if (RecordToAdd != null) // disable list creation while adding
-                    //{
-                    //    ((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = false;
-                    //    ApplicationBar.Mode = ApplicationBarMode.Minimized;
-                    //}
-                    //else
-                    //{
-                    //    ((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = true;
-                    //    ApplicationBar.Mode = ApplicationBarMode.Default;
-                    //}
+                    (ListsPane.DataContext as ListViewModel).IsActive = true;
                     break;
             }
             //ApplicationBar.IsVisible = true;
@@ -571,6 +570,11 @@ namespace DuDuChinese.Views
             lvm.Items.Insert(0, item);
             //((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = false; // disable "multi-add"
             ListListBox.ScrollIntoView(ListListBox.Items[0]);
+        }
+
+        private void AppBarUploadButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
         private void AppBarAddButton_Click(object sender, RoutedEventArgs e)

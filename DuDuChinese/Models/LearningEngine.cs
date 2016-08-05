@@ -244,7 +244,7 @@ namespace DuDuChinese.Models
 
             if (correctCount > 0 || wrongCount > 0)
             {
-                string score = "Total: " + (100.0 * Convert.ToDouble(correctCount) / Convert.ToDouble(totalItems)).ToString() + " %" + Environment.NewLine;
+                string score = "Total: " + ((int)(100.0 * Convert.ToDouble(correctCount) / Convert.ToDouble(totalItems))).ToString() + " %" + Environment.NewLine;
                 string correct = "Correct: " + correctCount.ToString() + Environment.NewLine;
                 string wrong = "Wrong: " + wrongCount.ToString() + Environment.NewLine;
                 

@@ -80,10 +80,6 @@ namespace DuDuChinese.ViewModels
             ClearData();
             //this.NetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
 
-            //Settings settings = new Settings();
-            //bool trad = settings.TraditionalChineseSetting;
-            bool trad = false;
-
             foreach (DictionaryRecord r in items)
             {
                 this.Items.Add(new ItemViewModel()

@@ -31,6 +31,20 @@ namespace DuDuChinese.ViewModels
             }
         }
 
+        private bool _IsActive = false;
+        public bool IsActive
+        {
+            get
+            {
+                return _IsActive;
+            }
+            set
+            {
+                if (value != _IsActive)
+                    Set(ref _IsActive, value);
+            }
+        }
+
         private bool _AddInProgress = false;
         public bool AddInProgress
         {

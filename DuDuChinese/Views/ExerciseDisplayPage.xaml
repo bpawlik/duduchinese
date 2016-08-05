@@ -58,38 +58,37 @@
                              RelativePanel.AlignTopWithPanel="True" Text="Exercise Page" />
 
         <!--  content  -->
-        <ScrollViewer Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"
+        <ScrollViewer RelativePanel.AlignBottomWithPanel="True"
                       RelativePanel.AlignLeftWithPanel="True"
                       RelativePanel.AlignRightWithPanel="True"
                       RelativePanel.Below="pageHeader"
+                      Background="Transparent"
                       VerticalScrollBarVisibility="Auto">
-            <Grid HorizontalAlignment="Left" Margin="50">
+            <Grid HorizontalAlignment="Left" Margin="10, 50">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="300" />
+                    <RowDefinition Height="400" />
                     <RowDefinition Height="50"/>
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="20">
-                    <!--<SymbolIcon Symbol="Audio" Margin="0,0,12,0"/>-->
-                    <!--<StackPanel>
-                        <TextBlock Text="{x:Bind ViewModel.CurrentItem.Pinyin, Converter={StaticResource StringFormatterValueConverter}, Mode=TwoWay}" FontWeight="Bold" FontSize="20"/>
-                        <TextBlock Text="{x:Bind ViewModel.CurrentItem.Translation, Converter={StaticResource StringFormatterValueConverter}, ConverterParameter=X, Mode=TwoWay}" FontSize="16"/>
-                        <TextBlock Text="{x:Bind ViewModel.CurrentItem.Simplified, Mode=TwoWay}" FontWeight="Bold" FontSize="30"/>
-                    </StackPanel>-->
-                    <ListBox x:Name="Results" ItemsSource="{Binding Items}"
-                             Grid.Row="1" VirtualizingStackPanel.VirtualizationMode="Standard">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel>
-                                    <StackPanel x:Name="ExpandedView" Margin="0,0,0,12">
-                                        <TextBlock Text="{Binding Pinyin}" Loaded="Pinyin_Loaded" TextWrapping="Wrap" TextTrimming="WordEllipsis" />
-                                        <TextBlock Text="{Binding EnglishWithNewlines}" TextWrapping="Wrap" TextTrimming="WordEllipsis" Margin="12,-4,0,5" />
-                                        <TextBlock Text="{Binding Chinese}" TextWrapping="Wrap" TextTrimming="WordEllipsis" Margin="12,-6,0,0" />
+                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10">
+                    <ScrollViewer Background="Transparent" MinWidth="300">
+                        <ListBox x:Name="Results" ItemsSource="{Binding Items}"
+                                 d:DataContext="{d:DesignData SampleData/MainViewModelSampleData.xaml}"
+                                 Background="Transparent"
+                                 Grid.Row="1" VirtualizingStackPanel.VirtualizationMode="Standard">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <StackPanel x:Name="ExpandedView">
+                                            <TextBlock Text="{Binding Pinyin}" Loaded="Pinyin_Loaded" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="26"  />
+                                            <TextBlock Text="{Binding EnglishWithNewlines}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="22"  />
+                                            <TextBlock Text="{Binding Chinese}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="26" />
+                                        </StackPanel>
                                     </StackPanel>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
                 </StackPanel>
                 <!--<TextBlock HorizontalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}" Text="{x:Bind ViewModel.Text}" />-->
                 <StackPanel Grid.Row="1">
