@@ -21,6 +21,7 @@ namespace DuDuChinese
         public class ManagedList : DictionaryRecordList
         {
             public string SavePath;
+            public string SaveFilename;
             int _Identifier = -1;
 
             public ManagedList(Dictionary dictionary)
@@ -41,7 +42,7 @@ namespace DuDuChinese
                 get
                 {
                     if (_Identifier < 0)
-                        _Identifier = int.Parse(Path.GetFileNameWithoutExtension(this.SavePath));
+                        _Identifier = int.Parse(Path.GetFileNameWithoutExtension(this.SaveFilename));
                     return _Identifier;
                 }
             }
@@ -53,10 +54,10 @@ namespace DuDuChinese
                     if (IsDeleted || !IsModified) // save not required
                         return;
 
-                    Debug.WriteLine("ManagedList.Save(): {0} ({1} entries)", SavePath, this.Count);
+                    Debug.WriteLine("ManagedList.Save(): {0} ({1} entries)", SaveFilename, this.Count);
                     StorageFolder dataFolder = ApplicationData.Current.LocalFolder;
                     StorageFolder listsFolder = await dataFolder.GetFolderAsync(_ListsDirectory);
-                    StorageFile file = await listsFolder.CreateFileAsync(SavePath, CreationCollisionOption.ReplaceExisting);
+                    StorageFile file = await listsFolder.CreateFileAsync(SaveFilename, CreationCollisionOption.ReplaceExisting);
                     using (Stream stream = await file.OpenStreamForWriteAsync())
                     {
                         byte[] data = Encoding.UTF8.GetBytes(this.ToString());
@@ -106,6 +107,7 @@ namespace DuDuChinese
                         Dictionary dictionary = new Dictionary(path);
                         ManagedList list = new ManagedList(dictionary);
                         list.SavePath = path;
+                        list.SaveFilename = file;
                         base.Add(list.Name, list);
                         if (list.Identifier > MaxListIdentifier)
                             MaxListIdentifier = list.Identifier;
@@ -137,7 +139,8 @@ namespace DuDuChinese
                 if (!this.ContainsKey(name)) // auto-create list
                 {
                     ManagedList list = new ManagedList(name);
-                    list.SavePath = String.Format("{0}.list", ++MaxListIdentifier);
+                    list.SaveFilename = String.Format("{0}.list", ++MaxListIdentifier);
+                    list.SavePath = String.Format("{0}/{1}", ListsDirectory, list.SaveFilename);
                     base.Add(name, list);
                 }
                 return base[name];
