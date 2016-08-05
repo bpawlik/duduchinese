@@ -1,5 +1,6 @@
 ﻿using Template10.Mvvm;
 using CC_CEDICT.Universal;
+using Windows.UI.Xaml;
 
 namespace DuDuChinese.ViewModels
 {
@@ -85,6 +86,28 @@ namespace DuDuChinese.ViewModels
                     Set(ref this._index, value);
                 }
             }
+        }
+
+        // Visibility flags
+        private Visibility pinyinVisible = Visibility.Collapsed;
+        public Visibility PinyinVisible
+        {
+            get { return this.pinyinVisible; }
+            set { this.Set(ref this.pinyinVisible, value); }
+        }
+
+        private Visibility translationVisible = Visibility.Collapsed;
+        public Visibility TranslationVisible
+        {
+            get { return this.translationVisible; }
+            set { this.Set(ref this.translationVisible, value); }
+        }
+
+        private Visibility simplifiedVisible = Visibility.Collapsed;
+        public Visibility SimplifiedVisible
+        {
+            get { return this.simplifiedVisible; }
+            set { this.Set(ref this.simplifiedVisible, value); }
         }
 
         //public event PropertyChangedEventHandler PropertyChanged;

@@ -91,15 +91,10 @@
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Select list:" VerticalAlignment="Top" RenderTransformOrigin="1.178,6.017" Margin="10,103,-42.667,-110"/>
         <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Number of items:" VerticalAlignment="Top" RenderTransformOrigin="1.178,6.017" Margin="10,139,-43.333,-126"/>
         <ComboBox x:Name="comboBoxLists" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="141" Margin="168,98,-245,-98"
-                  ItemsSource="{x:Bind ViewModel.Lists}"
+                  ItemsSource="{Binding Items}"
                   SelectionChanged="{x:Bind ViewModel.SelectedListChanged}"
                   SelectedIndex="{x:Bind ViewModel.SelectedListIndex}"
                   xmlns:m="using:DuDuChinese.Models">
-            <ComboBox.ItemTemplate>
-                <DataTemplate x:DataType="m:DictionaryItemList" >
-                    <TextBlock Text="{x:Bind Title}" />
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
         </ComboBox>
         <RadioButton x:Name="radioButtonWords" Content="Words" IsChecked="True" Tag="0" GroupName="mode" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="120" Margin="10,176,-10,-176" Checked="{x:Bind ViewModel.radioButton_Checked}" />
         <RadioButton x:Name="radioButtonSentences" Content="Sentences" IsChecked="False" Tag="1" GroupName="mode" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="120" Margin="168,176,-168,-176" Checked="{x:Bind ViewModel.radioButton_Checked}" />

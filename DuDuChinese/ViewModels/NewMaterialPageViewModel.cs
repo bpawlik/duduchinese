@@ -14,8 +14,11 @@ namespace DuDuChinese.ViewModels
 {
     public class NewMaterialPageViewModel : ViewModelBase
     {
+        public ObservableCollection<string> Items { get; private set; }
+
         public NewMaterialPageViewModel()
         {
+            this.Items = new ObservableCollection<string>();
         }
 
         public ObservableCollection<DictionaryItemList> Lists { get; private set; } = null;
@@ -39,15 +42,22 @@ namespace DuDuChinese.ViewModels
             // Reset learning engine
             LearningEngine.Reset();
 
-            // Refresh lists
-            this.Lists = new ObservableCollection<DictionaryItemList>();
-            if (this.Lists.Count == 0)
-                foreach (var key in DictionaryManager.Lists.Keys)
-                    this.Lists.Add(DictionaryManager.Lists[key]);
+            App app = (App)Application.Current;
+            this.Items.Clear();
+            foreach (string key in app.ListManager.Keys)
+            {
+                this.Items.Add(key);
+            }
 
-            // Select index
-            if (this.Lists.Count > 0)
-                this.SelectedListIndex = 0;
+            //// Refresh lists
+            //this.Lists = new ObservableCollection<DictionaryItemList>();
+            //if (this.Lists.Count == 0)
+            //    foreach (var key in DictionaryManager.Lists.Keys)
+            //        this.Lists.Add(DictionaryManager.Lists[key]);
+
+            //// Select index
+            //if (this.Lists.Count > 0)
+            //    this.SelectedListIndex = 0;
 
             await Task.CompletedTask;
         }
@@ -94,7 +104,9 @@ namespace DuDuChinese.ViewModels
         public void SelectedListChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox cb = sender as ComboBox;
-            LearningEngine.CurrentItemList = (DictionaryItemList)cb.SelectedItem;
+            App app = (App)Application.Current;
+            if (cb.SelectedValue != null)
+                LearningEngine.CurrentItemList = app.ListManager[cb.SelectedValue.ToString()];
             this.selectedListIndex = cb.SelectedIndex;
         }
 

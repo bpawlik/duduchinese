@@ -527,18 +527,25 @@ namespace DuDuChinese.Views
 
         void RealizePreinstalledLists()
         {
-            App app = (App)Application.Current;
-            using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForApplication())
+            try
             {
-                foreach (string file in store.GetFileNames("*.list"))
+                App app = (App)Application.Current;
+                using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForApplication())
                 {
-                    Dictionary list = new Dictionary(file);
-                    string name = list.Header[DictionaryRecordList.NameHeaderKey];
-                    if (app.ListManager.ContainsKey(name))
-                        continue;
-                    foreach (DictionaryRecord r in list)
-                        app.ListManager[name].Add(r);
+                    foreach (string file in store.GetFileNames("*.list"))
+                    {
+                        Dictionary list = new Dictionary(file);
+                        string name = list.Header[DictionaryRecordList.NameHeaderKey];
+                        if (app.ListManager.ContainsKey(name))
+                            continue;
+                        foreach (DictionaryRecord r in list)
+                            app.ListManager[name].Add(r);
+                    }
                 }
+            }
+            catch
+            {
+                System.Diagnostics.Debug.WriteLine("Couldn't load preinstalled lists!");
             }
         }
 

@@ -86,18 +86,13 @@ namespace DuDuChinese.ViewModels
 
             foreach (DictionaryRecord r in items)
             {
-                // determine what Hanzi to show to the user
-                string chinese = (!trad || r.Chinese.Simplified.Equals(r.Chinese.Traditional))
-                    ? r.Chinese.Simplified                                                     // show only simplified
-                    : String.Format("{0} ({1})", r.Chinese.Simplified, r.Chinese.Traditional); // else "simple (trad)"
-
                 this.Items.Add(new ItemViewModel()
                 {
                     Record = r,
                     Pinyin = r.Chinese.Pinyin,
                     English = String.Join("; ", r.English),
                     EnglishWithNewlines = String.Join("\n", r.English),
-                    Chinese = chinese,
+                    Chinese = r.Chinese.Simplified,
                     Index = r.Index
                 });
             }

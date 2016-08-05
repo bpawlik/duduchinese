@@ -77,17 +77,27 @@
                 <TextBlock x:Name="statusTextBlock" Grid.Row="0" Text="{x:Bind ViewModel.Status, Mode=TwoWay}" Foreground="{x:Bind ViewModel.FgColour, Mode=TwoWay}" FontSize="20"/>
                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="20">
                     <ScrollViewer>
-                        <StackPanel>
-                            <TextBlock x:Name="pinyinTextBox"
-                                       Text="{x:Bind ViewModel.CurrentItem.Pinyin, Converter={StaticResource StringFormatterValueConverter}, Mode=TwoWay}"
-                                       Visibility="{x:Bind ViewModel.PinyinVisible, Mode=TwoWay}" FontWeight="Bold" FontSize="20"/>
-                            <TextBlock x:Name="translationTextBox"
-                                       Text="{x:Bind ViewModel.CurrentItem.Translation, Converter={StaticResource StringFormatterValueConverter}, ConverterParameter=X, Mode=TwoWay}"
-                                       Visibility="{x:Bind ViewModel.TranslationVisible, Mode=TwoWay}" FontSize="16"/>
-                            <TextBlock x:Name="simplifiedTextBox"
-                                       Text="{x:Bind ViewModel.CurrentItem.Simplified, Mode=TwoWay}"
-                                       Visibility="{x:Bind ViewModel.SimplifiedVisible, Mode=TwoWay}" FontWeight="Bold" FontSize="30"/>
-                        </StackPanel>
+                        <ListBox x:Name="Results" ItemsSource="{Binding Items}"
+                             Grid.Row="1" VirtualizingStackPanel.VirtualizationMode="Standard">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <StackPanel x:Name="ExpandedView" Margin="0,0,0,12">
+                                            <TextBlock Text="{Binding Pinyin}"
+                                                       Loaded="Pinyin_Loaded"
+                                                       Visibility="{Binding PinyinVisible, Mode=TwoWay}"
+                                                       TextWrapping="Wrap" TextTrimming="WordEllipsis" />
+                                            <TextBlock Text="{Binding EnglishWithNewlines}"
+                                                       Visibility="{Binding TranslationVisible, Mode=TwoWay}"
+                                                       TextWrapping="Wrap" TextTrimming="WordEllipsis" Margin="12,-4,0,5" />
+                                            <TextBlock Text="{Binding Chinese}"
+                                                       Visibility="{Binding SimplifiedVisible, Mode=TwoWay}"
+                                                       TextWrapping="Wrap" TextTrimming="WordEllipsis" Margin="12,-6,0,0" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                     </ScrollViewer>
                 </StackPanel>
                 <TextBox x:Name="inputTextBox" Grid.Row="2" Margin="20"

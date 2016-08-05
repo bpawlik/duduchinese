@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CC_CEDICT.Universal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -158,12 +159,12 @@ namespace DuDuChinese.Models
 
         public static LearningExercise CurrentExercise { get; private set; } = LearningExercise.Start;
 
-        public static DictionaryItem CurrentItem { get; private set; } = null;
+        public static DictionaryRecord CurrentItem { get; private set; } = null;
 
         private static int currentItemIndex = 0;
-        private static DictionaryItemList currentItemList = null;
-        private static List<DictionaryItem> shuffledItems = null;
-        public static DictionaryItemList CurrentItemList
+        private static DictionaryRecordList currentItemList = null;
+        private static List<DictionaryRecord> shuffledItems = null;
+        public static DictionaryRecordList CurrentItemList
         {
             get
             {
@@ -176,13 +177,13 @@ namespace DuDuChinese.Models
                 // Shuffle entries
                 if (currentItemList != null)
                 {
-                    var shuffledList = currentItemList.Words.OrderBy(a => Guid.NewGuid());
-                    shuffledItems = new List<DictionaryItem>(shuffledList);
+                    var shuffledList = currentItemList.OrderBy(a => Guid.NewGuid());
+                    shuffledItems = new List<DictionaryRecord>(shuffledList);
                 }
             }
         }
 
-        public static void SetVisibility(ref Visibility PinyinVisible, ref Visibility TranslationVisible, ref Visibility SimplifiedVisible)
+        public static void SetVisibility(out Visibility PinyinVisible, out Visibility TranslationVisible, out Visibility SimplifiedVisible)
         {
             switch (ExerciseList[CurrentExerciseIndex])
             {
@@ -219,7 +220,7 @@ namespace DuDuChinese.Models
             wrongCount = 0;
         }
 
-        public static DictionaryItem GetNextItem()
+        public static DictionaryRecord GetNextItem()
         {
             if (shuffledItems == null || currentItemIndex >= shuffledItems.Count)
             {
@@ -269,7 +270,7 @@ namespace DuDuChinese.Models
                 case LearningExercise.HanziPinyin2English:
                 case LearningExercise.Hanzi2English:
                 case LearningExercise.Pinyin2English:
-                    foreach (string s in CurrentItem.Translation)
+                    foreach (string s in CurrentItem.English)
                     {
                         if (String.IsNullOrWhiteSpace(s) || String.IsNullOrWhiteSpace(inputText))
                             continue;
@@ -283,10 +284,10 @@ namespace DuDuChinese.Models
                     }
                     break;
                 case LearningExercise.English2Hanzi:
-                    result = CurrentItem.Simplified == inputText;
+                    result = CurrentItem.Chinese.Simplified == inputText;
                     break;
                 case LearningExercise.Pinyin2Hanzi:
-                    result = string.Join(" ", CurrentItem.Pinyin.ToArray()) == inputText;
+                    result = CurrentItem.Chinese.Pinyin == inputText;
                     break;
             }
 

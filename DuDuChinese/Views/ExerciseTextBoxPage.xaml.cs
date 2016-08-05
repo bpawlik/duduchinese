@@ -1,6 +1,7 @@
 using DuDuChinese.ViewModels;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Controls;
+using DuDuChinese.Models;
 
 namespace DuDuChinese.Views
 {
@@ -26,6 +27,15 @@ namespace DuDuChinese.Views
             ViewModel.Continue_Click(sender, e);
             this.inputTextBox.Focus(Windows.UI.Xaml.FocusState.Programmatic);
             Bindings.Update();
+        }
+
+        private void Pinyin_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            TextBlock textBlock = (TextBlock)sender;
+            ItemViewModel item = (ItemViewModel)textBlock.DataContext;
+            CC_CEDICT.Universal.DictionaryRecord record = item.Record;
+            PinyinColorizer p = new PinyinColorizer();
+            p.Colorize(textBlock, record);
         }
     }
 }

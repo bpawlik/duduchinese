@@ -11,17 +11,38 @@ using Template10.Services.NavigationService;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Media;
+using CC_CEDICT.Universal;
+using System.Collections.ObjectModel;
 
 namespace DuDuChinese.ViewModels
 {
     public class ExercisePageViewModel : ViewModelBase
     {
-        private DictionaryItem currentItem = null;
-        public DictionaryItem CurrentItem
+        private DictionaryRecord currentItem = null;
+        public DictionaryRecord CurrentItem
         {
             get { return this.currentItem; }
-            set { this.Set(ref this.currentItem, value); }
+            set {
+                this.Items.Clear();
+                Visibility pinyinVisible, translationVisible, simplifiedVisible;
+                LearningEngine.SetVisibility(out pinyinVisible, out translationVisible, out simplifiedVisible);
+                this.Items.Add(new ItemViewModel()
+                {
+                    Record = value,
+                    Pinyin = value.Chinese.Pinyin,
+                    English = String.Join("; ", value.English),
+                    EnglishWithNewlines = String.Join("\n", value.English),
+                    Chinese = value.Chinese.Simplified,
+                    Index = value.Index,
+                    PinyinVisible = pinyinVisible,
+                    TranslationVisible = translationVisible,
+                    SimplifiedVisible = simplifiedVisible
+            });
+                this.Set(ref this.currentItem, value);
+            }
         }
+
+        public ObservableCollection<ItemViewModel> Items { get; private set; } = new ObservableCollection<ItemViewModel>();
 
         private string status = "Enter translation:";
         public string Status
@@ -67,28 +88,6 @@ namespace DuDuChinese.ViewModels
         {
             get { return this.summary; }
             set { this.Set(ref this.summary, value); }
-        }
-
-        // Visibility flags
-        private Visibility pinyinVisible = Visibility.Collapsed;
-        public Visibility PinyinVisible
-        {
-            get { return this.pinyinVisible; }
-            set { this.Set(ref this.pinyinVisible, value); }
-        }
-
-        private Visibility translationVisible = Visibility.Collapsed;
-        public Visibility TranslationVisible
-        {
-            get { return this.translationVisible; }
-            set { this.Set(ref this.translationVisible, value); }
-        }
-
-        private Visibility simplifiedVisible = Visibility.Collapsed;
-        public Visibility SimplifiedVisible
-        {
-            get { return this.simplifiedVisible; }
-            set { this.Set(ref this.simplifiedVisible, value); }
         }
 
         public ExercisePageViewModel()
@@ -138,7 +137,7 @@ namespace DuDuChinese.ViewModels
             }
 
             ResetUI();
-            DictionaryItem nextItem = LearningEngine.GetNextItem();
+            DictionaryRecord nextItem = LearningEngine.GetNextItem();
 
             if (nextItem == null)
             {
@@ -178,9 +177,13 @@ namespace DuDuChinese.ViewModels
                 this.FgColour = redBrush;
             }
 
-            this.PinyinVisible = Visibility.Visible;
-            this.SimplifiedVisible = Visibility.Visible;
-            this.TranslationVisible = Visibility.Visible;
+            // Set visibility
+            if (this.Items.Count > 0)
+            {
+                this.Items[0].PinyinVisible = Visibility.Visible;
+                this.Items[0].TranslationVisible = Visibility.Visible;
+                this.Items[0].SimplifiedVisible = Visibility.Visible;
+            }
             this.Validated = true;
             this.InputTextDisabled = true;
         }
@@ -195,10 +198,15 @@ namespace DuDuChinese.ViewModels
             this.InputText = "";
 
             // Set visibility
-            LearningEngine.SetVisibility(ref this.pinyinVisible, ref this.translationVisible, ref this.simplifiedVisible);
-            this.PinyinVisible = this.pinyinVisible;
-            this.TranslationVisible = this.translationVisible;
-            this.SimplifiedVisible = this.simplifiedVisible;
+            if (this.Items.Count > 0)
+            {
+                Visibility pinyinVisible, translationVisible, simplifiedVisible;
+                LearningEngine.SetVisibility(out pinyinVisible, out translationVisible, out simplifiedVisible);
+                ItemViewModel c = this.Items[0];
+                this.Items[0].PinyinVisible = pinyinVisible;
+                this.Items[0].TranslationVisible = translationVisible;
+                this.Items[0].SimplifiedVisible = simplifiedVisible;
+            }
         }
     }
 }
