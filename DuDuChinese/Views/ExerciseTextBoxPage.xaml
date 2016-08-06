@@ -55,7 +55,7 @@
         <controls:PageHeader x:Name="pageHeader" Frame="{x:Bind Frame}"
                              RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignTopWithPanel="True" Text="Exercise Page" />
+                             RelativePanel.AlignTopWithPanel="True" Text="Learning Exercise" />
 
         <!--  content  -->
         <ScrollViewer Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"
@@ -70,13 +70,13 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="50" />
+                    <RowDefinition Height="55" />
                     <RowDefinition MinHeight="350"/>
                     <RowDefinition Height="80"/>
                     <RowDefinition Height="50"/>
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <TextBlock x:Name="statusTextBlock" Grid.Row="0" Text="{x:Bind ViewModel.Status, Mode=TwoWay}" Foreground="{x:Bind ViewModel.FgColour, Mode=TwoWay}" FontSize="20"/>
+                <TextBlock x:Name="statusTextBlock" Grid.Row="0" Margin="0,5" Text="{x:Bind ViewModel.Status, Mode=TwoWay}" Foreground="{x:Bind ViewModel.FgColour, Mode=TwoWay}" FontSize="30"/>
                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10">
                     <MediaElement x:Name="media" AutoPlay="True" />
                     <ScrollViewer Background="Transparent" MinWidth="300" VerticalScrollBarVisibility="Auto">
@@ -99,8 +99,8 @@
                                                        Visibility="{Binding SimplifiedVisible, Mode=TwoWay}"
                                                        TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="26" />
                                         </StackPanel>
-                                        <StackPanel x:Name="ActionPanel" Margin="0,0,0,0" Orientation="Horizontal">
-                                            <Button x:Name="PlayButton" Margin="0,0,0,0" Click="PlayButton_Click" Background="Transparent">
+                                        <StackPanel x:Name="ActionPanel" Margin="-5,5,0,0" Orientation="Horizontal">
+                                            <Button x:Name="PlayButton" Click="PlayButton_Click" Background="Transparent">
                                                 <Button.Content>
                                                     <SymbolIcon Symbol="Play" />
                                                 </Button.Content>

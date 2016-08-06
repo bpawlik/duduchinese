@@ -63,9 +63,6 @@ namespace DuDuChinese.ViewModels
         public void GotoNewMaterial() =>
             NavigationService.Navigate(typeof(Views.NewMaterialPage));
 
-        public void GotoLists() =>
-            NavigationService.Navigate(typeof(Views.ListsPage));
-
         public void GotoList(string name)
         {
             NavigationService.Navigate(typeof(Views.ListPage), name);

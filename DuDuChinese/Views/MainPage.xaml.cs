@@ -639,9 +639,11 @@ namespace DuDuChinese.Views
                     Dictionary list = new Dictionary(stream);
                     if (!app.ListManager.ContainsKey(name))
                         foreach (DictionaryRecord r in list)
-                            app.ListManager[name].Add(r);
+                            if (r.Chinese != null)
+                                app.ListManager[name].Add(r);
                 }
-                   
+
+                await System.Threading.Tasks.Task.CompletedTask;
             }
         }
 

@@ -51,19 +51,6 @@
                                Text="New Material" />
                 </StackPanel>
             </Controls:HamburgerButtonInfo>
-
-            <!--Lists button-->
-            <Controls:HamburgerButtonInfo x:Name="ListsButton" PageType="views:ListsPage">
-                <Controls:HamburgerButtonInfo.NavigationTransitionInfo>
-                    <SuppressNavigationTransitionInfo />
-                </Controls:HamburgerButtonInfo.NavigationTransitionInfo>
-                <StackPanel Orientation="Horizontal">
-                    <SymbolIcon Width="48" Height="48"
-                                Symbol="Favorite" />
-                    <TextBlock Margin="12,0,0,0" VerticalAlignment="Center"
-                               Text="Lists" />
-                </StackPanel>
-            </Controls:HamburgerButtonInfo>
         </Controls:HamburgerMenu.PrimaryButtons>
 
         <Controls:HamburgerMenu.SecondaryButtons>

@@ -57,7 +57,7 @@
         <controls:PageHeader x:Name="pageHeader" Frame="{x:Bind Frame}"
                              RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignTopWithPanel="True" Text="List Page" />
+                             RelativePanel.AlignTopWithPanel="True" Text="{x:Bind ViewModel.Title, Mode=OneWay, FallbackValue=DesigntimeValue}" />
 
         <!--  content  -->
         <ScrollViewer Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"
@@ -66,7 +66,6 @@
                       RelativePanel.Below="pageHeader"
                       VerticalScrollBarVisibility="Auto">
             <StackPanel>
-                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{x:Bind ViewModel.Title, Mode=OneWay, FallbackValue=DesigntimeValue}" />
                 <ListBox x:Name="listView" ItemsSource="{Binding Items}"
                          d:DataContext="{d:DesignData SampleData/MainViewModelSampleData.xaml}"
                          SelectionChanged="listView_SelectionChanged"
