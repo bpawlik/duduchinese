@@ -149,9 +149,6 @@
     <Compile Include="Views\ListPage.xaml.cs">
       <DependentUpon>ListPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DetailPage.xaml.cs">
-      <DependentUpon>DetailPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\NewMaterialPage.xaml.cs">
       <DependentUpon>NewMaterialPage.xaml</DependentUpon>
     </Compile>
@@ -221,10 +218,6 @@
     <Page Include="Views\ListPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\DetailPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NewMaterialPage.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -71,7 +71,8 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10">
-                    <ScrollViewer Background="Transparent" MinWidth="300">
+                    <ScrollViewer Background="Transparent" MinWidth="300"
+                                  VerticalScrollBarVisibility="Auto">
                         <ListBox x:Name="Results" ItemsSource="{Binding Items}"
                                  d:DataContext="{d:DesignData SampleData/MainViewModelSampleData.xaml}"
                                  Background="Transparent"

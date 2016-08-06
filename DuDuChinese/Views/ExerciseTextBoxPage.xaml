@@ -78,7 +78,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock x:Name="statusTextBlock" Grid.Row="0" Text="{x:Bind ViewModel.Status, Mode=TwoWay}" Foreground="{x:Bind ViewModel.FgColour, Mode=TwoWay}" FontSize="20"/>
                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10">
-                    <ScrollViewer Background="Transparent" MinWidth="300">
+                    <ScrollViewer Background="Transparent" MinWidth="300" VerticalScrollBarVisibility="Auto">
                         <ListBox x:Name="Results" ItemsSource="{x:Bind ViewModel.Items}"
                                  d:DataContext="{d:DesignData SampleData/MainViewModelSampleData.xaml}"
                                  Grid.Row="1" VirtualizingStackPanel.VirtualizationMode="Standard"
