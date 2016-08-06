@@ -71,6 +71,7 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10">
+                    <MediaElement x:Name="media" AutoPlay="True" />
                     <ScrollViewer Background="Transparent" MinWidth="300"
                                   VerticalScrollBarVisibility="Auto">
                         <ListBox x:Name="Results" ItemsSource="{Binding Items}"
@@ -84,6 +85,13 @@
                                             <TextBlock Text="{Binding Pinyin}" Loaded="Pinyin_Loaded" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="26"  />
                                             <TextBlock Text="{Binding EnglishWithNewlines}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="22"  />
                                             <TextBlock Text="{Binding Chinese}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="26" />
+                                        </StackPanel>
+                                        <StackPanel x:Name="ActionPanel" Margin="0,0,0,0" Orientation="Horizontal">
+                                            <Button x:Name="PlayButton" Margin="0,0,0,0" Click="PlayButton_Click" Background="Transparent">
+                                                <Button.Content>
+                                                    <SymbolIcon Symbol="Play" />
+                                                </Button.Content>
+                                            </Button>
                                         </StackPanel>
                                     </StackPanel>
                                 </DataTemplate>

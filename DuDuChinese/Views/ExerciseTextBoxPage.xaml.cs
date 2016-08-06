@@ -11,6 +11,8 @@ namespace DuDuChinese.Views
         {
             InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Disabled;
+
+            ViewModel.Media = media;
         }
 
         private void TextBox_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
@@ -36,6 +38,11 @@ namespace DuDuChinese.Views
             CC_CEDICT.Universal.DictionaryRecord record = item.Record;
             PinyinColorizer p = new PinyinColorizer();
             p.Colorize(textBlock, record);
+        }
+
+        private void PlayButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            ViewModel.Play();
         }
     }
 }

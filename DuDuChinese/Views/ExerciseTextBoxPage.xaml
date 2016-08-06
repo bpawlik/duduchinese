@@ -78,6 +78,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock x:Name="statusTextBlock" Grid.Row="0" Text="{x:Bind ViewModel.Status, Mode=TwoWay}" Foreground="{x:Bind ViewModel.FgColour, Mode=TwoWay}" FontSize="20"/>
                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10">
+                    <MediaElement x:Name="media" AutoPlay="True" />
                     <ScrollViewer Background="Transparent" MinWidth="300" VerticalScrollBarVisibility="Auto">
                         <ListBox x:Name="Results" ItemsSource="{x:Bind ViewModel.Items}"
                                  d:DataContext="{d:DesignData SampleData/MainViewModelSampleData.xaml}"
@@ -97,6 +98,13 @@
                                             <TextBlock Text="{Binding Chinese}"
                                                        Visibility="{Binding SimplifiedVisible, Mode=TwoWay}"
                                                        TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="26" />
+                                        </StackPanel>
+                                        <StackPanel x:Name="ActionPanel" Margin="0,0,0,0" Orientation="Horizontal">
+                                            <Button x:Name="PlayButton" Margin="0,0,0,0" Click="PlayButton_Click" Background="Transparent">
+                                                <Button.Content>
+                                                    <SymbolIcon Symbol="Play" />
+                                                </Button.Content>
+                                            </Button>
                                         </StackPanel>
                                     </StackPanel>
                                 </DataTemplate>

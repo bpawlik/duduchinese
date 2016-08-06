@@ -25,12 +25,7 @@ namespace DuDuChinese.ViewModels
             }
         }
 
-        private static readonly Windows.UI.Color defaultColor =
-            (Services.SettingsServices.SettingsService.Instance.AppTheme == ApplicationTheme.Dark) ?
-            Windows.UI.Colors.White : Windows.UI.Colors.Black;
-
-
-        private Windows.UI.Color foregroundColor = defaultColor;
+        private Windows.UI.Color foregroundColor = Windows.UI.Colors.Black;
         public Windows.UI.Color ForegroundColor
         {
             get { return this.foregroundColor; }
@@ -138,6 +133,12 @@ namespace DuDuChinese.ViewModels
 
         public void listView_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
         {
+            // Color all items to the default color
+            Windows.UI.Color defaultColor = (Services.SettingsServices.SettingsService.Instance.AppTheme == ApplicationTheme.Dark) ?
+            Windows.UI.Colors.White : Windows.UI.Colors.Black;
+            foreach (var item in ProgressItems)
+                item.ForegroundColor = defaultColor;
+
             // Color green all passed items
             for (int i = 0; i < LearningEngine.CurrentExerciseIndex; i++)
                     ProgressItems[i].ForegroundColor = Windows.UI.Colors.Green;

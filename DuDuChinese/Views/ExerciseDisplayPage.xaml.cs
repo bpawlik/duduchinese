@@ -2,6 +2,10 @@ using DuDuChinese.ViewModels;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Controls;
 using DuDuChinese.Models;
+using System;
+using Windows.Media.SpeechSynthesis;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml;
 
 namespace DuDuChinese.Views
 {
@@ -11,6 +15,8 @@ namespace DuDuChinese.Views
         {
             InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Disabled;
+
+            ViewModel.Media = media;
         }
 
         private void Pinyin_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -20,6 +26,11 @@ namespace DuDuChinese.Views
             CC_CEDICT.Universal.DictionaryRecord record = item.Record;
             PinyinColorizer p = new PinyinColorizer();
             p.Colorize(textBlock, record);
+        }
+
+        private void PlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Play();
         }
     }
 }
