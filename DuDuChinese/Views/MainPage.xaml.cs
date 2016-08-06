@@ -16,11 +16,18 @@ using System.IO;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.Media.SpeechSynthesis;
+using Windows.ApplicationModel.Resources.Core;
+using Windows.UI.Xaml.Media;
 
 namespace DuDuChinese.Views
 {
     public sealed partial class MainPage : Page
     {
+        private SpeechSynthesizer synthesizer;
+        private ResourceContext speechContext;
+        private ResourceMap speechResourceMap;
+
         public MainPage()
         {
             InitializeComponent();
@@ -28,8 +35,24 @@ namespace DuDuChinese.Views
 
             SearchPane.DataContext = ViewModel;
 
-            //TextToSpeech dummy = new TextToSpeech(null); // to initialise XNA framework
             this.Loaded += new RoutedEventHandler(MainPage_Loaded);
+
+            // Initalize speech synthesizer
+            synthesizer = new SpeechSynthesizer();
+            speechContext = ResourceContext.GetForCurrentView();
+            speechContext.Languages = new string[] { SpeechSynthesizer.DefaultVoice.Language };
+            foreach (var voice in SpeechSynthesizer.AllVoices)
+            {
+                var v = voice;
+                string lang = voice.Language;
+                if (lang == "zh-CN")
+                {
+                    speechContext.Languages = new string[] { lang };
+                    synthesizer.Voice = voice;
+                    break;  // Select female voice
+                }
+            }
+            speechResourceMap = ResourceManager.Current.MainResourceMap.GetSubtree("LocalizationTTSResources");
         }
 
         bool ok = false;
@@ -323,19 +346,53 @@ namespace DuDuChinese.Views
 
         #region Text-to-Speech button
 
-        void PlayButton_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// This is invoked when the user clicks on the play button.
+        /// </summary>
+        /// <param name="sender">Button that triggered this event</param>
+        /// <param name="e">State information about the routed event</param>
+        private async void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            //Button button = (Button)sender;
-            //int i;
-            //int.TryParse(button.Tag.ToString(), out i);
-            //TextToSpeech tts = new TextToSpeech(d[i]);
-            //Settings settings = new Settings();
-            //if (!tts.Speak(settings.AudioQualitySetting))
-            //{
-            //    App.ViewModel.UpdateNetworkStatus(false);
-            //    MessageBox.Show("Sorry, Text-to-Speech is only available with a network connection.");
-            //    return;
-            //}
+            // If the media is playing, the user has pressed the button to stop the playback.
+            if (media.CurrentState.Equals(MediaElementState.Playing))
+            {
+                media.Stop();
+            }
+            else
+            {
+                Button button = (Button)sender;
+                int i;
+                int.TryParse(button.Tag.ToString(), out i);
+                string text = d[i].Chinese.Simplified;
+
+                if (!String.IsNullOrEmpty(text))
+                {
+                    try
+                    {
+                        // Create a stream from the text. This will be played using a media element.
+                        SpeechSynthesisStream synthesisStream = await synthesizer.SynthesizeTextToStreamAsync(text);
+
+                        // Set the source and start playing the synthesized audio stream.
+                        media.AutoPlay = true;
+                        media.SetSource(synthesisStream, synthesisStream.ContentType);
+                        media.Play();
+                    }
+                    catch (System.IO.FileNotFoundException)
+                    {
+                        // If media player components are unavailable, (eg, using a N SKU of windows), we won't
+                        // be able to start media playback. Handle this gracefully
+                        var messageDialog = new Windows.UI.Popups.MessageDialog("Media player components unavailable");
+                        await messageDialog.ShowAsync();
+                    }
+                    catch (Exception)
+                    {
+                        // If the text is unable to be synthesized, throw an error message to the user.
+                        media.AutoPlay = false;
+                        var messageDialog = new Windows.UI.Popups.MessageDialog("Unable to synthesize text");
+                        await messageDialog.ShowAsync();
+                    }
+                }
+            }
         }
 
         #endregion

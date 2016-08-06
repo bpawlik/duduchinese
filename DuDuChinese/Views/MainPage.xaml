@@ -100,6 +100,7 @@
                         <TextBox x:Name="Query" InputScope="Search" GotFocus="Query_GotFocus" LostFocus="Query_LostFocus" KeyDown="Query_KeyDown" Text="english, pin1yin1 or 中文"/>
                         <TextBlock x:Name="Status" Text="" TextWrapping="Wrap" Visibility="Collapsed" />
                         <ProgressBar x:Name="Progress" Visibility="Collapsed" />
+                        <MediaElement x:Name="media" AutoPlay="False" />
                     </StackPanel>
                     <ListBox x:Name="Results" ItemsSource="{Binding Items}" Grid.Row="1" VirtualizingStackPanel.VirtualizationMode="Standard" SelectionChanged="ListBox_SelectionChanged">
                         <ListBox.ItemTemplate>
@@ -115,10 +116,11 @@
                                         <TextBlock Text="{Binding EnglishWithNewlines}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="22" />
                                         <TextBlock Text="{Binding Chinese}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="26" />
                                     </StackPanel>
-                                    <StackPanel x:Name="ActionPanel" Margin="0,-5,0,0" Orientation="Horizontal" Visibility="Collapsed">
+                                    
+                                    <StackPanel x:Name="ActionPanel" Margin="0,0,0,0" Orientation="Horizontal" Visibility="Collapsed">
                                         <!--<c4f:RoundButton x:Name="PlayButton" ImageSource="/kuaishuo2;component/images/appbar.transport.play.rest.png" IsEnabled="{Binding ElementName=SearchPane, Path=DataContext.NetworkAvailable}" Tag="{Binding Index}" Margin="0,0,0,0" Click="PlayButton_Click"/>-->
                                         <!--<c4f:RoundButton x:Name="CopyButton" ImageSource="/kuaishuo2;component/images/CopyButton.png" Tag="{Binding Index}" Margin="0,0,0,0" Click="CopyButton_Click"/>-->
-                                        <Button x:Name="PlayButton" Margin="0,0,0,0" Click="PlayButton_Click" Background="Transparent">
+                                        <Button x:Name="PlayButton" Tag="{Binding Index}" Margin="0,0,0,0" Click="PlayButton_Click" Background="Transparent">
                                             <Button.Content>
                                                 <SymbolIcon Symbol="Play" />
                                             </Button.Content>
