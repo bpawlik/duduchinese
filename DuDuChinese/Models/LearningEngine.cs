@@ -262,6 +262,7 @@ namespace DuDuChinese.Models
                 return false;
 
             bool result = false;
+            inputText = inputText.ToLower();
 
             switch (ExerciseList[CurrentExerciseIndex])
             {
@@ -274,13 +275,30 @@ namespace DuDuChinese.Models
                     {
                         if (String.IsNullOrWhiteSpace(s) || String.IsNullOrWhiteSpace(inputText))
                             continue;
-                        List<string> temp = new List<string>(s.Split(' '));
-                        foreach (string sInner in temp)
-                            if (sInner == inputText)
+
+                        string refText = s.ToLower();
+
+                        // If input text contains space then match it as a whole phrase
+                        if (inputText.Contains(" "))
+                        {
+                            if (refText == inputText)
                             {
                                 result = true;
                                 break;
                             }
+                        }
+                        else  // match input string with any of the words from the translation
+                        {
+                            List<string> temp = new List<string>(refText.Split(' '));
+                            foreach (string sInner in temp)
+                            {
+                                if (sInner == inputText)
+                                {
+                                    result = true;
+                                    break;
+                                }
+                            }
+                        }
                     }
                     break;
                 case LearningExercise.English2Hanzi:

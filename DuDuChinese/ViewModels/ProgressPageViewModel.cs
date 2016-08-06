@@ -135,7 +135,7 @@ namespace DuDuChinese.ViewModels
         {
             // Color all items to the default color
             Windows.UI.Color defaultColor = (Services.SettingsServices.SettingsService.Instance.AppTheme == ApplicationTheme.Dark) ?
-            Windows.UI.Colors.White : Windows.UI.Colors.Black;
+                Windows.UI.Colors.White : Windows.UI.Colors.Black;
             foreach (var item in ProgressItems)
                 item.ForegroundColor = defaultColor;
 

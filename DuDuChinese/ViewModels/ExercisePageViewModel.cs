@@ -65,9 +65,8 @@ namespace DuDuChinese.ViewModels
 
         public bool InputTextDisabled { get; set; } = false;
 
-        private static readonly Brush defaultTextColor =
-            (Services.SettingsServices.SettingsService.Instance.AppTheme == ApplicationTheme.Dark) ?
-            new SolidColorBrush(Windows.UI.Colors.White) : new SolidColorBrush(Windows.UI.Colors.Black);
+        private static readonly Brush whiteBrush = new SolidColorBrush(Windows.UI.Colors.White);
+        private static readonly Brush blackBrush = new SolidColorBrush(Windows.UI.Colors.Black);
         private static readonly Brush transparentBrush = new SolidColorBrush(Windows.UI.Colors.Transparent);
         private static readonly Brush redBrush = new SolidColorBrush(Windows.UI.Colors.Red);
         private static readonly Brush greenBrush = new SolidColorBrush(Windows.UI.Colors.Green);
@@ -79,7 +78,7 @@ namespace DuDuChinese.ViewModels
             set { this.Set(ref this.bgcolour, value); }
         }
 
-        private Brush fgcolour = defaultTextColor;
+        private Brush fgcolour = blackBrush;
         public Brush FgColour
         {
             get { return this.fgcolour; }
@@ -195,6 +194,9 @@ namespace DuDuChinese.ViewModels
 
         private void ResetUI()
         {
+            Brush defaultTextColor = (Services.SettingsServices.SettingsService.Instance.AppTheme == ApplicationTheme.Dark) ?
+                whiteBrush : blackBrush;
+
             this.Status = LearningEngine.GetDescription(LearningEngine.CurrentExercise) + ":";
             this.BgColour = transparentBrush;
             this.FgColour = defaultTextColor;

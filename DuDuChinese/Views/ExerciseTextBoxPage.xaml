@@ -76,7 +76,7 @@
                     <RowDefinition Height="50"/>
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <TextBlock x:Name="statusTextBlock" Grid.Row="0" Margin="0,5" Text="{x:Bind ViewModel.Status, Mode=TwoWay}" Foreground="{x:Bind ViewModel.FgColour, Mode=TwoWay}" FontSize="30"/>
+                <TextBlock x:Name="statusTextBlock" Grid.Row="0"  TextWrapping="NoWrap" TextTrimming="WordEllipsis" Margin="0,5" Text="{x:Bind ViewModel.Status, Mode=TwoWay}" Foreground="{x:Bind ViewModel.FgColour, Mode=TwoWay}" FontSize="30"/>
                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10">
                     <MediaElement x:Name="media" AutoPlay="True" />
                     <ScrollViewer Background="Transparent" MinWidth="300" VerticalScrollBarVisibility="Auto">
