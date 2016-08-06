@@ -80,18 +80,6 @@
                                       RelativePanel.AlignLeftWithPanel="True"
                                       RelativePanel.Below="UseShellDrawnBackButtonToggleSwtich" />
 
-                        <TextBox x:Name="BusyTextTextBox" Width="200"
-                                 Margin="0,12,0,0" HorizontalAlignment="Left"
-                                 Header="Busy text" RelativePanel.AlignLeftWithPanel="True"
-                                 RelativePanel.Below="UseLightThemeToggleSwitch"
-                                 Text="{Binding BusyText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-                        <Button Margin="12,0,0,0"
-                                Command="{x:Bind ViewModel.SettingsPartViewModel.ShowBusyCommand}"
-                                Content="Show Busy"
-                                RelativePanel.AlignBottomWith="BusyTextTextBox"
-                                RelativePanel.RightOf="BusyTextTextBox" />
-
                     </RelativePanel>
 
                 </ScrollViewer>
