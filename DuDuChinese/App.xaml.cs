@@ -8,6 +8,8 @@ using System;
 using System.Linq;
 using Windows.UI.Xaml.Data;
 using CC_CEDICT.Universal;
+using Windows.Media.SpeechSynthesis;
+using Windows.ApplicationModel.Resources.Core;
 
 namespace DuDuChinese
 {
@@ -50,6 +52,37 @@ namespace DuDuChinese
 
         // Learning engine shared between all pages
         // LearningEngine
+
+        // Speech recognition elements
+        private SpeechSynthesizer synthesizer = null;
+        public SpeechSynthesizer Synthesizer
+        {
+            get
+            {
+                if (this.synthesizer == null)
+                {
+                    // Initalize speech synthesizer
+                    synthesizer = new SpeechSynthesizer();
+                    speechContext = ResourceContext.GetForCurrentView();
+                    speechContext.Languages = new string[] { SpeechSynthesizer.DefaultVoice.Language };
+                    foreach (var voice in SpeechSynthesizer.AllVoices)
+                    {
+                        var v = voice;
+                        string lang = voice.Language;
+                        if (lang == "zh-CN")
+                        {
+                            speechContext.Languages = new string[] { lang };
+                            synthesizer.Voice = voice;
+                            break;  // Select female voice
+                        }
+                    }
+                    speechResourceMap = ResourceManager.Current.MainResourceMap.GetSubtree("LocalizationTTSResources");
+                }
+                return this.synthesizer;
+            }
+        }
+        private ResourceContext speechContext;
+        private ResourceMap speechResourceMap;
 
         public override async Task OnInitializeAsync(IActivatedEventArgs args)
         {

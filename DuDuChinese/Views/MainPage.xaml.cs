@@ -24,10 +24,6 @@ namespace DuDuChinese.Views
 {
     public sealed partial class MainPage : Page
     {
-        private SpeechSynthesizer synthesizer;
-        private ResourceContext speechContext;
-        private ResourceMap speechResourceMap;
-
         public MainPage()
         {
             InitializeComponent();
@@ -36,23 +32,6 @@ namespace DuDuChinese.Views
             SearchPane.DataContext = ViewModel;
 
             this.Loaded += new RoutedEventHandler(MainPage_Loaded);
-
-            // Initalize speech synthesizer
-            synthesizer = new SpeechSynthesizer();
-            speechContext = ResourceContext.GetForCurrentView();
-            speechContext.Languages = new string[] { SpeechSynthesizer.DefaultVoice.Language };
-            foreach (var voice in SpeechSynthesizer.AllVoices)
-            {
-                var v = voice;
-                string lang = voice.Language;
-                if (lang == "zh-CN")
-                {
-                    speechContext.Languages = new string[] { lang };
-                    synthesizer.Voice = voice;
-                    break;  // Select female voice
-                }
-            }
-            speechResourceMap = ResourceManager.Current.MainResourceMap.GetSubtree("LocalizationTTSResources");
         }
 
         bool ok = false;
@@ -370,7 +349,8 @@ namespace DuDuChinese.Views
                     try
                     {
                         // Create a stream from the text. This will be played using a media element.
-                        SpeechSynthesisStream synthesisStream = await synthesizer.SynthesizeTextToStreamAsync(text);
+                        App app = (App)Application.Current;
+                        SpeechSynthesisStream synthesisStream = await app.Synthesizer.SynthesizeTextToStreamAsync(text);
 
                         // Set the source and start playing the synthesized audio stream.
                         media.AutoPlay = true;
@@ -388,7 +368,8 @@ namespace DuDuChinese.Views
                     {
                         // If the text is unable to be synthesized, throw an error message to the user.
                         media.AutoPlay = false;
-                        var messageDialog = new Windows.UI.Popups.MessageDialog("Unable to synthesize text");
+                        var messageDialog = new Windows.UI.Popups.MessageDialog(
+                            "Unable to synthesize text. Please download Chinese simplified speech language pack.");
                         await messageDialog.ShowAsync();
                     }
                 }
