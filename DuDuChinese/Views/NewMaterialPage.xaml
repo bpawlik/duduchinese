@@ -66,39 +66,51 @@
             </controls:PageHeader.SecondaryCommands>
 
         </controls:PageHeader>
-        <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Height="32"
-                  VerticalAlignment="Top" Width="141" Margin="168,134,-245,-134"
-                  >
-            <ComboBoxItem>10</ComboBoxItem>
-            <ComboBoxItem>20</ComboBoxItem>
-            <ComboBoxItem>30</ComboBoxItem>
-            <ComboBoxItem>40</ComboBoxItem>
-            <ComboBoxItem>50</ComboBoxItem>
-            <ComboBoxItem>60</ComboBoxItem>
-            <ComboBoxItem>70</ComboBoxItem>
-            <ComboBoxItem>80</ComboBoxItem>
-        </ComboBox>
-        <Button x:Name="button" Content="Start" HorizontalAlignment="Left" Height="35"
-                VerticalAlignment="Top" Width="98" RenderTransformOrigin="3.666,3.162"
-                Margin="103,234,-136.333,-237" Click="{x:Bind ViewModel.Start_Click}">
-            <Interactivity:Interaction.Behaviors>
-                <!--  focus on textbox when page loads  -->
-                <Core:EventTriggerBehavior>
-                    <Behaviors:FocusAction />
-                </Core:EventTriggerBehavior>
-            </Interactivity:Interaction.Behaviors>
-        </Button>
-        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Select list:" VerticalAlignment="Top" RenderTransformOrigin="1.178,6.017" Margin="10,103,-42.667,-110"/>
-        <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Number of items:" VerticalAlignment="Top" RenderTransformOrigin="1.178,6.017" Margin="10,139,-43.333,-126"/>
-        <ComboBox x:Name="comboBoxLists" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="141" Margin="168,98,-245,-98"
+
+        <Grid Margin="10,60" MinWidth="300">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition MinHeight="40" />
+                <RowDefinition MinHeight="40" />
+                <RowDefinition MinHeight="40" />
+                <RowDefinition MinHeight="40" />
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="textBlock" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" Text="Select list:" />
+            <TextBlock x:Name="textBlock2" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" Text="Number of items:" />
+            <ComboBox x:Name="comboBoxLists" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="20,0" Height="32" VerticalAlignment="Top" MinWidth="180"
                   ItemsSource="{Binding Items}"
                   SelectionChanged="{x:Bind ViewModel.SelectedListChanged}"
                   SelectedIndex="{x:Bind ViewModel.SelectedListIndex}"
                   xmlns:m="using:DuDuChinese.Models">
-        </ComboBox>
-        <RadioButton x:Name="radioButtonWords" Content="Words" IsChecked="True" Tag="0" GroupName="mode" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="120" Margin="10,176,-10,-176" Checked="{x:Bind ViewModel.radioButton_Checked}" />
-        <RadioButton x:Name="radioButtonSentences" Content="Sentences" IsChecked="False" Tag="1" GroupName="mode" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="120" Margin="168,176,-168,-176" Checked="{x:Bind ViewModel.radioButton_Checked}" />
-
+            </ComboBox>
+            <ComboBox x:Name="comboBox" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Height="32" MinWidth="180" Margin="20,0"
+                  VerticalAlignment="Top"
+                  >
+                <ComboBoxItem>10</ComboBoxItem>
+                <ComboBoxItem>20</ComboBoxItem>
+                <ComboBoxItem>30</ComboBoxItem>
+                <ComboBoxItem>40</ComboBoxItem>
+                <ComboBoxItem>50</ComboBoxItem>
+                <ComboBoxItem>60</ComboBoxItem>
+                <ComboBoxItem>70</ComboBoxItem>
+                <ComboBoxItem>80</ComboBoxItem>
+            </ComboBox>
+            <RadioButton x:Name="radioButtonWords" Grid.Row="2" Grid.Column="0" Content="Words" IsChecked="True" Tag="0" GroupName="mode" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Checked="{x:Bind ViewModel.radioButton_Checked}" />
+            <RadioButton x:Name="radioButtonSentences" Grid.Row="2" Grid.Column="1" Content="Sentences" IsChecked="False" Tag="1" GroupName="mode" HorizontalAlignment="Left" Height="32"  Margin="20,0" VerticalAlignment="Top" Checked="{x:Bind ViewModel.radioButton_Checked}" />
+            <Button x:Name="button" Content="Start" HorizontalAlignment="Left" Height="35"
+                VerticalAlignment="Top" Width="150" Click="{x:Bind ViewModel.Start_Click}" Grid.Column="1" Grid.Row="3" Margin="-50,0">
+                <Interactivity:Interaction.Behaviors>
+                    <!--  focus on textbox when page loads  -->
+                    <Core:EventTriggerBehavior>
+                        <Behaviors:FocusAction />
+                    </Core:EventTriggerBehavior>
+                </Interactivity:Interaction.Behaviors>
+            </Button>
+        </Grid>
     </RelativePanel>
 </Page>
 

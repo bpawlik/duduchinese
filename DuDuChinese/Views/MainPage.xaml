@@ -181,7 +181,7 @@
                              SelectionChanged="ListListBox_SelectionChanged">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Holding="ListItem_Holding"  RightTapped="ListItem_RightTapped" Width="300" Orientation="Horizontal" >
+                                <StackPanel Holding="ListItem_Holding"  RightTapped="ListItem_RightTapped" MinWidth="300" Orientation="Horizontal" >
                                     <FlyoutBase.AttachedFlyout>
                                         <MenuFlyout>
                                             <MenuFlyoutItem x:Name="EditButton"
@@ -239,7 +239,8 @@
                                         <TextBox
                                             Text="{Binding Name}"
                                             Visibility="{Binding IsEditable, Converter={StaticResource VisibilityConverter}}"
-                                            Margin="0,5,0,0"
+                                            Margin="5,5,0,0"
+                                            MinWidth="200"
                                             InputScope="Search"
                                             Loaded="ListEdit_Loaded"
                                             GotFocus="ListEdit_GotFocus"
