@@ -120,6 +120,7 @@
     <Compile Include="Models\PinyinColorizer.cs" />
     <Compile Include="Models\VisualTreeHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Models\RevisionEngine.cs" />
     <Compile Include="Services\SettingsServices\SettingsService.cs" />
     <Compile Include="ViewModels\ExercisePageViewModel.cs" />
     <Compile Include="ViewModels\ItemViewModel.cs" />

@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Template10.Services.NavigationService;
 using Windows.UI.Xaml.Navigation;
+using DuDuChinese.Models;
+using Windows.UI.Xaml.Controls;
 
 namespace DuDuChinese.ViewModels
 {
@@ -27,6 +29,9 @@ namespace DuDuChinese.ViewModels
             {
                 Value = suspensionState[nameof(Value)]?.ToString();
             }
+
+            RevisionEngine.Deserialize();
+
             await Task.CompletedTask;
         }
 
@@ -53,6 +58,36 @@ namespace DuDuChinese.ViewModels
 
         public void GotoAbout() =>
             NavigationService.Navigate(typeof(Views.SettingsPage), 2);
+
+        private int NumberOfItems { get; set; } = 0;
+
+        public void NumberOfItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox cb = sender as ComboBox;
+            this.NumberOfItems = Convert.ToInt32((cb.SelectedItem as ComboBoxItem).Content.ToString());
+        }
+
+        public async void Start_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            List<RevisionItem> revisionList = RevisionEngine.GetRevisionList(this.NumberOfItems);
+
+            if (revisionList == null || revisionList.Count == 0 || this.NumberOfItems == 0)
+            {
+                ContentDialog dialog = new ContentDialog();
+                dialog.Content = "Revision list is empty!";
+                dialog.Title = "Error";
+                dialog.PrimaryButtonText = "OK";
+                dialog.CanDrag = true;
+
+                await dialog.ShowAsync();
+            }
+            else
+            {
+                LearningEngine.UpdateRevisionList(revisionList);
+                LearningEngine.Mode = LearningMode.Revision;
+                NavigationService.Navigate(typeof(Views.ProgressPage), 0);
+            }
+        }
 
     }
 }

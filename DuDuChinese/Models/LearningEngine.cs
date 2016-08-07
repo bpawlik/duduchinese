@@ -12,7 +12,8 @@ namespace DuDuChinese.Models
     public enum LearningMode
     {
         Words = 0,
-        Sentences = 1
+        Sentences = 1,
+        Revision = 2
     }
 
     public enum LearningExercise
@@ -26,14 +27,14 @@ namespace DuDuChinese.Models
 
         // Radio 
 
-        [Description("Understanding from hearing")]
-        UnderstadningFromHearing,
+        [Description("Choose pinyin from hearing")]
+        ChoosePinyinFromHearing,
 
-        [Description("Text understanding")]
-        TextUnderstanding,
+        [Description("Choose character from hearing")]
+        ChooseHanziFromHearing,
 
-        [Description("Select translation")]
-        TranslationSelection,
+        [Description("Choose translation from hearing")]
+        ChooseEnglishFromHearing,
 
         // Textbox
 
@@ -42,15 +43,6 @@ namespace DuDuChinese.Models
 
         [Description("Write translation from hearing")]
         Translation,
-
-        #endregion
-
-        #region Sentence exercises
-
-        // Textbox
-
-        [Description("Fill gaps")]
-        FillGaps,
 
         // Yes / No
 
@@ -77,6 +69,15 @@ namespace DuDuChinese.Models
 
         #endregion
 
+        #region Sentence exercises
+
+        // Textbox
+
+        [Description("Fill gaps")]
+        FillGaps,
+
+        #endregion
+
         [Description("We are at the start fo the big adventure!")]
         Start,
 
@@ -97,12 +98,14 @@ namespace DuDuChinese.Models
     public class LearningEngine
     {
         // Predefined exercise lists
-        private static readonly LearningExercise[] ExerciseListWords = {
+        private static readonly LearningExercise[] exerciseListWords = {
             LearningExercise.Display,
             LearningExercise.HanziPinyin2English,
-            LearningExercise.English2Hanzi
+            LearningExercise.English2Hanzi,
+            LearningExercise.Hanzi2English,
+            LearningExercise.Pinyin2Hanzi
         };
-        private static readonly LearningExercise[] ExerciseListSentences = { LearningExercise.Display, LearningExercise.FillGaps };
+        private static readonly LearningExercise[] exerciseListSentences = { LearningExercise.Display, LearningExercise.FillGaps };
 
         private static LearningMode mode = LearningMode.Words;
         public static LearningMode Mode
@@ -115,9 +118,9 @@ namespace DuDuChinese.Models
             {
                 mode = value;
                 if (mode == LearningMode.Words)
-                    ExerciseList = new List<LearningExercise>(ExerciseListWords);
-                else
-                    ExerciseList = new List<LearningExercise>(ExerciseListSentences);
+                    ExerciseList = new List<LearningExercise>(exerciseListWords);
+                else if (mode == LearningMode.Sentences)
+                    ExerciseList = new List<LearningExercise>(exerciseListSentences);
             }
         }
 
@@ -143,7 +146,7 @@ namespace DuDuChinese.Models
         {
             if (CurrentExercise == LearningExercise.Done)
             {
-                // return current exercise
+                // return current exercise (LearningExercise.Done)
             }
             else if (currentExerciseIndex + 1 == ExerciseList.Count)
             {
@@ -153,8 +156,26 @@ namespace DuDuChinese.Models
             else
             {
                 CurrentExercise = ExerciseList[++currentExerciseIndex];
+                if (Mode == LearningMode.Revision)
+                    CurrentItemList = RevisionEngine.ToDictionaryRecordList(ListForExercise[CurrentExercise]);
             }
             return CurrentExercise;
+        }
+
+        public static void UpdateRevisionList(List<RevisionItem> revisionList)
+        {
+            foreach (RevisionItem item in revisionList)
+            {
+                if (!ListForExercise.ContainsKey(item.Exercise))
+                    ListForExercise.Add(item.Exercise, new List<RevisionItem>());
+                ListForExercise[item.Exercise].Add(item);
+            }
+
+            List<LearningExercise> exerciseList = new List<LearningExercise>();
+            foreach (var key in ListForExercise.Keys)
+                exerciseList.Add(key);
+            ExerciseList = exerciseList;
+            currentExerciseIndex = -1;
         }
 
         public static LearningExercise CurrentExercise { get; private set; } = LearningExercise.Start;
@@ -180,6 +201,21 @@ namespace DuDuChinese.Models
                     var shuffledList = currentItemList.OrderBy(a => Guid.NewGuid());
                     shuffledItems = new List<DictionaryRecord>(shuffledList);
                 }
+            }
+        }
+
+        private static Dictionary<LearningExercise, List<RevisionItem> > listForExercise = null;
+        public static Dictionary<LearningExercise, List<RevisionItem> > ListForExercise
+        {
+            get
+            {
+                if (listForExercise == null)
+                    listForExercise = new Dictionary<LearningExercise, List<RevisionItem>>();
+                return listForExercise;
+            }
+            set
+            {
+                listForExercise = value;
             }
         }
 
@@ -313,6 +349,12 @@ namespace DuDuChinese.Models
                 correctCount++;
             else
                 wrongCount++;
+
+            // Update revision list
+            if (Mode == LearningMode.Revision)
+                RevisionEngine.UpdateRevisionList(ListForExercise[CurrentExercise][currentItemIndex - 1], result);
+            else
+                RevisionEngine.UpdateRevisionList(CurrentItemList.Name, CurrentItem, ExerciseList[CurrentExerciseIndex], result);
 
             return result;
         }

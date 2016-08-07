@@ -56,16 +56,17 @@ namespace DuDuChinese.ViewModels
         {
             //Value = (suspensionState.ContainsKey(nameof(Value))) ? suspensionState[nameof(Value)]?.ToString() : parameter?.ToString();
 
+            RevisionEngine.Serialize();
+
+            // Get next exercise
+            LearningExercise nextExcercise = LearningEngine.NextExercise();
+
             // Refresh task list
             if (this.ProgressItems == null)
                 this.ProgressItems = new List<ProgressItem>();
-
             foreach (LearningExercise exerc in LearningEngine.ExerciseList)
-            {
                 this.ProgressItems.Add(new ProgressItem(LearningEngine.GetDescription(exerc)));
-            }
 
-            LearningExercise nextExcercise = LearningEngine.NextExercise();
             if (nextExcercise == LearningExercise.Done)
             {
                 // This is it, display summary and ask whether one want to review
@@ -104,8 +105,11 @@ namespace DuDuChinese.ViewModels
             if (LearningEngine.CurrentExercise == LearningExercise.Done)
             {
                 // We're done!
-                // Go back to new material page
-                NavigationService.Navigate(typeof(Views.NewMaterialPage), 0);
+                // Go back to new material / revision page
+                if (LearningEngine.Mode == LearningMode.Revision)
+                    NavigationService.Navigate(typeof(Views.RevisePage), 0);
+                else
+                    NavigationService.Navigate(typeof(Views.NewMaterialPage), 0);
             }
             else
             {
