@@ -325,20 +325,18 @@ namespace DuDuChinese.Models
 
         public static string GetStatus()
         {
-            int totalItems = shuffledItems.Count;
-            string progress = currentItemIndex.ToString() + " / " + totalItems.ToString() + Environment.NewLine;
-
             if (correctCount > 0 || wrongCount > 0)
             {
+                int totalItems = shuffledItems.Count;
                 string score = "Total: " + ((int)(100.0 * Convert.ToDouble(correctCount) / Convert.ToDouble(totalItems))).ToString() + " %" + Environment.NewLine;
                 string correct = "Correct: " + correctCount.ToString() + Environment.NewLine;
                 string wrong = "Wrong: " + wrongCount.ToString() + Environment.NewLine;
                 
-                return progress + correct + wrong + score;
+                return correct + wrong + score;
             }
             else
             {
-                return progress;
+                return "";
             }
         }
 

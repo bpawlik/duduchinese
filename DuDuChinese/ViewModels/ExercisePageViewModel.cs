@@ -94,9 +94,21 @@ namespace DuDuChinese.ViewModels
 
         public MediaElement Media { get; internal set; }
 
-        public ExercisePageViewModel()
+        private int progressValue = 1;
+        public int ProgressValue
         {
+            get { return this.progressValue; }
+            set { this.Set(ref this.progressValue, value); }
         }
+
+        private int progressMaxValue = 1;
+        public int ProgressMaxValue
+        {
+            get { return this.progressMaxValue; }
+            set { this.Set(ref this.progressMaxValue, value); }
+        }
+
+        public ExercisePageViewModel() {}
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
@@ -106,8 +118,8 @@ namespace DuDuChinese.ViewModels
             CurrentItem = LearningEngine.GetNextItem();
             Summary = LearningEngine.GetStatus();
 
-            // Later put here exercise selection
-            // ....
+            this.ProgressValue = 1;
+            this.ProgressMaxValue = LearningEngine.CurrentItemList.Count;
 
             ResetUI();
 
@@ -151,6 +163,7 @@ namespace DuDuChinese.ViewModels
             {
                 CurrentItem = nextItem;
                 Summary = LearningEngine.GetStatus();
+                this.ProgressValue++;
             }
         }
 

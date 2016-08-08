@@ -75,6 +75,7 @@
                     <RowDefinition Height="80"/>
                     <RowDefinition Height="50"/>
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <TextBlock x:Name="statusTextBlock" Grid.Row="0"  TextWrapping="NoWrap" TextTrimming="WordEllipsis" Margin="0,5" Text="{x:Bind ViewModel.Status, Mode=TwoWay}" Foreground="{x:Bind ViewModel.FgColour, Mode=TwoWay}" FontSize="30"/>
                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10">
@@ -138,8 +139,17 @@
                     <Button x:Name="continueButton" Content="Continue" Margin="150,10,0,0" HorizontalAlignment="Left"
                             Click="{x:Bind Continue_Click}" />
                 </StackPanel>
-                <StackPanel Grid.Row="4" VerticalAlignment="Bottom">
-                    <TextBlock Text="{x:Bind ViewModel.Summary, Mode=TwoWay}" FontSize="16" />
+                <TextBlock Grid.Row="4" Margin="20,0,0,5" VerticalAlignment="Bottom">
+                    <Run Text="{x:Bind ViewModel.ProgressValue}" /> 
+                    <Run Text=" / " />
+                    <Run Text="{x:Bind ViewModel.ProgressMaxValue}" />
+                </TextBlock>
+                <ProgressBar Grid.Row="4" x:Name="progressBar" Width="300" HorizontalAlignment="Left" Margin="20,10,0,0"
+                             VerticalAlignment="Bottom"
+                             Value="{x:Bind ViewModel.ProgressValue}"  Maximum="{x:Bind ViewModel.ProgressMaxValue}" 
+                    IsIndeterminate="False" />
+                <StackPanel Grid.Row="5" VerticalAlignment="Bottom">
+                    <TextBlock Text="{x:Bind ViewModel.Summary, Mode=TwoWay}" Margin="20,0" />
                 </StackPanel>
             </Grid>
         </ScrollViewer>

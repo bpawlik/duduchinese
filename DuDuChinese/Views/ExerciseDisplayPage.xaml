@@ -69,6 +69,7 @@
                     <RowDefinition Height="400" />
                     <RowDefinition Height="50"/>
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10">
                     <MediaElement x:Name="media" AutoPlay="True" />
@@ -109,7 +110,7 @@
                 <StackPanel Grid.Row="1">
                     <Button x:Name="continueButton" Content="Continue" Margin="150,10,0,0"
                             VerticalAlignment="Center"
-                            HorizontalAlignment="Left" Click="{x:Bind ViewModel.Continue_Click}">
+                            HorizontalAlignment="Left" Click="Continue_Click">
                         <Interactivity:Interaction.Behaviors>
                             <!--  focus on textbox when page loads  -->
                             <Core:EventTriggerBehavior>
@@ -118,8 +119,17 @@
                         </Interactivity:Interaction.Behaviors>
                     </Button>
                 </StackPanel>
-                <StackPanel Grid.Row="2" VerticalAlignment="Bottom">
-                    <TextBlock Text="{x:Bind ViewModel.Summary, Mode=TwoWay}" FontSize="20" />
+                <TextBlock Grid.Row="2" Margin="20,0,0,5" VerticalAlignment="Bottom" >
+                    <Run Text="{x:Bind ViewModel.ProgressValue}" /> 
+                    <Run Text=" / " />
+                    <Run Text="{x:Bind ViewModel.ProgressMaxValue}" />
+                </TextBlock>
+                <ProgressBar Grid.Row="2" x:Name="progressBar" Width="300" HorizontalAlignment="Left" Margin="20,10,0,0"
+                             VerticalAlignment="Bottom"
+                             Value="{x:Bind ViewModel.ProgressValue}"  Maximum="{x:Bind ViewModel.ProgressMaxValue}" 
+                    IsIndeterminate="False" />
+                <StackPanel Grid.Row="3" VerticalAlignment="Bottom">
+                    <TextBlock Text="{x:Bind ViewModel.Summary, Mode=TwoWay}" Margin="20,0" />
                 </StackPanel>
             </Grid>
         </ScrollViewer>
