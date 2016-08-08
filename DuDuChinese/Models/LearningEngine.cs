@@ -164,6 +164,7 @@ namespace DuDuChinese.Models
 
         public static void UpdateRevisionList(List<RevisionItem> revisionList)
         {
+            ListForExercise.Clear();
             foreach (RevisionItem item in revisionList)
             {
                 if (!ListForExercise.ContainsKey(item.Exercise))
@@ -176,6 +177,18 @@ namespace DuDuChinese.Models
                 exerciseList.Add(key);
             ExerciseList = exerciseList;
             currentExerciseIndex = -1;
+        }
+
+        public static List<RevisionItem> GenerateLearningItems(DictionaryRecordList recordList)
+        {
+            List<RevisionItem> items = new List<RevisionItem>();
+            foreach (var record in recordList)
+            {
+                foreach (LearningExercise exercise in ExerciseList)
+                    items.Add(new RevisionItem() { Index = record.Index, Exercise = exercise, ListName = recordList.Name, Score = 10 });
+            }
+
+            return items;
         }
 
         public static LearningExercise CurrentExercise { get; private set; } = LearningExercise.Start;
@@ -204,6 +217,26 @@ namespace DuDuChinese.Models
             }
         }
 
+        private static int itemsCount = 0;
+        public static int ItemsCount
+        {
+            get
+            {
+                return itemsCount;
+            }
+            set
+            {
+                itemsCount = value;
+
+                // Shuffle entries
+                if (currentItemList != null)
+                {
+                    var shuffledList = currentItemList.OrderBy(a => Guid.NewGuid());
+                    shuffledItems = new List<DictionaryRecord>(shuffledList).GetRange(0, itemsCount);
+                }
+            }
+        }
+
         private static Dictionary<LearningExercise, List<RevisionItem> > listForExercise = null;
         public static Dictionary<LearningExercise, List<RevisionItem> > ListForExercise
         {
@@ -217,6 +250,14 @@ namespace DuDuChinese.Models
             {
                 listForExercise = value;
             }
+        }
+
+        public static int GetItemCountForExercise(LearningExercise exercise)
+        {
+            if (Mode == LearningMode.Revision)
+                return ListForExercise[exercise].Count;
+            else
+                return CurrentItemList.Count;
         }
 
         public static void SetVisibility(out Visibility PinyinVisible, out Visibility TranslationVisible, out Visibility SimplifiedVisible)

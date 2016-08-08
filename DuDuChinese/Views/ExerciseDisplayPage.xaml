@@ -92,7 +92,6 @@
                         </ListBox>
                     </ScrollViewer>
                 </StackPanel>
-                <!--<TextBlock HorizontalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}" Text="{x:Bind ViewModel.Text}" />-->
                 <StackPanel x:Name="ActionPanel" Grid.Row="1" Margin="10,0,0,0" Orientation="Horizontal">
                     <Button x:Name="PlayButton" Margin="0,0,0,0" Click="PlayButton_Click" Background="Transparent">
                         <Button.Content>

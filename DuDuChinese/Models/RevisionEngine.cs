@@ -50,12 +50,20 @@ namespace DuDuChinese.Models
                     revisionList = new List<RevisionItem>();
                 return revisionList;
             }
+
+            private set
+            {
+                revisionList = value;
+            }
         }
 
-        public static List<RevisionItem> GetRevisionList(int numberOfItems)
+        public static List<RevisionItem> GetRevisionList(int numberOfItems, string name = null)
         {
             if (numberOfItems == 0 || revisionList == null)
-                return null;
+                return new List<RevisionItem>();
+
+            if (numberOfItems < 0 || numberOfItems > revisionList.Count)
+                numberOfItems = revisionList.Count;
 
             // Sort item by the score
             revisionList.Sort((s1, s2) => s1.Score.CompareTo(s2.Score));
@@ -66,6 +74,9 @@ namespace DuDuChinese.Models
             List<RevisionItem> revList = new List<RevisionItem>();
             for (int i = 0; i < numberOfItems && i < revisionList.Count; ++i)
             {
+                if (name != null && revisionList[i].ListName != name)
+                    continue;
+
                 revList.Add(revisionList[i]);
             }
 
@@ -130,7 +141,7 @@ namespace DuDuChinese.Models
                 using (var writer = XmlDictionaryWriter.CreateTextWriter(s, Encoding.UTF8, ownsStream: false))
                 {
                     var ser = new DataContractSerializer(typeof(List<RevisionItem>));
-                    ser.WriteObject(writer, RevisionList);
+                    ser.WriteObject(writer, revisionList);
                 }
             }
         }

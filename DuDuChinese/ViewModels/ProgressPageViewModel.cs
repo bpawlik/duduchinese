@@ -25,6 +25,16 @@ namespace DuDuChinese.ViewModels
             }
         }
 
+        private int itemCount = 0;
+        public int ItemCount
+        {
+            get { return this.itemCount; }
+            set
+            {
+                this.Set(ref this.itemCount, value);
+            }
+        }
+
         private Windows.UI.Color foregroundColor = Windows.UI.Colors.Black;
         public Windows.UI.Color ForegroundColor
         {
@@ -35,9 +45,10 @@ namespace DuDuChinese.ViewModels
             }
         }
 
-        public ProgressItem(string text)
+        public ProgressItem(string text, int itemCount)
         {
             this.text = text;
+            this.itemCount = itemCount;
         }
     }
 
@@ -65,7 +76,9 @@ namespace DuDuChinese.ViewModels
             if (this.ProgressItems == null)
                 this.ProgressItems = new List<ProgressItem>();
             foreach (LearningExercise exerc in LearningEngine.ExerciseList)
-                this.ProgressItems.Add(new ProgressItem(LearningEngine.GetDescription(exerc)));
+                this.ProgressItems.Add(new ProgressItem(
+                    LearningEngine.GetDescription(exerc),
+                    LearningEngine.GetItemCountForExercise(exerc)));
 
             if (nextExcercise == LearningExercise.Done)
             {

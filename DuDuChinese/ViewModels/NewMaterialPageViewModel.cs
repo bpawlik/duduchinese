@@ -16,18 +16,13 @@ namespace DuDuChinese.ViewModels
     {
         public ObservableCollection<string> Items { get; private set; }
 
+        public List<string> SelectedItemsCount { get; set; } = new List<string>();
+
+        public bool IsStartEnabled { get; set; } = false;
+
         public NewMaterialPageViewModel()
         {
             this.Items = new ObservableCollection<string>();
-        }
-
-        public ObservableCollection<DictionaryItemList> Lists { get; private set; } = null;
-
-        private int selectedListIndex = -1;
-        public int SelectedListIndex
-        {
-            get { return this.selectedListIndex; }
-            set { this.Set(ref this.selectedListIndex, value); }
         }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
@@ -37,7 +32,8 @@ namespace DuDuChinese.ViewModels
                 //Value = suspensionState[nameof(Value)]?.ToString();
             }
 
-            DictionaryManager.Deserialize();
+            this.IsStartEnabled = false;
+            this.SelectedItemsCount.Clear();
 
             // Reset learning engine
             LearningEngine.Reset();
@@ -48,16 +44,6 @@ namespace DuDuChinese.ViewModels
             {
                 this.Items.Add(key);
             }
-
-            //// Refresh lists
-            //this.Lists = new ObservableCollection<DictionaryItemList>();
-            //if (this.Lists.Count == 0)
-            //    foreach (var key in DictionaryManager.Lists.Keys)
-            //        this.Lists.Add(DictionaryManager.Lists[key]);
-
-            //// Select index
-            //if (this.Lists.Count > 0)
-            //    this.SelectedListIndex = 0;
 
             await Task.CompletedTask;
         }
@@ -106,8 +92,36 @@ namespace DuDuChinese.ViewModels
             ComboBox cb = sender as ComboBox;
             App app = (App)Application.Current;
             if (cb.SelectedValue != null)
-                LearningEngine.CurrentItemList = app.ListManager[cb.SelectedValue.ToString()];
-            this.selectedListIndex = cb.SelectedIndex;
+            {
+                DictionaryRecordList recordList = app.ListManager[cb.SelectedValue.ToString()];
+
+                List<RevisionItem> learningItems = LearningEngine.GenerateLearningItems(recordList);
+                List<RevisionItem> revisionItems = RevisionEngine.RevisionList;
+
+                // Get the intersection of learningItems and revisionItems
+                var intersectList = learningItems.Select(i => i).Intersect(revisionItems);
+
+                // Remove those items from the list that overlap
+                foreach (var item in intersectList)
+                    recordList.Remove(recordList[item.Index]);
+
+                LearningEngine.CurrentItemList = recordList;
+
+                // Update items count combobox
+                SelectedItemsCount.Clear();
+                for (int i = 10; i < recordList.Count; i += 10)
+                    SelectedItemsCount.Add(i.ToString());
+                SelectedItemsCount.Add(recordList.Count.ToString());
+            }
+        }
+
+        public void NumberOfItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox cb = sender as ComboBox;
+            int itemsCount = Convert.ToInt32(cb.SelectedValue);
+            if (itemsCount > 0)
+                this.IsStartEnabled = true;
+            LearningEngine.ItemsCount = itemsCount;
         }
 
         public void GotoSettings() =>

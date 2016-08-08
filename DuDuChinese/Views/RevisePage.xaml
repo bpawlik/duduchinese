@@ -62,28 +62,27 @@
         </controls:PageHeader>
         <Grid Margin="10,60" MinWidth="300">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="130" />
+                <ColumnDefinition Width="135" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition MinHeight="40" />
                 <RowDefinition MinHeight="40" />
+                <RowDefinition MinHeight="40" />
             </Grid.RowDefinitions>
-            <TextBlock x:Name="textBlock2" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" Text="Number of items:" />
-            <ComboBox x:Name="comboBox" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Height="32" MinWidth="180" Margin="20,0"
-                  VerticalAlignment="Top"
-                      SelectionChanged="{x:Bind ViewModel.NumberOfItems_SelectionChanged}"
-                  >
-                <ComboBoxItem>10</ComboBoxItem>
-                <ComboBoxItem>20</ComboBoxItem>
-                <ComboBoxItem>30</ComboBoxItem>
-                <ComboBoxItem>40</ComboBoxItem>
-                <ComboBoxItem>50</ComboBoxItem>
-                <ComboBoxItem>60</ComboBoxItem>
-                <ComboBoxItem>70</ComboBoxItem>
-                <ComboBoxItem>80</ComboBoxItem>
+            <TextBlock x:Name="textBlock" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" Text="Select list (optional):" />
+            <ComboBox x:Name="comboBoxLists" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="20,0" Height="32" VerticalAlignment="Top" MinWidth="180"
+                  ItemsSource="{Binding Items}"
+                  SelectionChanged="SelectedListChanged"
+                  xmlns:m="using:DuDuChinese.Models">
             </ComboBox>
-            <Button x:Name="button" Content="Start" HorizontalAlignment="Left" Height="35"
+            <TextBlock x:Name="textBlock2" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" Text="Number of items:" />
+            <ComboBox x:Name="comboBox" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Height="32" MinWidth="180" Margin="20,0"
+                      VerticalAlignment="Top"
+                      ItemsSource="{x:Bind ViewModel.SelectedItemsCount}"
+                      SelectionChanged="NumberOfItems_SelectionChanged" >
+            </ComboBox>
+            <Button x:Name="button" Content="Start" HorizontalAlignment="Left" Height="35" IsEnabled="{x:Bind ViewModel.IsStartEnabled}"
                 VerticalAlignment="Top" Width="330" Click="{x:Bind ViewModel.Start_Click}" Grid.Column="1" Grid.Row="2" Margin="-130,0">
                 <Interactivity:Interaction.Behaviors>
                     <!--  focus on textbox when page loads  -->
