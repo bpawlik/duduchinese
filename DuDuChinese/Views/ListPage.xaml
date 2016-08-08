@@ -66,6 +66,7 @@
                       RelativePanel.Below="pageHeader"
                       VerticalScrollBarVisibility="Auto">
             <StackPanel>
+                <MediaElement x:Name="media" AutoPlay="False" />
                 <ListBox x:Name="listView" ItemsSource="{Binding Items}"
                          d:DataContext="{d:DesignData SampleData/MainViewModelSampleData.xaml}"
                          SelectionChanged="listView_SelectionChanged"
@@ -83,34 +84,37 @@
                                     <TextBlock Text="{Binding EnglishWithNewlines}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="22"   />
                                     <TextBlock Text="{Binding Chinese}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="26"  />
                                 </StackPanel>
-                                <StackPanel x:Name="ActionPanel" Margin="0,-5,0,0" Orientation="Horizontal" Visibility="Collapsed">
-
-                                    <!--<Button x:Name="PlayButton" Margin="0,0,0,0" Click="PlayButton_Click" Background="Transparent">
+                                <StackPanel x:Name="ActionPanel" Margin="-5,2,0,0" Orientation="Horizontal" Visibility="Collapsed">
+                                    <Button x:Name="PlayButton" Tag="{Binding Index}" Click="PlayButton_Click" Background="Transparent">
                                         <Button.Content>
                                             <SymbolIcon Symbol="Play" />
                                         </Button.Content>
                                     </Button>
-                                    <Button x:Name="CopyButton" Margin="0,0,0,0" Background="Transparent" Click="CopyButton_Click">
+                                    <Button x:Name="AddSentenceButton" Background="Transparent" Click="AddSentenceButton_Click">
+                                        <Button.Content>
+                                            <SymbolIcon Symbol="Add"  />
+                                        </Button.Content>
+                                    </Button>
+                                    <Button x:Name="CopyButton"  Background="Transparent" Click="CopyButton_Click">
                                         <Button.Content>
                                             <SymbolIcon Symbol="Copy" />
                                         </Button.Content>
                                     </Button>
-                                    <Button x:Name="AddToListButton" Margin="0,0,0,0" Background="Transparent" Click="AddToListButton_Click" Tag="{Binding Index}">
+                                    <Button x:Name="DeleteButton" Background="Transparent" Click="DeleteButton_Click" Tag="{Binding Index}">
                                         <Button.Content>
-                                            <SymbolIcon Symbol="Add" />
+                                            <SymbolIcon Symbol="Delete" />
                                         </Button.Content>
                                     </Button>
-                                    <Button x:Name="SearchButton" Margin="0,0,0,0" Background="Transparent" Click="SearchButton_Click">
+                                    <Button x:Name="SearchButton" Background="Transparent" Click="SearchButton_Click">
                                         <Button.Content>
                                             <SymbolIcon Symbol="Find" />
                                         </Button.Content>
                                     </Button>
-                                    <Button x:Name="DecomposeButton" Margin="0,0,0,0" Background="Transparent" Click="DecomposeButton_Click">
+                                    <Button x:Name="DecomposeButton" Background="Transparent" Click="DecomposeButton_Click">
                                         <Button.Content>
                                             <SymbolIcon Symbol="Cut" />
                                         </Button.Content>
-                                    </Button>-->
-                                    
+                                    </Button>
                                 </StackPanel>
                             </StackPanel>
                         </DataTemplate>

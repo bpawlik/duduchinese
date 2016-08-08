@@ -181,7 +181,6 @@ namespace DuDuChinese.Views
         #region toggle search query placeholder text
 
         string defaultQueryText = null;
-        bool appBarVisibility;
         void Query_GotFocus(object sender, RoutedEventArgs e)
         {
             if (Query.Text.Equals(defaultQueryText))

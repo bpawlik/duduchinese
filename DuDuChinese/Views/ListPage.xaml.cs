@@ -15,6 +15,8 @@ namespace DuDuChinese.Views
         {
             InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Disabled;
+
+            ViewModel.Media = media;
         }
 
         private void Pinyin_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -34,6 +36,8 @@ namespace DuDuChinese.Views
             int item = list.SelectedIndex;
             if (item == -1)
                 return;
+
+            ViewModel.SelectedIndex = list.SelectedIndex;
 
             if (previous != item)
             {
@@ -69,6 +73,39 @@ namespace DuDuChinese.Views
                 expandedView.Visibility = Visibility.Collapsed;
                 actionPanel.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void PlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Play();
+        }
+
+        private void AddSentenceButton_Click(object sender, RoutedEventArgs e)
+        {
+            //Button button = (Button)sender;
+            //int i = int.Parse(button.Tag.ToString());
+            //DictionaryRecord record = d[i];
+            //App app = (App)Application.Current;
+        }
+
+        private void CopyButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DecomposeButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
