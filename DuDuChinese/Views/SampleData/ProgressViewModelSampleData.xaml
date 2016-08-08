@@ -1,0 +1,13 @@
+﻿<local:ProgressPageViewModel 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"       
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DuDuChinese.ViewModels">
+
+    <local:ProgressPageViewModel.ProgressItems>
+        <local:ProgressItem Text="First exercise item" ItemCount="10" />
+        <local:ProgressItem Text="Exercise Item" ItemCount="5" />
+        <local:ProgressItem Text="Some other exercise item" ItemCount="3" />
+        <local:ProgressItem Text="Another exercise item" ItemCount="15" />
+    </local:ProgressPageViewModel.ProgressItems>
+
+</local:ProgressPageViewModel>

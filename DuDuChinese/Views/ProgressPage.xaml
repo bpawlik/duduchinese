@@ -53,7 +53,7 @@
                              RelativePanel.AlignTopWithPanel="True" Text="Progress Page" />
 
         <!--  content  -->
-        <StackPanel Margin="25, 50">
+        <StackPanel Margin="25, 50" d:DataContext="{d:DesignData SampleData/ProgressViewModelSampleData.xaml}">
             <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="List of exercises:" />
             <ScrollViewer Margin="25" RelativePanel.AlignBottomWithPanel="True"
                         RelativePanel.AlignLeftWithPanel="True"
@@ -69,24 +69,28 @@
                         <DataTemplate x:DataType="vm:ProgressItem">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="30" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="{x:Bind Text, Mode=TwoWay}" Grid.Column="0">
-                                    <TextBlock.Foreground>
-                                        <SolidColorBrush Color="{x:Bind ForegroundColor, Mode=TwoWay}"/>
-                                    </TextBlock.Foreground>
-                                </TextBlock>
                                 <TextBlock 
                                     Text="{Binding ItemCount}" 
-                                    Margin="50,0,10,0"
-                                    FontWeight="Bold"
-                                    Grid.Column="1"
-                                    HorizontalAlignment="Right" >
+                                    Margin="10,0,0,0"
+                                    Grid.Column="0"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Left" >
                                     <TextBlock.Foreground>
                                         <SolidColorBrush Color="{x:Bind ForegroundColor, Mode=TwoWay}"/>
                                     </TextBlock.Foreground>
                                 </TextBlock>
+                                <CheckBox Content="{Binding Text, Mode=TwoWay}" Grid.Column="1"
+                                          VerticalAlignment="Center"
+                                          Margin="10,0,10,0"
+                                          IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                          IsEnabled="{Binding IsEnabled}">
+                                    <CheckBox.Foreground>
+                                        <SolidColorBrush Color="{x:Bind ForegroundColor, Mode=TwoWay}"/>
+                                    </CheckBox.Foreground>
+                                </CheckBox>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>

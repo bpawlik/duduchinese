@@ -15,41 +15,44 @@ namespace DuDuChinese.ViewModels
 {
     public class ProgressItem : ViewModelBase
     {
+        public ProgressItem() { }
+
         private string text = "";
         public string Text
         {
             get { return this.text; }
-            set
-            {
-                this.Set(ref this.text, value);
-            }
+            set { this.Set(ref this.text, value); }
         }
 
         private int itemCount = 0;
         public int ItemCount
         {
             get { return this.itemCount; }
-            set
-            {
-                this.Set(ref this.itemCount, value);
-            }
+            set { this.Set(ref this.itemCount, value); }
+        }
+
+        private bool isChecked = true;
+        public bool IsChecked
+        {
+            get { return this.isChecked; }
+            set { this.Set(ref this.isChecked, value); }
+        }
+
+        private bool isEnabled = true;
+        public bool IsEnabled
+        {
+            get { return this.isEnabled; }
+            set { this.Set(ref this.isEnabled, value); }
         }
 
         private Windows.UI.Color foregroundColor = Windows.UI.Colors.Black;
         public Windows.UI.Color ForegroundColor
         {
             get { return this.foregroundColor; }
-            set
-            {
-                this.Set(ref this.foregroundColor, value);
-            }
+            set { this.Set(ref this.foregroundColor, value); }
         }
 
-        public ProgressItem(string text, int itemCount)
-        {
-            this.text = text;
-            this.itemCount = itemCount;
-        }
+        public LearningExercise Exercise { get; set; }
     }
 
     public class ProgressPageViewModel : ViewModelBase
@@ -58,10 +61,9 @@ namespace DuDuChinese.ViewModels
         public List<ProgressItem> ProgressItems { get; set; } = null;
         public string Text { get; set; } = "Click Continue to go to the next exercise:";
         public bool CancelEnabled { get; set; } = true;
+        private int nextExerciseIndex = -1;
 
-        public ProgressPageViewModel()
-        {
-        }
+        public ProgressPageViewModel() {}
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
@@ -69,16 +71,21 @@ namespace DuDuChinese.ViewModels
 
             RevisionEngine.Serialize();
 
-            // Get next exercise
-            LearningExercise nextExcercise = LearningEngine.NextExercise();
+            // Peek next exercise
+            LearningExercise nextExcercise = LearningEngine.PeekNextExercise(out this.nextExerciseIndex);
 
             // Refresh task list
             if (this.ProgressItems == null)
                 this.ProgressItems = new List<ProgressItem>();
             foreach (LearningExercise exerc in LearningEngine.ExerciseList)
-                this.ProgressItems.Add(new ProgressItem(
-                    LearningEngine.GetDescription(exerc),
-                    LearningEngine.GetItemCountForExercise(exerc)));
+            {
+                this.ProgressItems.Add(new ProgressItem()
+                {
+                    Exercise = exerc,
+                    Text = LearningEngine.GetDescription(exerc),
+                    ItemCount = LearningEngine.GetItemCountForExercise(exerc)
+                });
+            }
 
             if (nextExcercise == LearningExercise.Done)
             {
@@ -91,7 +98,7 @@ namespace DuDuChinese.ViewModels
             }
             else
             {
-                this.SelectedItemIndex = LearningEngine.CurrentExerciseIndex;
+                this.SelectedItemIndex = this.nextExerciseIndex;
             }
 
             await Task.CompletedTask;
@@ -115,6 +122,15 @@ namespace DuDuChinese.ViewModels
 
         public void Continue_Click(object sender, RoutedEventArgs e)
         {
+            // Update exercise list based on the checkbox selection
+            if (LearningEngine.Mode != LearningMode.Revision)
+                foreach (var item in ProgressItems)
+                    if (!item.IsChecked)
+                        LearningEngine.ExerciseList.Remove(item.Exercise);
+
+            // Move to the next exercise
+            LearningEngine.NextExercise();
+
             if (LearningEngine.CurrentExercise == LearningExercise.Done)
             {
                 // We're done!
@@ -145,7 +161,10 @@ namespace DuDuChinese.ViewModels
 
         public void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(typeof(Views.NewMaterialPage), 0);
+            if (LearningEngine.Mode == LearningMode.Revision)
+                NavigationService.Navigate(typeof(Views.RevisePage), 0);
+            else
+                NavigationService.Navigate(typeof(Views.NewMaterialPage), 0);
         }
 
         public void listView_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
@@ -157,8 +176,12 @@ namespace DuDuChinese.ViewModels
                 item.ForegroundColor = defaultColor;
 
             // Color green all passed items
-            for (int i = 0; i < LearningEngine.CurrentExerciseIndex; i++)
-                    ProgressItems[i].ForegroundColor = Windows.UI.Colors.Green;
+            for (int i = 0; i < this.nextExerciseIndex; i++)
+            {
+                ProgressItems[i].ForegroundColor = Windows.UI.Colors.Green;
+                ProgressItems[i].IsEnabled = false;
+            }
+                
         }
     }
 }

@@ -142,6 +142,15 @@ namespace DuDuChinese.Models
             }
         }
 
+        public static LearningExercise PeekNextExercise(out int index)
+        {
+            index = currentExerciseIndex + 1;
+            if (CurrentExercise == LearningExercise.Done || index == ExerciseList.Count)
+                return LearningExercise.Done;
+            else
+                return ExerciseList[index];
+        }
+
         public static LearningExercise NextExercise()
         {
             if (CurrentExercise == LearningExercise.Done)
