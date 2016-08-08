@@ -99,13 +99,6 @@
                                                        Visibility="{Binding SimplifiedVisible, Mode=TwoWay}"
                                                        TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="26" />
                                         </StackPanel>
-                                        <StackPanel x:Name="ActionPanel" Margin="-5,5,0,0" Orientation="Horizontal">
-                                            <Button x:Name="PlayButton" Click="PlayButton_Click" Background="Transparent">
-                                                <Button.Content>
-                                                    <SymbolIcon Symbol="Play" />
-                                                </Button.Content>
-                                            </Button>
-                                        </StackPanel>
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
@@ -127,8 +120,22 @@
                         </Core:EventTriggerBehavior>
                     </Interactivity:Interaction.Behaviors>
                 </TextBox>
+                <StackPanel x:Name="ActionPanel" Grid.Row="3" Margin="10,0,0,0" Orientation="Horizontal">
+                    <Button x:Name="PlayButton" Margin="0,0,0,0" Click="PlayButton_Click" Background="Transparent">
+                        <Button.Content>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition  />
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="1" Text="Play" />
+                                <SymbolIcon Grid.Column="0" Symbol="Play" />
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
                 <StackPanel Grid.Row="3">
-                    <Button x:Name="continueButton" Content="Continue" Margin="150,0,0,0" HorizontalAlignment="Left"
+                    <Button x:Name="continueButton" Content="Continue" Margin="150,10,0,0" HorizontalAlignment="Left"
                             Click="{x:Bind Continue_Click}" />
                 </StackPanel>
                 <StackPanel Grid.Row="4" VerticalAlignment="Bottom">

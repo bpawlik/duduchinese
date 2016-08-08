@@ -86,13 +86,6 @@
                                             <TextBlock Text="{Binding EnglishWithNewlines}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="20"  />
                                             <TextBlock Text="{Binding Chinese}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="26" />
                                         </StackPanel>
-                                        <StackPanel x:Name="ActionPanel" Margin="-5,5,0,0" Orientation="Horizontal">
-                                            <Button x:Name="PlayButton" Margin="0,0,0,0" Click="PlayButton_Click" Background="Transparent">
-                                                <Button.Content>
-                                                    <SymbolIcon Symbol="Play" />
-                                                </Button.Content>
-                                            </Button>
-                                        </StackPanel>
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
@@ -100,8 +93,23 @@
                     </ScrollViewer>
                 </StackPanel>
                 <!--<TextBlock HorizontalAlignment="Center" Style="{StaticResource TitleTextBlockStyle}" Text="{x:Bind ViewModel.Text}" />-->
+                <StackPanel x:Name="ActionPanel" Grid.Row="1" Margin="10,0,0,0" Orientation="Horizontal">
+                    <Button x:Name="PlayButton" Margin="0,0,0,0" Click="PlayButton_Click" Background="Transparent">
+                        <Button.Content>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition  />
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="1" Text="Play" />
+                                <SymbolIcon Grid.Column="0" Symbol="Play" />
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
                 <StackPanel Grid.Row="1">
-                    <Button x:Name="continueButton" Content="Continue" Margin="150,0,0,0"
+                    <Button x:Name="continueButton" Content="Continue" Margin="150,10,0,0"
+                            VerticalAlignment="Center"
                             HorizontalAlignment="Left" Click="{x:Bind ViewModel.Continue_Click}">
                         <Interactivity:Interaction.Behaviors>
                             <!--  focus on textbox when page loads  -->
