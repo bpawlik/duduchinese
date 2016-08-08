@@ -50,7 +50,7 @@
         <controls:PageHeader x:Name="pageHeader" Frame="{x:Bind Frame}"
                              RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignTopWithPanel="True" Text="Progress Page" />
+                             RelativePanel.AlignTopWithPanel="True" Text="{x:Bind ViewModel.PageTitle}" />
 
         <!--  content  -->
         <StackPanel Margin="25, 50" d:DataContext="{d:DesignData SampleData/ProgressViewModelSampleData.xaml}">
@@ -86,7 +86,7 @@
                                           VerticalAlignment="Center"
                                           Margin="10,0,10,0"
                                           IsChecked="{Binding IsChecked, Mode=TwoWay}"
-                                          IsEnabled="{Binding IsEnabled}">
+                                          IsEnabled="{Binding IsEnabled}" >
                                     <CheckBox.Foreground>
                                         <SolidColorBrush Color="{x:Bind ForegroundColor, Mode=TwoWay}"/>
                                     </CheckBox.Foreground>

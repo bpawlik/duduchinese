@@ -63,6 +63,11 @@ namespace DuDuChinese.ViewModels
         public bool CancelEnabled { get; set; } = true;
         private int nextExerciseIndex = -1;
 
+        public string PageTitle
+        {
+            get { return LearningEngine.Mode == LearningMode.Revision ? "Revision" : "New Material"; }
+        }
+
         public ProgressPageViewModel() {}
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
@@ -83,7 +88,8 @@ namespace DuDuChinese.ViewModels
                 {
                     Exercise = exerc,
                     Text = LearningEngine.GetDescription(exerc),
-                    ItemCount = LearningEngine.GetItemCountForExercise(exerc)
+                    ItemCount = LearningEngine.GetItemCountForExercise(exerc),
+                    IsEnabled = (LearningEngine.Mode != LearningMode.Revision)
                 });
             }
 

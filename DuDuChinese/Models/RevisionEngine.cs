@@ -47,13 +47,16 @@ namespace DuDuChinese.Models
         {
             get {
                 if (revisionList == null)
-                    revisionList = new List<RevisionItem>();
+                {
+                    Deserialize();
+                }
                 return revisionList;
             }
 
             private set
             {
-                revisionList = value;
+                if (value != null)
+                    revisionList = value;
             }
         }
 
