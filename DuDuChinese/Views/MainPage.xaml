@@ -123,22 +123,22 @@
                                                 <SymbolIcon Symbol="Play" />
                                             </Button.Content>
                                         </Button>
-                                        <Button x:Name="CopyButton"  Background="Transparent" Click="CopyButton_Click">
+                                        <Button x:Name="CopyButton" Tag="{Binding Index}" Background="Transparent" Click="CopyButton_Click">
                                             <Button.Content>
                                                 <SymbolIcon Symbol="Copy" />
                                             </Button.Content>
                                         </Button>
-                                        <Button x:Name="AddToListButton" Background="Transparent" Click="AddToListButton_Click" Tag="{Binding Index}">
+                                        <Button x:Name="AddToListButton" Tag="{Binding Index}" Background="Transparent" Click="AddToListButton_Click">
                                             <Button.Content>
                                                 <SymbolIcon Symbol="Add" />
                                             </Button.Content>
                                         </Button>
-                                        <Button x:Name="SearchButton" Background="Transparent" Click="SearchButton_Click">
+                                        <Button x:Name="SearchButton" Tag="{Binding Index}" Background="Transparent" Click="SearchButton_Click">
                                             <Button.Content>
                                                 <SymbolIcon Symbol="Find" />
                                             </Button.Content>
                                         </Button>
-                                        <Button x:Name="DecomposeButton" Background="Transparent" Click="DecomposeButton_Click">
+                                        <Button x:Name="DecomposeButton" Tag="{Binding Index}" Background="Transparent" Click="DecomposeButton_Click">
                                             <Button.Content>
                                                 <SymbolIcon Symbol="Cut" />
                                             </Button.Content>
