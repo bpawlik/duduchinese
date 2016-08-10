@@ -72,16 +72,16 @@ namespace DuDuChinese.ViewModels
         void LoadListData()
         {
             List<DictionaryRecord> data = new List<DictionaryRecord>(list);
-            //switch (list.SortOrder)
-            //{
-            //    case DictionaryRecordList.ListSortOrder.ReverseChronological:
-            //        data.Reverse();
-            //        break;
-            //    case DictionaryRecordList.ListSortOrder.Alphabetical:
-            //    default:
-            //        data.Sort();
-            //        break;
-            //}
+            switch (list.SortOrder)
+            {
+                case DictionaryRecordList.ListSortOrder.ReverseChronological:
+                    data.Reverse();
+                    break;
+                case DictionaryRecordList.ListSortOrder.Alphabetical:
+                default:
+                    data.Sort();
+                    break;
+            }
             LoadData(data);
         }
 
