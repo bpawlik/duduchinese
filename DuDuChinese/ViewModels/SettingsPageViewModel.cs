@@ -19,15 +19,7 @@ namespace DuDuChinese.ViewModels
 
         public SettingsPartViewModel()
         {
-            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-            {
-                // designtime
-            }
-            else
-            {
-                _settings = Services.SettingsServices.SettingsService.Instance;
-                UseLightThemeButton = true;
-            }
+            _settings = Services.SettingsServices.SettingsService.Instance;
         }
 
         public bool UseShellBackButton
@@ -59,8 +51,6 @@ namespace DuDuChinese.ViewModels
                 return $"{v.Major}.{v.Minor}.{v.Build}.{v.Revision}";
             }
         }
-
-        public Uri RateMe => new Uri("http://aka.ms/template10");
     }
 }
 

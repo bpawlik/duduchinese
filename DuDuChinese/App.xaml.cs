@@ -103,8 +103,8 @@ namespace DuDuChinese
 
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
         {
-            // long-running startup tasks go here
-            await Task.Delay(5000);
+            var _settings = SettingsService.Instance;
+            Views.Shell.HamburgerMenu.RefreshStyles(_settings.AppTheme);
 
             NavigationService.Navigate(typeof(Views.MainPage));
             await Task.CompletedTask;
