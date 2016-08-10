@@ -88,7 +88,9 @@
 
         </controls:PageHeader>
 
-        <Pivot x:Name="pivot" Title=" " Padding="0,-53,0,0" Margin="0,53,0,0" SelectionChanged="pivot_SelectionChanged">
+        <Pivot x:Name="pivot" Title=" " Padding="0,-53,0,0" Margin="0,53,0,0" SelectionChanged="pivot_SelectionChanged"
+               IsHitTestVisible="{x:Bind ViewModel.IsDataLoaded}"
+               SelectedIndex="{x:Bind ViewModel.SelectedPivotIndex, Mode=TwoWay}">
             <PivotItem x:Name="SearchPane" Header="Search" d:DataContext="{d:DesignData SampleData/MainViewModelSampleData.xaml}">
                 <!-- Search pivot content goes here-->
                 <Grid>
@@ -97,8 +99,10 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Vertical" Grid.Row="0">
-                        <TextBox x:Name="Query" InputScope="Search" GotFocus="Query_GotFocus" LostFocus="Query_LostFocus" KeyDown="Query_KeyDown" Text="english, pin1yin1 or 中文"/>
-                        <TextBlock x:Name="Status" Text="" TextWrapping="Wrap" Visibility="Collapsed" />
+                        <TextBox x:Name="Query" InputScope="Search" GotFocus="Query_GotFocus" LostFocus="Query_LostFocus" KeyDown="Query_KeyDown"
+                                 Text="{x:Bind ViewModel.QueryText}"/>
+                        <TextBlock x:Name="Status" Text="{x:Bind ViewModel.StatusText, Mode=TwoWay}" TextWrapping="Wrap"
+                                   Visibility="{x:Bind ViewModel.StatusVisibility, Mode=TwoWay}" />
                         <ProgressBar x:Name="Progress" Visibility="Collapsed" />
                         <MediaElement x:Name="media" AutoPlay="False" />
                     </StackPanel>

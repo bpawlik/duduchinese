@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -25,6 +25,8 @@ namespace DuDuChinese.ViewModels
 
         public int SelectedIndex { get; set; } = -1;
 
+        DictionaryRecordList list;
+
         //public ObservableCollection<DictionaryItem> Words { get; private set; } = new ObservableCollection<DictionaryItem>();
         //public DictionaryItemList Items { get; set; }
         private string title = "Default";
@@ -44,33 +46,10 @@ namespace DuDuChinese.ViewModels
         {
             Title = (suspensionState.ContainsKey(nameof(Title))) ? suspensionState[nameof(Title)]?.ToString() : parameter?.ToString();
 
-            //// TODO:
-            //Items = DictionaryManager.GetList(Title);
-            //Words = Items.Words;
-
             App app = (App)Application.Current;
-            DictionaryRecordList list = app.ListManager[Title];
+            list = app.ListManager[Title];
 
-            // Do I really need to recreate it ?
-            bool trad = false;
-            foreach (DictionaryRecord r in list)
-            {
-                // determine what Hanzi to show to the user
-                string chinese = (!trad || r.Chinese.Simplified.Equals(r.Chinese.Traditional))
-                    ? r.Chinese.Simplified                                                     // show only simplified
-                    : String.Format("{0} ({1})", r.Chinese.Simplified, r.Chinese.Traditional); // else "simple (trad)"
-
-                this.Items.Add(new ItemViewModel()
-                {
-                    Record = r,
-                    Pinyin = r.Chinese.Pinyin,
-                    English = String.Join("; ", r.English),
-                    EnglishWithNewlines = String.Join("\n", r.English),
-                    Chinese = chinese,
-                    Index = r.Index
-                });
-            }
-
+            LoadListData();
 
             await Task.CompletedTask;
         }
@@ -90,32 +69,45 @@ namespace DuDuChinese.ViewModels
             await Task.CompletedTask;
         }
 
-        //public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
-        //{
-        //    //Title = (suspensionState.ContainsKey(nameof(Title))) ? suspensionState[nameof(Title)]?.ToString() : parameter?.ToString();
-        //    ProgressItems = (suspensionState.ContainsKey(nameof(Title))) ? (DictionaryItemList)suspensionState[nameof(Title)] : (DictionaryItemList)parameter;
-        //    Title = ProgressItems.Title;
-        //    Words = ProgressItems.Words;
+        void LoadListData()
+        {
+            List<DictionaryRecord> data = new List<DictionaryRecord>(list);
+            //switch (list.SortOrder)
+            //{
+            //    case DictionaryRecordList.ListSortOrder.ReverseChronological:
+            //        data.Reverse();
+            //        break;
+            //    case DictionaryRecordList.ListSortOrder.Alphabetical:
+            //    default:
+            //        data.Sort();
+            //        break;
+            //}
+            LoadData(data);
+        }
 
-        //    // Time to load the list
+        public void LoadData(List<DictionaryRecord> items)
+        {
+            ClearData();
+            //this.NetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
 
-        //    await Task.CompletedTask;
-        //}
+            foreach (DictionaryRecord r in items)
+            {
+                this.Items.Add(new ItemViewModel()
+                {
+                    Record = r,
+                    Pinyin = r.Chinese.Pinyin,
+                    English = String.Join("; ", r.English),
+                    EnglishWithNewlines = String.Join("\n", r.English),
+                    Chinese = r.Chinese.Simplified,
+                    Index = r.Index
+                });
+            }
+        }
 
-        //public override async Task OnNavigatedFromAsync(IDictionary<string, object> suspensionState, bool suspending)
-        //{
-        //    if (suspending)
-        //    {
-        //        suspensionState[nameof(Title)] = Title;
-        //    }
-        //    await Task.CompletedTask;
-        //}
-
-        //public override async Task OnNavigatingFromAsync(NavigatingEventArgs args)
-        //{
-        //    args.Cancel = false;
-        //    await Task.CompletedTask;
-        //}
+        public void ClearData()
+        {
+            this.Items.Clear();
+        }
 
         public async void Play()
         {
@@ -163,6 +155,41 @@ namespace DuDuChinese.ViewModels
                     await messageDialog.ShowAsync();
                 }
             }
+        }
+
+        public void Sort()
+        {
+            switch (list.SortOrder)
+            {
+                case DictionaryRecordList.ListSortOrder.Alphabetical:
+                    list.SortOrder = DictionaryRecordList.ListSortOrder.ReverseChronological;
+                    break;
+                case DictionaryRecordList.ListSortOrder.ReverseChronological:
+                    list.SortOrder = DictionaryRecordList.ListSortOrder.Alphabetical;
+                    break;
+            }
+            LoadListData(); // reload
+        }
+
+        public void Delete()
+        {
+            App app = (App)Application.Current;
+            DictionaryRecord record = app.ListManager[this.Title][this.SelectedIndex];
+            list.Remove(record);
+            LoadListData();
+        }
+
+        public void Search()
+        {
+            App app = (App)Application.Current;
+            DictionaryRecord record = app.ListManager[this.Title][this.SelectedIndex];
+
+            // NavigationService.Navigate is actually serializing the object.
+            // To avoid making DictionarRecord serializable, it's better to
+            // use SessionState dicitonary to pass objects over different pages.
+            var key = nameof(DictionaryRecord);
+            SessionState.Add(key, record);
+            NavigationService.Navigate(typeof(Views.MainPage), key);
         }
     }
 }

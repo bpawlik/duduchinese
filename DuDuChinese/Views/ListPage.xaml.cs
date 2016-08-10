@@ -75,37 +75,95 @@ namespace DuDuChinese.Views
             }
         }
 
+        private void AppBarAddButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Add sentence
+        }
+
+        private void AppBarSortButton_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Sort();
+        }
+
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.Play();
         }
 
-        private void AddSentenceButton_Click(object sender, RoutedEventArgs e)
+        void CopyButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            DictionaryRecord record = ((ItemViewModel)button.DataContext).Record;
+            Windows.ApplicationModel.DataTransfer.DataPackage dataPackage = new Windows.ApplicationModel.DataTransfer.DataPackage();
+            dataPackage.SetText(record.Chinese.Simplified);
+            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dataPackage);
+        }
+
+        void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Delete();
+
+            previous = -1;
+        }
+
+        void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Search();
+        }
+
+        void DecomposeButton_Click(object sender, RoutedEventArgs e)
         {
             //Button button = (Button)sender;
-            //int i = int.Parse(button.Tag.ToString());
-            //DictionaryRecord record = d[i];
+            //DictionaryRecord record = ((ItemViewModel)button.DataContext).Record;
             //App app = (App)Application.Current;
+            //app.Transition = App.TransitionType.Decompose;
+            //app.TransitionData = record;
+            //NavigationService.GoBack();
         }
 
-        private void CopyButton_Click(object sender, RoutedEventArgs e)
+        void SortButton_Click(object sender, EventArgs e)
         {
-
+            ViewModel.Sort();
         }
 
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        void EmailButton_Click(object sender, EventArgs e)
         {
+            //StringBuilder sb = new StringBuilder();
+            //StringBuilder s2 = new StringBuilder();
 
-        }
+            //foreach (ItemViewModel item in NotepadItems.Items)
+            //{
+            //    sb.AppendLine(item.Pinyin);
+            //    sb.AppendLine(item.EnglishWithNewlines);
+            //    sb.AppendLine(item.Chinese);
+            //    sb.AppendLine();
+            //    s2.AppendLine(item.Record.ToString());
+            //}
 
-        private void SearchButton_Click(object sender, RoutedEventArgs e)
-        {
+            //sb.AppendLine("-- Kuaishuo Chinese Dictionary http://www.knibb.co.uk/kuaishuo");
+            //sb.AppendLine("________________________________________");
+            //sb.AppendLine("CC-CEDICT ed. " + d.Header["date"]);
+            //sb.AppendLine();
 
-        }
+            //if (Encoding.UTF8.GetBytes(sb.ToString()).Length < 16384)
+            //    sb.AppendLine(s2.ToString());
 
-        private void DecomposeButton_Click(object sender, RoutedEventArgs e)
-        {
+            //sb.AppendLine("Redistributed under license. " + d.Header["license"]);
 
+            //try
+            //{
+            //    EmailComposeTask email = new EmailComposeTask();
+            //    email.Subject = String.Format("[Kuaishuo] {0}", list.Name);
+            //    email.Body = sb.ToString();
+            //    email.Show();
+            //}
+            //catch (ArgumentOutOfRangeException)
+            //{
+            //    int size = Encoding.UTF8.GetBytes(sb.ToString()).Length / 1024;
+            //    MessageBox.Show(String.Format(
+            //        "Sorry, Windows Phone has a 64KB size limit for emails sent from applications. " +
+            //        "Your notepad contains too many items to email ({0}KB). Please remove some and try again.", size));
+            //}
         }
     }
 }

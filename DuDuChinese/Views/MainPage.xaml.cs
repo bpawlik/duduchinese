@@ -34,19 +34,8 @@ namespace DuDuChinese.Views
             this.Loaded += new RoutedEventHandler(MainPage_Loaded);
         }
 
-        bool ok = false;
         void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
-            if (defaultQueryText == null)
-                defaultQueryText = Query.Text;
-
-            pivot.IsHitTestVisible = false; // lock pivot prior to dictionary extraction
-            if (ok) // already loaded (e.g. coming back from settings page)
-            {
-                pivot.IsHitTestVisible = true; // unlock pivot since we are OK
-                return;
-            }
-
             List<string> files = new List<string> {
                 "cedict_ts.u8", "english.index", "hanzi.index", "pinyin.index", "hsklevel1.list", "hsklevel2.list" };
             foreach (string file in files)
@@ -56,8 +45,8 @@ namespace DuDuChinese.Views
 
             if (inProgress == 0)
             {
-                LoadDictionary();
-                RealizePreinstalledLists();
+                ViewModel.LoadDictionary();
+                ViewModel.RealizePreinstalledLists();
                 LoadLists();
             }  
 
@@ -155,98 +144,58 @@ namespace DuDuChinese.Views
             if (--inProgress > 0) // still busy
                 return;
             Progress.Visibility = Visibility.Collapsed; // don't need this any more
-            LoadDictionary();
-            RealizePreinstalledLists();
+            ViewModel.LoadDictionary();
+            ViewModel.RealizePreinstalledLists();
         }
 
         #endregion
 
         #region load dictionary (and indexes)
 
-        Dictionary d;
-        Searcher s;
-        void LoadDictionary()
-        {
-            d = new Dictionary("cedict_ts.u8");
-            s = new Searcher(d, new Index("english.index"), new Index("pinyin.index"), new Index("hanzi.index"));
-            Status.Text = "Enter your search phrase above.";
-            ok = true;
-            pivot.IsHitTestVisible = true; // unlock pivot now that dictionary has been extracted
-            App app = (App)Application.Current;
-            app.Dictionary = d;
-        }
+       
 
         #endregion
 
         #region toggle search query placeholder text
 
-        string defaultQueryText = null;
         void Query_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (Query.Text.Equals(defaultQueryText))
-                Query.Text = "";
+            if (Query.Text.Equals(MainPageViewModel.DefaultQueryText))
+                ViewModel.QueryText = "";
             else
                 Query.SelectAll();
-            //appBarVisibility = ApplicationBar.IsVisible;
-            //ApplicationBar.IsVisible = false; // otherwise annoying to accidentally touch ... when pressing -> (enter)
+            Bindings.Update();
         }
 
         void Query_LostFocus(object sender, RoutedEventArgs e)
         {
             if (Query.Text.Length == 0)
-                Query.Text = defaultQueryText;
-            //ApplicationBar.IsVisible = appBarVisibility;
+                ViewModel.QueryText = MainPageViewModel.DefaultQueryText;
+            Bindings.Update();
         }
 
         #endregion
 
         #region search
 
-        string lastQuery = "";
         void Query_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
-            if (e.Key != Windows.System.VirtualKey.Enter || !ok)
+            if (e.Key != Windows.System.VirtualKey.Enter || !ViewModel.IsDataLoaded)
                 return;
 
-            Query.Text = Query.Text.Trim();
-            if (Query.Text.Length == 0)
+            ViewModel.QueryText = Query.Text.Trim();
+            if (ViewModel.QueryText.Length == 0)
             {
+                ViewModel.StatusText = "";
+                ViewModel.StatusVisibility = Visibility.Collapsed;
                 ViewModel.ClearData();
                 Results.Focus(FocusState.Programmatic);
+                Bindings.Update();
                 return;
             }
 
-            int minRelevance = Query.Text.Equals(lastQuery) ? 30 : 75;
-            TriggerSearch(Query.Text, minRelevance);
-        }
-
-        void TriggerSearch(string query, int minRelevance)
-        {
-            List<DictionaryRecord> results = s.Search(query, minRelevance);
-
-            if (results.Count == 0 && s.Total > 0) // try again
-                results = s.Search(query);
-
-            // reset things that need to be reset :)
-            prev[Results.Name] = -1; // override expansion marker
-
-            if (results.Count == 0)
-            {
-                Status.Text = String.Format("No results for '{0}'. Try another search.", query);
-                Status.Visibility = Visibility.Visible;
-                ViewModel.ClearData();
-            }
-            else // replace old search results with new
-            {
-                Status.Text = String.Format("Showing results for '{0}' (omitted '{1}')", s.LastQuery, s.Ignored);
-                Status.Visibility = s.SmartSearch ? Visibility.Visible : Visibility.Collapsed;
-                ViewModel.LoadData(results);
-            }
-
-            lastQuery = query;
-
-            // This would be good for mobile up to hide keyboard. On PC however is annoying.
-            //Results.Focus(FocusState.Programmatic);
+            int minRelevance = ViewModel.QueryText.Equals(ViewModel.LastQuery) ? 30 : 75;
+            ViewModel.TriggerSearch(Query.Text, minRelevance);
         }
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
@@ -254,15 +203,16 @@ namespace DuDuChinese.Views
             Button button = (Button)sender;
             int i;
             int.TryParse(button.Tag.ToString(), out i);
-            DictionaryRecord record = d[i];
-            Search(record);
+            //DictionaryRecord record = ViewModel.Dictionary[i];
+            //Search(record);
+            ViewModel.Search(i);
         }
 
-        void Search(DictionaryRecord record)
-        {
-            Query.Text = record.Chinese.Simplified;
-            TriggerSearch(Query.Text, 30);
-        }
+        //void Search(DictionaryRecord record)
+        //{
+        //    Query.Text = record.Chinese.Simplified;
+        //    TriggerSearch(Query.Text, 30);
+        //}
 
         #endregion
 
@@ -273,7 +223,6 @@ namespace DuDuChinese.Views
             switch (((Pivot)sender).SelectedIndex)
             {
                 case 0: // Search page
-                    //ApplicationBar = ((ApplicationBar)Resources["AppBar_SearchPivotPage"]);
                     if (RecordToAdd != null)
                         RecordToAdd = null; // cancel the incomplete add-to-list action
                     Query.Focus(FocusState.Programmatic);
@@ -285,13 +234,11 @@ namespace DuDuChinese.Views
                         (ListsPane.DataContext as ListViewModel).IsActive = false;
                     break;
                 case 2: // List page
-                    //ApplicationBar = ((ApplicationBar)Resources["AppBar_ListsPivotPage"]);
                     CreateDefaultList();
                     LoadLists();
                     (ListsPane.DataContext as ListViewModel).IsActive = true;
                     break;
             }
-            //ApplicationBar.IsVisible = true;
         }
 
         #endregion
@@ -303,7 +250,7 @@ namespace DuDuChinese.Views
             Button button = (Button)sender;
             int i;
             int.TryParse(button.Tag.ToString(), out i);
-            DictionaryRecord record = d[i];
+            DictionaryRecord record = ViewModel.Dictionary[i];
             Decompose(record);
         }
 
@@ -312,9 +259,9 @@ namespace DuDuChinese.Views
             List<DictionaryRecord> results = new List<DictionaryRecord>();
             results.Add(record);
             foreach (Chinese.Character c in record.Chinese.Characters)
-                results.AddRange(s.Search(c.Simplified.ToString(), 100));
+                results.AddRange(ViewModel.Searcher.Search(c.Simplified.ToString(), 100));
             Query.Text = record.Chinese.Simplified + " (split)";
-            prev[Results.Name] = -1; // override expansion marker
+            ViewModel.Prev[Results.Name] = -1; // override expansion marker
             Status.Visibility = Visibility.Collapsed;
             ViewModel.LoadData(results);
             Results.ScrollIntoView(Results.Items[0]);
@@ -341,7 +288,7 @@ namespace DuDuChinese.Views
                 Button button = (Button)sender;
                 int i;
                 int.TryParse(button.Tag.ToString(), out i);
-                string text = d[i].Chinese.Simplified;
+                string text = ViewModel.Dictionary[i].Chinese.Simplified;
 
                 if (!String.IsNullOrEmpty(text))
                 {
@@ -384,7 +331,7 @@ namespace DuDuChinese.Views
             Button button = (Button)sender;
             int i;
             int.TryParse(button.Tag.ToString(), out i);
-            DictionaryRecord r = d[i];
+            DictionaryRecord r = ViewModel.Dictionary[i];
             Windows.ApplicationModel.DataTransfer.DataPackage dataPackage = new Windows.ApplicationModel.DataTransfer.DataPackage();
             dataPackage.SetText(r.Chinese.Simplified);
             Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dataPackage);
@@ -411,7 +358,7 @@ namespace DuDuChinese.Views
         {
             Button button = (Button)sender;
             int i = int.Parse(button.Tag.ToString());
-            DictionaryRecord record = d[i];
+            DictionaryRecord record = ViewModel.Dictionary[i];
             App app = (App)Application.Current;
 
             // Find default list
@@ -470,7 +417,7 @@ namespace DuDuChinese.Views
 
         #region expand/collapse list items
 
-        Dictionary<string, int> prev = new Dictionary<string, int>();
+        //Dictionary<string, int> prev = new Dictionary<string, int>();
         // IMPORTANT: this event handler is used by both search and notepad lists
         // DO NOT USE Results or NotepadItems objects directly
         // DO USE (ListBox)sender to ensure the correct list is manipulated
@@ -481,13 +428,13 @@ namespace DuDuChinese.Views
             if (item == -1)
                 return;
 
-            int previous = prev.ContainsKey(list.Name) ? prev[list.Name] : -1;
+            int previous = ViewModel.Prev.ContainsKey(list.Name) ? ViewModel.Prev[list.Name] : -1;
             if (previous != item)
             {
                 ToggleView(list, item, true);
                 if (previous != -1)
                     ToggleView(list, previous, false);
-                prev[list.Name] = item;
+                ViewModel.Prev[list.Name] = item;
             }
 
             list.SelectedIndex = -1; // reset
@@ -561,30 +508,6 @@ namespace DuDuChinese.Views
             //}
         }
 
-        void RealizePreinstalledLists()
-        {
-            try
-            {
-                App app = (App)Application.Current;
-                using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForApplication())
-                {
-                    foreach (string file in store.GetFileNames("*.list"))
-                    {
-                        Dictionary list = new Dictionary(file);
-                        string name = list.Header[DictionaryRecordList.NameHeaderKey];
-                        if (app.ListManager.ContainsKey(name))
-                            continue;
-                        foreach (DictionaryRecord r in list)
-                            app.ListManager[name].Add(r);
-                    }
-                }
-            }
-            catch
-            {
-                System.Diagnostics.Debug.WriteLine("Couldn't load preinstalled lists!");
-            }
-        }
-
         void LoadLists()
         {
             ListViewModel lvm = new ListViewModel();
@@ -592,8 +515,6 @@ namespace DuDuChinese.Views
             ListsPane.DataContext = lvm;
             if (pivot.SelectedItem.Equals(ListsPane))
             {
-                //((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = true; // (re-)enable add new list
-                //ApplicationBar.IsVisible = true;
                 if (RecordToAdd != null)
                     lvm.AddInProgress = true;
             }
@@ -889,9 +810,6 @@ namespace DuDuChinese.Views
             }
 
             ViewModel.GotoList(name);
-
-            //string uri = String.Format("/ListPage.xaml?name={0}", name);
-            //NavigationService.Navigate(new Uri(uri, UriKind.Relative));
         }
 
         #endregion
@@ -904,7 +822,6 @@ namespace DuDuChinese.Views
             ItemViewModel item = (ItemViewModel)textBlock.DataContext;
             DictionaryRecord record = item.Record;
             PinyinColorizer p = new PinyinColorizer();
-            //Settings settings = new Settings();
             p.Colorize(textBlock, record);
         }
 
