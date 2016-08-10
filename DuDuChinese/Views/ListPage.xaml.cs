@@ -26,7 +26,6 @@ namespace DuDuChinese.Views
             DictionaryRecord record = item.Record;
             PinyinColorizer p = new PinyinColorizer();
             p.Colorize(textBlock, record);
-
         }
 
         int previous = -1;
@@ -37,7 +36,7 @@ namespace DuDuChinese.Views
             if (item == -1)
                 return;
 
-            ViewModel.SelectedIndex = list.SelectedIndex;
+            ViewModel.SelectedItem = ((ItemViewModel)list.SelectedItem).Record;
 
             if (previous != item)
             {
@@ -92,11 +91,7 @@ namespace DuDuChinese.Views
 
         void CopyButton_Click(object sender, RoutedEventArgs e)
         {
-            Button button = (Button)sender;
-            DictionaryRecord record = ((ItemViewModel)button.DataContext).Record;
-            Windows.ApplicationModel.DataTransfer.DataPackage dataPackage = new Windows.ApplicationModel.DataTransfer.DataPackage();
-            dataPackage.SetText(record.Chinese.Simplified);
-            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dataPackage);
+            ViewModel.CopyToClipboard();
         }
 
         void DeleteButton_Click(object sender, RoutedEventArgs e)

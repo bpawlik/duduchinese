@@ -23,7 +23,7 @@ namespace DuDuChinese.ViewModels
 
         public MediaElement Media { get; internal set; }
 
-        public int SelectedIndex { get; set; } = -1;
+        public DictionaryRecord SelectedItem { get; set; } = null;
 
         DictionaryRecordList list;
 
@@ -124,14 +124,14 @@ namespace DuDuChinese.ViewModels
                     return;
             }
 
-            App app = (App)Application.Current;
-            string text = app.ListManager[this.Title][this.SelectedIndex].Chinese.Simplified;
+            string text = SelectedItem.Chinese.Simplified;
 
             if (!String.IsNullOrEmpty(text))
             {
                 try
                 {
                     // Create a stream from the text. This will be played using a media element.
+                    App app = (App)Application.Current;
                     SpeechSynthesisStream synthesisStream = await app.Synthesizer.SynthesizeTextToStreamAsync(text);
 
                     // Set the source and start playing the synthesized audio stream.
@@ -171,24 +171,26 @@ namespace DuDuChinese.ViewModels
             LoadListData(); // reload
         }
 
+        public void CopyToClipboard()
+        {
+            Windows.ApplicationModel.DataTransfer.DataPackage dataPackage = new Windows.ApplicationModel.DataTransfer.DataPackage();
+            dataPackage.SetText(SelectedItem.Chinese.Simplified);
+            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dataPackage);
+        }
+
         public void Delete()
         {
-            App app = (App)Application.Current;
-            DictionaryRecord record = app.ListManager[this.Title][this.SelectedIndex];
-            list.Remove(record);
+            list.Remove(SelectedItem);
             LoadListData();
         }
 
         public void Search()
         {
-            App app = (App)Application.Current;
-            DictionaryRecord record = app.ListManager[this.Title][this.SelectedIndex];
-
             // NavigationService.Navigate is actually serializing the object.
             // To avoid making DictionarRecord serializable, it's better to
             // use SessionState dicitonary to pass objects over different pages.
             var key = nameof(DictionaryRecord);
-            SessionState.Add(key, record);
+            SessionState.Add(key, SelectedItem);
             NavigationService.Navigate(typeof(Views.MainPage), key);
         }
     }
