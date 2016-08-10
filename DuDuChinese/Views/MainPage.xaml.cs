@@ -166,19 +166,18 @@ namespace DuDuChinese.Views
                     if (RecordToAdd != null)
                         RecordToAdd = null; // cancel the incomplete add-to-list action
                     Query.Focus(FocusState.Programmatic);
-                    if (ListsPane.DataContext != null && ListsPane.DataContext is ListViewModel)
-                        (ListsPane.DataContext as ListViewModel).IsActive = false;
+                    ViewModel.IsActive = false;
                     break;
                 case 1:
-                    if (ListsPane.DataContext != null && ListsPane.DataContext is ListViewModel)
-                        (ListsPane.DataContext as ListViewModel).IsActive = false;
+                    ViewModel.IsActive = false;
                     break;
                 case 2: // List page
                     ViewModel.RealizePreinstalledLists();
                     LoadLists();
-                    (ListsPane.DataContext as ListViewModel).IsActive = true;
+                    ViewModel.IsActive = true;
                     break;
             }
+            Bindings.Update();
         }
 
         #endregion
@@ -650,6 +649,10 @@ namespace DuDuChinese.Views
             ListListBox.UpdateLayout();
             int index = FindListItemIndexByName(ListListBox, name);
             ListListBox.ScrollIntoView(ListListBox.Items[index]);
+
+            // Update binding to get IsActive property updated and then focus back to the listbox
+            Bindings.Update();
+            ListListBox.Focus(FocusState.Programmatic);
         }
 
         private int FindListItemIndexByName(ListBox list, string name)

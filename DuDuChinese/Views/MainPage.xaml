@@ -70,11 +70,11 @@
             <!-- primary commands -->
             <controls:PageHeader.PrimaryCommands>
                 <AppBarButton Click="AppBarAddButton_Click" Label="Add"
-                              Visibility="{Binding ElementName=ListsPane, Path=DataContext.IsActive, Converter={StaticResource VisibilityConverter}}">
+                              Visibility="{x:Bind ViewModel.IsActive, Converter={StaticResource VisibilityConverter}}">
                     <SymbolIcon Symbol="Add" Height="20" VerticalAlignment="Top" />
                 </AppBarButton>
                 <AppBarButton Click="AppBarUploadButton_Click" Label="Add"
-                              Visibility="{Binding ElementName=ListsPane, Path=DataContext.IsActive, Converter={StaticResource VisibilityConverter}}">
+                              Visibility="{x:Bind ViewModel.IsActive, Converter={StaticResource VisibilityConverter}}">
                     <SymbolIcon Symbol="Upload" Height="20" VerticalAlignment="Top" />
                 </AppBarButton>
             </controls:PageHeader.PrimaryCommands>

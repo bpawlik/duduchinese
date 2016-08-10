@@ -21,6 +21,13 @@ namespace DuDuChinese.ViewModels
         public string LastQuery { get; set; } = "";
         public static string DefaultQueryText = "english, pin1yin1 or 中文";
 
+        private bool isActive = false;
+        public bool IsActive
+        {
+            get { return this.isActive; }
+            set { this.Set(ref this.isActive, value); }
+        }
+
         private string queryText = DefaultQueryText;
         public string QueryText
         {
@@ -65,6 +72,8 @@ namespace DuDuChinese.ViewModels
             {
                 //Value = suspensionState[nameof(Value)]?.ToString();
             }
+
+            this.IsActive = this.SelectedPivotIndex == 2;
 
             if (parameter is string && SessionState.ContainsKey(parameter as string))
             {
