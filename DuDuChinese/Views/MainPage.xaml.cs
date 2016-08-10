@@ -151,12 +151,6 @@ namespace DuDuChinese.Views
 
         #endregion
 
-        #region load dictionary (and indexes)
-
-       
-
-        #endregion
-
         #region toggle search query placeholder text
 
         void Query_GotFocus(object sender, RoutedEventArgs e)
@@ -235,7 +229,6 @@ namespace DuDuChinese.Views
                         (ListsPane.DataContext as ListViewModel).IsActive = false;
                     break;
                 case 2: // List page
-                    CreateDefaultList();
                     LoadLists();
                     (ListsPane.DataContext as ListViewModel).IsActive = true;
                     break;
@@ -386,13 +379,13 @@ namespace DuDuChinese.Views
             switch (app.ListManager.CountWriteable)
             {
                 case 0:
-                    //MessageBox.Show("You need to create a list before you can save items to it.");
+                    var messageDialog = new Windows.UI.Popups.MessageDialog(
+                        "You need to create a list before you can save items to it.");
+                    await messageDialog.ShowAsync();
                     return;
                 case 1:
                     DictionaryRecordList list = app.ListManager.DefaultList();
                     list.Add(record);
-                    //app.Transition = App.TransitionType.PostAdd;
-                    //app.TransitionData = record;
                     OpenList(list.Name);
                     break;
                 default:
@@ -430,7 +423,6 @@ namespace DuDuChinese.Views
 
         #region expand/collapse list items
 
-        //Dictionary<string, int> prev = new Dictionary<string, int>();
         // IMPORTANT: this event handler is used by both search and notepad lists
         // DO NOT USE Results or NotepadItems objects directly
         // DO USE (ListBox)sender to ensure the correct list is manipulated
@@ -486,41 +478,6 @@ namespace DuDuChinese.Views
 
         #region list handling
 
-        /// <summary>
-        /// Create default "notepad" list (once).
-        /// </summary>
-        void CreateDefaultList()
-        {
-            //Settings s = new Settings();
-            //if (s.NotepadCreatedSetting)
-            //    return;
-
-            //App app = (App)Application.Current;
-            //DictionaryRecordList list = app.ListManager["notepad"];
-            //s.NotepadCreatedSetting = true;
-
-            //if (s.NotepadItemsSetting.Count > 0) // migrate old notepad to list
-            //{
-            //    bool PatienceMessageShown = false;
-            //    DateTime start = DateTime.Now;
-            //    foreach (int id in s.NotepadItemsSetting)
-            //    {
-            //        list.Add(d[id]);
-            //        TimeSpan elapsed = DateTime.Now - start;
-            //        if (!PatienceMessageShown && elapsed.TotalSeconds > 1)
-            //        {
-            //            MessageBox.Show(
-            //                "Your notepad is being converted into a new style list. " +
-            //                "This may take a few more seconds so please be patient. " +
-            //                "Look for the 'notepad' list when the update completes.");
-            //            PatienceMessageShown = true;
-            //        }
-            //    }
-
-            //    s.NotepadItemsSetting.Clear(); // empty the old notepad so this doesn't happen twice
-            //}
-        }
-
         void LoadLists()
         {
             ListViewModel lvm = new ListViewModel();
@@ -539,7 +496,6 @@ namespace DuDuChinese.Views
             lvm.EditInProgress = true;
             ListItemViewModel item = new ListItemViewModel { Name = "", LineTwo = "", IsEditable = true };
             lvm.Items.Insert(0, item);
-            //((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = false; // disable "multi-add"
             ListListBox.ScrollIntoView(ListListBox.Items[0]);
         }
 
@@ -664,34 +620,19 @@ namespace DuDuChinese.Views
             // Iterate through all item list and remove default options
             ListViewModel lvm = (ListViewModel)ListListBox.DataContext;
             foreach (ListItemViewModel item in lvm.Items)
-            {
-                //FrameworkElement senderElement = item as FrameworkElement;
-                //FlyoutBase flyoutBase = FlyoutBase.GetAttachedFlyout(senderElement);
-                //bool isChecked = (bool)flyoutBase.ReadLocalValue(ToggleMenuFlyoutItem.IsCheckedProperty);
-
-                //if (isChecked)
-                //{
-                //    flyoutBase.SetValue(ToggleMenuFlyoutItem.IsCheckedProperty, false);
-                //}
-
                 item.IsDefault = false;
-            }
+
+            App app = (App)Application.Current;
+            foreach (string key in app.ListManager.Keys)
+                app.ListManager[key].IsDefault = false;
 
             var datacontext = (e.OriginalSource as FrameworkElement).DataContext;
             ListBoxItem lbItem = (ListBoxItem)ListListBox.ItemContainerGenerator.ContainerFromItem(datacontext);
             ListItemViewModel listItem = (ListItemViewModel)lbItem.DataContext;
+
+            app.ListManager[listItem.Name].IsDefault = true;
             listItem.IsDefault = true;
-
-            //ToggleMenuFlyoutItem flyoutItem = sender as ToggleMenuFlyoutItem;
-            //flyoutItem.IsChecked = true;
         }
-
-        //private void DeleteButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    var datacontext = (e.OriginalSource as FrameworkElement).DataContext;
-
-        //    //this datacontext is probably some object of some type T
-        //}
 
         void ListEdit_Loaded(object sender, RoutedEventArgs e)
         {
@@ -729,14 +670,9 @@ namespace DuDuChinese.Views
             }
             RenameListMode = false; // turn off renaming mode
             lvm.EditInProgress = false; // to reenable context menu
-            if (pivot.SelectedItem.Equals(ListsPane)) // check they didn't pivot away
-            {
-                //ApplicationBar.IsVisible = true;
-                //((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = true; // re-enable add list
-            }
         }
 
-        private void ListEdit_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        private async void ListEdit_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
             if (e.Key != Windows.System.VirtualKey.Enter)
                 return;
@@ -747,7 +683,9 @@ namespace DuDuChinese.Views
             App app = (App)Application.Current;
             if (name != OldName && app.ListManager.ContainsKey(name))
             {
-                //MessageBox.Show(String.Format("There is already a list called '{0}'. Please choose another name.", name));
+                var messageDialog = new Windows.UI.Popups.MessageDialog(
+                    String.Format("There is already a list called '{0}'. Please choose another name.", name));
+                await messageDialog.ShowAsync();
                 return;
             }
             if (RenameListMode)
@@ -799,8 +737,6 @@ namespace DuDuChinese.Views
                 if (target.IsDeleted)
                     return; // can't add items to a deleted list
                 target.Add(RecordToAdd);
-                //app.Transition = App.TransitionType.PostAdd;
-                //app.TransitionData = RecordToAdd;
                 RecordToAdd = null; // come out of add-to-list mode
                 LoadLists();
                 TextNotification = "Item added to the list: " + ivm.Name;
@@ -839,10 +775,5 @@ namespace DuDuChinese.Views
         }
 
         #endregion
-
-        private void Settings_Click(object sender, EventArgs e)
-        {
-            //NavigationService.Navigate(new Uri("/SettingsPage.xaml", UriKind.Relative));
-        }
     }
 }

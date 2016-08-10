@@ -25,6 +25,11 @@ namespace DuDuChinese
         /// </remarks>
         public bool IsDeleted = false;
 
+        /// <summary>
+        /// Indicates whether this list is a default
+        /// </summary>
+        public bool IsDefault = false;
+
         // metadata header
         public const string NameHeaderKey = "name";
         const string ReadOnlyHeaderKey = "readonly";

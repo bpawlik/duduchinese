@@ -27,7 +27,7 @@ namespace DuDuChinese.ViewModels
             {
                 DictionaryRecordList list = app.ListManager[name];
                 string lineTwo = list.Count.ToString();
-                Items.Add(new ListItemViewModel { Name = list.Name, LineTwo = lineTwo, IsDeleted = list.IsDeleted });
+                Items.Add(new ListItemViewModel { Name = list.Name, LineTwo = lineTwo, IsDeleted = list.IsDeleted, IsDefault = list.IsDefault });
             }
         }
 
