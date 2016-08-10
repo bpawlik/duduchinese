@@ -103,7 +103,9 @@ namespace DuDuChinese.Models
             LearningExercise.HanziPinyin2English,
             LearningExercise.English2Hanzi,
             LearningExercise.Hanzi2English,
-            LearningExercise.Pinyin2Hanzi
+            LearningExercise.Pinyin2Hanzi,
+            LearningExercise.English2Pinyin,
+            LearningExercise.Hanzi2Pinyin
         };
         private static readonly LearningExercise[] exerciseListSentences = { LearningExercise.Display, LearningExercise.FillGaps };
 
@@ -284,9 +286,22 @@ namespace DuDuChinese.Models
                     SimplifiedVisible = Visibility.Visible;
                     break;
                 case LearningExercise.English2Hanzi:
+                case LearningExercise.English2Pinyin:
                     PinyinVisible = Visibility.Collapsed;
                     TranslationVisible = Visibility.Visible;
                     SimplifiedVisible = Visibility.Collapsed;
+                    break;
+                case LearningExercise.Pinyin2Hanzi:
+                case LearningExercise.Pinyin2English:
+                    PinyinVisible = Visibility.Visible;
+                    TranslationVisible = Visibility.Collapsed;
+                    SimplifiedVisible = Visibility.Collapsed;
+                    break;
+                case LearningExercise.Hanzi2English:
+                case LearningExercise.Hanzi2Pinyin:
+                    PinyinVisible = Visibility.Collapsed;
+                    TranslationVisible = Visibility.Collapsed;
+                    SimplifiedVisible = Visibility.Visible;
                     break;
                 default:
                     PinyinVisible = Visibility.Visible;
@@ -386,10 +401,12 @@ namespace DuDuChinese.Models
                     }
                     break;
                 case LearningExercise.English2Hanzi:
+                case LearningExercise.Pinyin2Hanzi:
                     result = CurrentItem.Chinese.Simplified == inputText;
                     break;
-                case LearningExercise.Pinyin2Hanzi:
-                    result = CurrentItem.Chinese.Pinyin == inputText;
+                case LearningExercise.Hanzi2Pinyin:
+                case LearningExercise.English2Pinyin:
+                    result = CurrentItem.Chinese.PinyinNoMarkup == inputText;
                     break;
             }
 
