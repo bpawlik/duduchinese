@@ -90,8 +90,8 @@
                   VerticalAlignment="Top" ItemsSource="{x:Bind ViewModel.SelectedItemsCount}"
                       SelectionChanged="NumberOfItems_SelectionChanged" >
             </ComboBox>
-            <RadioButton x:Name="radioButtonWords" Grid.Row="2" Grid.Column="0" Content="Words" IsChecked="True" Tag="0" GroupName="mode" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Checked="{x:Bind ViewModel.radioButton_Checked}" />
-            <RadioButton x:Name="radioButtonSentences" Grid.Row="2" Grid.Column="1" Content="Sentences" IsChecked="False" Tag="1" GroupName="mode" HorizontalAlignment="Left" Height="32"  Margin="20,0" VerticalAlignment="Top" Checked="{x:Bind ViewModel.radioButton_Checked}" />
+            <RadioButton x:Name="radioButtonWords" Grid.Row="2" Grid.Column="0" IsEnabled="False" Content="Words" IsChecked="True" Tag="0" GroupName="mode" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Checked="{x:Bind ViewModel.radioButton_Checked}" />
+            <RadioButton x:Name="radioButtonSentences" Grid.Row="2" Grid.Column="1" IsEnabled="False" Content="Sentences" IsChecked="False" Tag="1" GroupName="mode" HorizontalAlignment="Left" Height="32"  Margin="20,0" VerticalAlignment="Top" Checked="{x:Bind ViewModel.radioButton_Checked}" />
             <Button x:Name="button" Content="Start" HorizontalAlignment="Left" Height="35" IsEnabled="{x:Bind ViewModel.IsStartEnabled}"
                 VerticalAlignment="Top" Width="150" Click="{x:Bind ViewModel.Start_Click}" Grid.Column="1" Grid.Row="3" Margin="-50,0">
                 <Interactivity:Interaction.Behaviors>
