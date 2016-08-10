@@ -126,6 +126,9 @@ namespace SevenZip.Compression.LZMA.WindowsPhone
             
             if (!AllowConcurrentDecoding)
                 concurrency.Set(); // reset signal
+
+            outStream.Flush();
+            outStream.Dispose();
         }
 
         /// <summary>

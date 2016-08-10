@@ -157,7 +157,10 @@ namespace DuDuChinese.Models
                 StorageFolder data_folder = Windows.Storage.ApplicationData.Current.LocalFolder;
 
                 if (!File.Exists(Path.Combine(data_folder.Path, revisionsFile)))
+                {
+                    revisionList = new List<RevisionItem>();
                     return;
+                }
 
                 // Create a new file named data_file.xml
                 StorageFile file = await data_folder.GetFileAsync(revisionsFile);

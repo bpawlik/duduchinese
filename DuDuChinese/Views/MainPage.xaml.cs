@@ -49,63 +49,12 @@ namespace DuDuChinese.Views
                 ViewModel.LoadDictionary();
                 ViewModel.RealizePreinstalledLists();
                 LoadLists();
+                ViewModel.IsDataLoaded = true;
+                Bindings.Update();
             }  
 
             Query.Focus(FocusState.Programmatic);
         }
-
-        //protected override void OnBackKeyPress(CancelEventArgs e)
-        //{
-        //    if (!ok)
-        //    {
-        //        MessageBox.Show("Please wait a few seconds until the dictionary and indexes are extracted.");
-        //        e.Cancel = true;
-        //    }
-        //    else if (pivot.SelectedItem.Equals(ListsPane))
-        //    {
-        //        e.Cancel = true;
-        //        pivot.SelectedItem = SearchPane;
-        //    }
-
-        //    base.OnBackKeyPress(e);
-        //}
-
-        //protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
-        //{
-        //    App app = (App)Application.Current;
-        //    switch (app.Transition)
-        //    {
-        //        case App.TransitionType.PostAdd: // after add to list, go back to search page
-        //            //pivot.SelectedItem = SearchPane; // looks ugly
-        //            break;
-        //        case App.TransitionType.ListUpdate: // after delete, list page needs an update
-        //            LoadLists();
-        //            break;
-        //        case App.TransitionType.Specialise: // from SearchButton_Click on lists page
-        //            pivot.SelectedItem = SearchPane;
-        //            Search(app.TransitionData);
-        //            break;
-        //        case App.TransitionType.Decompose: // from DecomposeButton_Click on lists page
-        //            pivot.SelectedItem = SearchPane;
-        //            Decompose(app.TransitionData);
-        //            break;
-        //        case App.TransitionType.MoveItem: // moving an item from one list to another
-        //            RecordToAdd = app.TransitionData;
-        //            pivot.SelectedItem = ListsPane;
-        //            break;
-        //        case App.TransitionType.None:
-        //        default:
-        //            break;
-        //    }
-        //    CleanupTransitionData(app);
-        //    base.OnNavigatedTo(e);
-        //}
-
-        //void CleanupTransitionData(App app)
-        //{
-        //    app.Transition = App.TransitionType.None;
-        //    app.TransitionData = null;
-        //}
 
         #region decompress LZMA resources (dictionary, indexes, preinstalled lists)
 
@@ -144,9 +93,13 @@ namespace DuDuChinese.Views
         {
             if (--inProgress > 0) // still busy
                 return;
+
             Progress.Visibility = Visibility.Collapsed; // don't need this any more
             ViewModel.LoadDictionary();
             ViewModel.RealizePreinstalledLists();
+
+            ViewModel.IsDataLoaded = true;
+            Bindings.Update();
         }
 
         #endregion
@@ -198,16 +151,8 @@ namespace DuDuChinese.Views
             Button button = (Button)sender;
             int i;
             int.TryParse(button.Tag.ToString(), out i);
-            //DictionaryRecord record = ViewModel.Dictionary[i];
-            //Search(record);
             ViewModel.Search(i);
         }
-
-        //void Search(DictionaryRecord record)
-        //{
-        //    Query.Text = record.Chinese.Simplified;
-        //    TriggerSearch(Query.Text, 30);
-        //}
 
         #endregion
 
@@ -229,6 +174,7 @@ namespace DuDuChinese.Views
                         (ListsPane.DataContext as ListViewModel).IsActive = false;
                     break;
                 case 2: // List page
+                    ViewModel.RealizePreinstalledLists();
                     LoadLists();
                     (ListsPane.DataContext as ListViewModel).IsActive = true;
                     break;
@@ -365,14 +311,17 @@ namespace DuDuChinese.Views
             App app = (App)Application.Current;
 
             // Find default list
-            ListViewModel lvm = (ListViewModel)ListListBox.DataContext;
             ListItemViewModel defaultList = null;
-            foreach (ListItemViewModel item in lvm.Items)
+            if (ListListBox.DataContext is ListViewModel)
             {
-                if (item.IsDefault)
+                ListViewModel lvm = (ListViewModel)ListListBox.DataContext;
+                foreach (ListItemViewModel item in lvm.Items)
                 {
-                    defaultList = item;
-                    break;
+                    if (item.IsDefault)
+                    {
+                        defaultList = item;
+                        break;
+                    }
                 }
             }
 

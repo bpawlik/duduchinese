@@ -17,28 +17,6 @@ namespace CC_CEDICT.Universal
 
         public Index(string name)
         {
-            //// Get the local folder.
-            //StorageFolder data_folder = ApplicationData.Current.LocalFolder;
-
-            //if (File.Exists(Path.Combine(data_folder.Path, name)))
-            //{
-            //    Action readFile = async () =>
-            //    {
-            //        // Create a new file named data_file.xml
-            //        StorageFile file = await data_folder.GetFileAsync(name);
-
-            //        // Write the data
-            //        using (Stream stream = await file.OpenStreamForReadAsync())
-            //        {
-            //            if (stream.CanRead)
-            //            {
-            //                loaded = Read(stream);
-            //            }
-            //        }
-            //    };
-            //    readFile.Invoke();
-            //}
-
             using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForApplication())
             {
                 if (store.FileExists(name))
@@ -51,7 +29,7 @@ namespace CC_CEDICT.Universal
                 }
             }
         }
-        
+
         public IndexRecord this[string key]
         {
             get

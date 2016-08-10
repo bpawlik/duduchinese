@@ -122,22 +122,36 @@ namespace DuDuChinese.ViewModels
             NavigationService.Navigate(typeof(Views.ListPage), name);
         }
 
-        public void LoadDictionary()
+        public async void LoadDictionary()
         {
             if (!this.IsDataLoaded)
             {
-                this.Dictionary = new Dictionary("cedict_ts.u8");
-                this.Searcher = new Searcher(this.Dictionary, new Index("english.index"), new Index("pinyin.index"), new Index("hanzi.index"));
-                this.StatusText = "Enter your search phrase above.";
-                this.IsDataLoaded = true;
+                try
+                {
+                    this.Dictionary = new Dictionary("cedict_ts.u8");
+                    this.Searcher = new Searcher(this.Dictionary, new Index("english.index"), new Index("pinyin.index"), new Index("hanzi.index"));
+                    this.StatusText = "Enter your search phrase above.";
+                }
+                catch (Exception ex)
+                {
+                    var messageDialog = new Windows.UI.Popups.MessageDialog(
+                        String.Format("Couldn't load dictionary. Please restart the application.\n\nException: {0}", ex.Message));
+                    await messageDialog.ShowAsync();
+
+                    //NavigationService.Navigate(typeof(Views.MainPage), 0);
+                }
             }
 
             App app = (App)Application.Current;
             app.Dictionary = this.Dictionary;
         }
 
+        private bool preinstalledListsLoaded = false;
         public void RealizePreinstalledLists()
         {
+            if (this.preinstalledListsLoaded)
+                return;
+
             try
             {
                 App app = (App)Application.Current;
@@ -153,6 +167,8 @@ namespace DuDuChinese.ViewModels
                             app.ListManager[name].Add(r);
                     }
                 }
+
+                preinstalledListsLoaded = true;
             }
             catch
             {
@@ -163,7 +179,6 @@ namespace DuDuChinese.ViewModels
         public void LoadData(List<DictionaryRecord> items)
         {
             ClearData();
-            //this.NetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
 
             foreach (DictionaryRecord r in items)
             {
@@ -177,7 +192,6 @@ namespace DuDuChinese.ViewModels
                     Index = r.Index
                 });
             }
-            this.IsDataLoaded = true;
         }
 
         public void ClearData()
@@ -246,7 +260,6 @@ namespace DuDuChinese.ViewModels
             Windows.ApplicationModel.DataTransfer.DataPackage dataPackage = new Windows.ApplicationModel.DataTransfer.DataPackage();
             dataPackage.SetText(r.Chinese.Simplified);
             Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dataPackage);
-
         }
     }
 }
