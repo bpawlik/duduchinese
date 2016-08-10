@@ -14,6 +14,7 @@ using Windows.UI.Xaml;
 using CC_CEDICT.Universal;
 using Windows.UI.Xaml.Media;
 using Windows.Media.SpeechSynthesis;
+using System.Xml.Linq;
 
 namespace DuDuChinese.ViewModels
 {
@@ -171,11 +172,41 @@ namespace DuDuChinese.ViewModels
             LoadListData(); // reload
         }
 
-        public void CopyToClipboard()
+        public static Windows.Data.Xml.Dom.XmlDocument CreateToast()
+        {
+            var xDoc = new XDocument(
+                new XElement("toast",
+                    new XElement("visual",
+                        new XElement("binding",
+                            new XAttribute("template", "ToastGeneric"),
+                            new XElement("text", "DuDuChinese"),
+                            new XElement("text", "Text copied to the clipboard")
+                            )
+                        )
+                    )
+                );
+
+            var xmlDoc = new Windows.Data.Xml.Dom.XmlDocument();
+            xmlDoc.LoadXml(xDoc.ToString());
+            return xmlDoc;
+        }
+
+        public async void CopyToClipboard()
         {
             Windows.ApplicationModel.DataTransfer.DataPackage dataPackage = new Windows.ApplicationModel.DataTransfer.DataPackage();
             dataPackage.SetText(SelectedItem.Chinese.Simplified);
             Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dataPackage);
+
+            // Create toast
+            var xmlDoc = CreateToast();
+            var toast = new Windows.UI.Notifications.ToastNotification(xmlDoc);
+            toast.Tag = "Clipboard";
+            var notifi = Windows.UI.Notifications.ToastNotificationManager.CreateToastNotifier();
+            notifi.Show(toast);
+
+            // Wait for a while and remove toast
+            await System.Threading.Tasks.Task.Delay(TimeSpan.FromMilliseconds(2000));
+            Windows.UI.Notifications.ToastNotificationManager.History.Remove("Clipboard");
         }
 
         public void Delete()

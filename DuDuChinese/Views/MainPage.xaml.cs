@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.Media.SpeechSynthesis;
 using Windows.ApplicationModel.Resources.Core;
 using Windows.UI.Xaml.Media;
+using System.Xml.Linq;
 
 namespace DuDuChinese.Views
 {
@@ -314,22 +315,43 @@ namespace DuDuChinese.Views
 
         #region Copy-to-Clipboard action
 
-        private void CopyButton_Click(object sender, RoutedEventArgs e)
+        public static Windows.Data.Xml.Dom.XmlDocument CreateToast(string text = null)
+        {
+            var xDoc = new XDocument(
+                new XElement("toast",
+                    new XElement("visual",
+                        new XElement("binding",
+                            new XAttribute("template", "ToastGeneric"),
+                            new XElement("text", "DuDuChinese"),
+                            new XElement("text", text == null ? 
+                                "Text copied to the clipboard" : ("Item added to the list: " + text))
+                            )
+                        )
+                    )
+                );
+
+            var xmlDoc = new Windows.Data.Xml.Dom.XmlDocument();
+            xmlDoc.LoadXml(xDoc.ToString());
+            return xmlDoc;
+        }
+
+        private async void CopyButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
             int i;
             int.TryParse(button.Tag.ToString(), out i);
-            DictionaryRecord r = ViewModel.Dictionary[i];
-            Windows.ApplicationModel.DataTransfer.DataPackage dataPackage = new Windows.ApplicationModel.DataTransfer.DataPackage();
-            dataPackage.SetText(r.Chinese.Simplified);
-            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dataPackage);
-            //ToastPrompt toast = new ToastPrompt
-            //{
-            //    Title = "Copy",
-            //    Message = "Text copied to clipboard",
-            //    MillisecondsUntilHidden = 1000
-            //};
-            //toast.Show();
+            ViewModel.CopyToClipboard(i);
+
+            // Create toast
+            var xmlDoc = CreateToast();
+            var toast = new Windows.UI.Notifications.ToastNotification(xmlDoc);
+            toast.Tag = "Clipboard";
+            var notifi = Windows.UI.Notifications.ToastNotificationManager.CreateToastNotifier();
+            notifi.Show(toast);
+
+            // Wait for a while and remove toast
+            await System.Threading.Tasks.Task.Delay(TimeSpan.FromMilliseconds(2000));
+            Windows.UI.Notifications.ToastNotificationManager.History.Remove("Clipboard");
         }
 
         #endregion
@@ -383,13 +405,16 @@ namespace DuDuChinese.Views
                         LoadLists();
                         TextNotification = "Item added to the default list: " + defaultList.Name;
 
-                        ContentDialog dialog = new ContentDialog();
-                        dialog.Content = "Item added to the default list: " + defaultList.Name;
-                        dialog.Title = "Success";
-                        dialog.PrimaryButtonText = "OK";
-                        dialog.CanDrag = true;
+                        // Show toast
+                        var xmlDoc = CreateToast(defaultList.Name);
+                        var toast = new Windows.UI.Notifications.ToastNotification(xmlDoc);
+                        toast.Tag = "AddToList";
+                        var notifi = Windows.UI.Notifications.ToastNotificationManager.CreateToastNotifier();
+                        notifi.Show(toast);
 
-                        await dialog.ShowAsync();
+                        // Wait for a while and remove toast
+                        await System.Threading.Tasks.Task.Delay(TimeSpan.FromMilliseconds(2000));
+                        Windows.UI.Notifications.ToastNotificationManager.History.Remove("AddToList");
                     }
                     else
                     {

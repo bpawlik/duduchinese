@@ -239,6 +239,15 @@ namespace DuDuChinese.ViewModels
             this.StatusVisibility = Visibility.Collapsed;
             LoadData(results);
         }
+
+        public void CopyToClipboard(int index)
+        {
+            DictionaryRecord r = this.Dictionary[index];
+            Windows.ApplicationModel.DataTransfer.DataPackage dataPackage = new Windows.ApplicationModel.DataTransfer.DataPackage();
+            dataPackage.SetText(r.Chinese.Simplified);
+            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dataPackage);
+
+        }
     }
 }
 
