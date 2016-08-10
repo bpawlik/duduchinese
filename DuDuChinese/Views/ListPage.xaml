@@ -60,8 +60,11 @@
                              RelativePanel.AlignTopWithPanel="True" Text="{x:Bind ViewModel.Title, Mode=OneWay, FallbackValue=DesigntimeValue}" >
             <!-- primary commands -->
             <controls:PageHeader.PrimaryCommands>
-                <AppBarButton Click="AppBarSortButton_Click" Label="Add" >
+                <AppBarButton Click="AppBarSortButton_Click" Label="Sort" >
                     <SymbolIcon Symbol="Sort" Height="20" VerticalAlignment="Top" />
+                </AppBarButton>
+                <AppBarButton Click="AppBarEmailButton_Click" Label="Email" >
+                    <SymbolIcon Symbol="MailForward" Height="20" VerticalAlignment="Top" />
                 </AppBarButton>
                 <AppBarButton Click="AppBarAddButton_Click" Label="Add" >
                     <SymbolIcon Symbol="Add" Height="20" VerticalAlignment="Top" />

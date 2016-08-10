@@ -84,6 +84,11 @@ namespace DuDuChinese.Views
             ViewModel.Sort();
         }
 
+        private void AppBarEmailButton_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Email();
+        }
+
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.Play();
@@ -114,46 +119,6 @@ namespace DuDuChinese.Views
         void SortButton_Click(object sender, EventArgs e)
         {
             ViewModel.Sort();
-        }
-
-        void EmailButton_Click(object sender, EventArgs e)
-        {
-            //StringBuilder sb = new StringBuilder();
-            //StringBuilder s2 = new StringBuilder();
-
-            //foreach (ItemViewModel item in NotepadItems.Items)
-            //{
-            //    sb.AppendLine(item.Pinyin);
-            //    sb.AppendLine(item.EnglishWithNewlines);
-            //    sb.AppendLine(item.Chinese);
-            //    sb.AppendLine();
-            //    s2.AppendLine(item.Record.ToString());
-            //}
-
-            //sb.AppendLine("-- Kuaishuo Chinese Dictionary http://www.knibb.co.uk/kuaishuo");
-            //sb.AppendLine("________________________________________");
-            //sb.AppendLine("CC-CEDICT ed. " + d.Header["date"]);
-            //sb.AppendLine();
-
-            //if (Encoding.UTF8.GetBytes(sb.ToString()).Length < 16384)
-            //    sb.AppendLine(s2.ToString());
-
-            //sb.AppendLine("Redistributed under license. " + d.Header["license"]);
-
-            //try
-            //{
-            //    EmailComposeTask email = new EmailComposeTask();
-            //    email.Subject = String.Format("[Kuaishuo] {0}", list.Name);
-            //    email.Body = sb.ToString();
-            //    email.Show();
-            //}
-            //catch (ArgumentOutOfRangeException)
-            //{
-            //    int size = Encoding.UTF8.GetBytes(sb.ToString()).Length / 1024;
-            //    MessageBox.Show(String.Format(
-            //        "Sorry, Windows Phone has a 64KB size limit for emails sent from applications. " +
-            //        "Your notepad contains too many items to email ({0}KB). Please remove some and try again.", size));
-            //}
         }
     }
 }

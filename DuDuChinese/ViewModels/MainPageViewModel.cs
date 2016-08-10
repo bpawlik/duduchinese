@@ -58,21 +58,11 @@ namespace DuDuChinese.ViewModels
 
         public MainPageViewModel()
         {
-            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-            {
-                //Value = "Designtime value";
-            }
-
             this.Items = new ObservableCollection<ItemViewModel>();
         }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
-            if (suspensionState.Any())
-            {
-                //Value = suspensionState[nameof(Value)]?.ToString();
-            }
-
             this.IsActive = this.SelectedPivotIndex == 2;
 
             if (parameter is string && SessionState.ContainsKey(parameter as string))
@@ -96,10 +86,6 @@ namespace DuDuChinese.ViewModels
 
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> suspensionState, bool suspending)
         {
-            if (suspending)
-            {
-                //suspensionState[nameof(Value)] = Value;
-            }
             this.ClearData();
             await Task.CompletedTask;
         }
@@ -146,8 +132,6 @@ namespace DuDuChinese.ViewModels
                     var messageDialog = new Windows.UI.Popups.MessageDialog(
                         String.Format("Couldn't load dictionary. Please restart the application.\n\nException: {0}", ex.Message));
                     await messageDialog.ShowAsync();
-
-                    //NavigationService.Navigate(typeof(Views.MainPage), 0);
                 }
             }
 

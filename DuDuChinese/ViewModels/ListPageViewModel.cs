@@ -15,21 +15,17 @@ using CC_CEDICT.Universal;
 using Windows.UI.Xaml.Media;
 using Windows.Media.SpeechSynthesis;
 using System.Xml.Linq;
+using Windows.ApplicationModel.Email;
 
 namespace DuDuChinese.ViewModels
 {
     public class ListPageViewModel : ViewModelBase
     {
         public ObservableCollection<ItemViewModel> Items { get; private set; }
-
         public MediaElement Media { get; internal set; }
-
         public DictionaryRecord SelectedItem { get; set; } = null;
+        private DictionaryRecordList list;
 
-        DictionaryRecordList list;
-
-        //public ObservableCollection<DictionaryItem> Words { get; private set; } = new ObservableCollection<DictionaryItem>();
-        //public DictionaryItemList Items { get; set; }
         private string title = "Default";
         public string Title { get { return title; } set { Set(ref title, value); } }
 
@@ -89,7 +85,6 @@ namespace DuDuChinese.ViewModels
         public void LoadData(List<DictionaryRecord> items)
         {
             ClearData();
-            //this.NetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
 
             foreach (DictionaryRecord r in items)
             {
@@ -230,6 +225,49 @@ namespace DuDuChinese.ViewModels
             SessionState.Clear();
             SessionState.Add("Decompose", SelectedItem);
             NavigationService.Navigate(typeof(Views.MainPage), "Decompose");
+        }
+
+        public async void Email()
+        {
+            App app = (App)Application.Current;
+            StringBuilder sb = new StringBuilder();
+            StringBuilder s2 = new StringBuilder();
+
+            foreach (ItemViewModel item in Items)
+            {
+                sb.AppendLine(item.Pinyin);
+                sb.AppendLine(item.EnglishWithNewlines);
+                sb.AppendLine(item.Chinese);
+                sb.AppendLine();
+                s2.AppendLine(item.Record.ToString());
+            }
+
+            sb.AppendLine("-- DuDuChinese Learning Dictionary -- https://github.com/bpawlik/duduchinese/wiki");
+            sb.AppendLine("________________________________________");
+            sb.AppendLine("CC-CEDICT ed. " + app.Dictionary.Header["date"]);
+            sb.AppendLine();
+
+            if (Encoding.UTF8.GetBytes(sb.ToString()).Length < 16384)
+                sb.AppendLine(s2.ToString());
+
+            sb.AppendLine("Redistributed under license. " + app.Dictionary.Header["license"]);
+
+            try
+            {
+                EmailMessage email = new EmailMessage();
+                email.Subject = String.Format("[Kuaishuo] {0}", list.Name);
+                email.Body = sb.ToString();
+                await EmailManager.ShowComposeNewEmailAsync(email);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                int size = Encoding.UTF8.GetBytes(sb.ToString()).Length / 1024;
+                var messageDialog = new Windows.UI.Popups.MessageDialog(
+                    String.Format(
+                    "Sorry, Windows Phone has a 64KB size limit for emails sent from applications. " +
+                    "Your notepad contains too many items to email ({0}KB). Please remove some and try again.", size));
+                await messageDialog.ShowAsync();
+            }
         }
     }
 }
