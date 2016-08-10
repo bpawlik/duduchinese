@@ -108,12 +108,7 @@ namespace DuDuChinese.Views
 
         void DecomposeButton_Click(object sender, RoutedEventArgs e)
         {
-            //Button button = (Button)sender;
-            //DictionaryRecord record = ((ItemViewModel)button.DataContext).Record;
-            //App app = (App)Application.Current;
-            //app.Transition = App.TransitionType.Decompose;
-            //app.TransitionData = record;
-            //NavigationService.GoBack();
+            ViewModel.Decompose();
         }
 
         void SortButton_Click(object sender, EventArgs e)

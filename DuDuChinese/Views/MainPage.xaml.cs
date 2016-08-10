@@ -251,19 +251,7 @@ namespace DuDuChinese.Views
             int i;
             int.TryParse(button.Tag.ToString(), out i);
             DictionaryRecord record = ViewModel.Dictionary[i];
-            Decompose(record);
-        }
-
-        void Decompose(DictionaryRecord record)
-        {
-            List<DictionaryRecord> results = new List<DictionaryRecord>();
-            results.Add(record);
-            foreach (Chinese.Character c in record.Chinese.Characters)
-                results.AddRange(ViewModel.Searcher.Search(c.Simplified.ToString(), 100));
-            Query.Text = record.Chinese.Simplified + " (split)";
-            ViewModel.Prev[Results.Name] = -1; // override expansion marker
-            Status.Visibility = Visibility.Collapsed;
-            ViewModel.LoadData(results);
+            ViewModel.Decompose(record);
             Results.ScrollIntoView(Results.Items[0]);
         }
 

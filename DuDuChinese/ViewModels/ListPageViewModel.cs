@@ -189,9 +189,16 @@ namespace DuDuChinese.ViewModels
             // NavigationService.Navigate is actually serializing the object.
             // To avoid making DictionarRecord serializable, it's better to
             // use SessionState dicitonary to pass objects over different pages.
-            var key = nameof(DictionaryRecord);
-            SessionState.Add(key, SelectedItem);
-            NavigationService.Navigate(typeof(Views.MainPage), key);
+            SessionState.Clear();
+            SessionState.Add("Search", SelectedItem);
+            NavigationService.Navigate(typeof(Views.MainPage), "Search");
+        }
+
+        public void Decompose()
+        {
+            SessionState.Clear();
+            SessionState.Add("Decompose", SelectedItem);
+            NavigationService.Navigate(typeof(Views.MainPage), "Decompose");
         }
     }
 }

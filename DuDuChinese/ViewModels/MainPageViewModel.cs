@@ -69,10 +69,17 @@ namespace DuDuChinese.ViewModels
             if (parameter is string && SessionState.ContainsKey(parameter as string))
             {
                 DictionaryRecord record = (DictionaryRecord)SessionState[parameter as string];
-
-                // Go to search
                 this.SelectedPivotIndex = 0;
-                Search(record);
+
+                switch (parameter as string)
+                {
+                    case "Search":
+                        Search(record);
+                        break;
+                    case "Decompose":
+                        Decompose(record);
+                        break;
+                }
             }
 
             await Task.CompletedTask;
@@ -219,6 +226,18 @@ namespace DuDuChinese.ViewModels
 
             // This would be good for mobile up to hide keyboard. On PC however is annoying.
             //Results.Focus(FocusState.Programmatic);
+        }
+
+        public void Decompose(DictionaryRecord record)
+        {
+            List<DictionaryRecord> results = new List<DictionaryRecord>();
+            results.Add(record);
+            foreach (Chinese.Character c in record.Chinese.Characters)
+                results.AddRange(this.Searcher.Search(c.Simplified.ToString(), 100));
+            QueryText = record.Chinese.Simplified + " (split)";
+            this.Prev["Results"] = -1; // override expansion marker
+            this.StatusVisibility = Visibility.Collapsed;
+            LoadData(results);
         }
     }
 }
