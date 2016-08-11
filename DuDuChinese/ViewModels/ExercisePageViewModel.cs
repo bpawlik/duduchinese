@@ -69,7 +69,7 @@ namespace DuDuChinese.ViewModels
         private static readonly Brush blackBrush = new SolidColorBrush(Windows.UI.Colors.Black);
         private static readonly Brush transparentBrush = new SolidColorBrush(Windows.UI.Colors.Transparent);
         private static readonly Brush redBrush = new SolidColorBrush(Windows.UI.Colors.Red);
-        private static readonly Brush greenBrush = new SolidColorBrush(Windows.UI.Colors.Green);
+        private static readonly Brush greenBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0x32, 0xCD, 0x32));
 
         private Brush bgcolour = transparentBrush;
         public Brush BgColour
