@@ -458,30 +458,34 @@ namespace DuDuChinese.Views
             picker.FileTypeFilter.Add(".msg");
             picker.FileTypeFilter.Add(".list");
 
-            Windows.Storage.StorageFile file = await picker.PickSingleFileAsync();
-            if (file != null)
+            IReadOnlyList<Windows.Storage.StorageFile> fileList = await picker.PickMultipleFilesAsync();
+            foreach (var file in fileList)
             {
-                // Create new list
-                ListViewModel lvm = (ListViewModel)ListsPane.DataContext;
-                string name = Path.GetFileNameWithoutExtension(file.Name);
-                ListItemViewModel item = new ListItemViewModel { Name = name, LineTwo = "", IsEditable = true };
-                lvm.Items.Insert(0, item);
-                //((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = false; // disable "multi-add"
-                ListListBox.ScrollIntoView(ListListBox.Items[0]);
-
-                // Read file and add items to the list
-                App app = (App)Application.Current;
-                using (Stream stream = await file.OpenStreamForReadAsync())
+                if (file != null)
                 {
-                    Dictionary list = new Dictionary(stream);
-                    if (!app.ListManager.ContainsKey(name))
-                        foreach (DictionaryRecord r in list)
-                            if (r.Chinese != null)
-                                app.ListManager[name].Add(r);
-                }
+                    // Create new list
+                    ListViewModel lvm = (ListViewModel)ListsPane.DataContext;
+                    string name = Path.GetFileNameWithoutExtension(file.Name);
+                    ListItemViewModel item = new ListItemViewModel { Name = name, LineTwo = "", IsEditable = false };
+                    lvm.Items.Insert(0, item);
+                    ListListBox.ScrollIntoView(ListListBox.Items[0]);
 
-                await System.Threading.Tasks.Task.CompletedTask;
+                    // Read file and add items to the list
+                    App app = (App)Application.Current;
+                    using (Stream stream = await file.OpenStreamForReadAsync())
+                    {
+                        Dictionary list = new Dictionary(stream);
+                        if (!app.ListManager.ContainsKey(name))
+                            foreach (DictionaryRecord r in list)
+                                if (r.Chinese != null)
+                                    app.ListManager[name].Add(r);
+                    }
+
+                    await System.Threading.Tasks.Task.CompletedTask;
+                }
             }
+
+            LoadLists();
         }
 
         private void AppBarAddButton_Click(object sender, RoutedEventArgs e)
@@ -624,18 +628,24 @@ namespace DuDuChinese.Views
         {
             if (e.Key != Windows.System.VirtualKey.Enter)
                 return;
+
             TextBox textBox = (TextBox)sender;
             string name = textBox.Text.Trim();
             if (name.Length == 0)
                 return;
+
             App app = (App)Application.Current;
             if (name != OldName && app.ListManager.ContainsKey(name))
             {
+                if (!RenameListMode)
+                    return;
+
                 var messageDialog = new Windows.UI.Popups.MessageDialog(
                     String.Format("There is already a list called '{0}'. Please choose another name.", name));
                 await messageDialog.ShowAsync();
                 return;
             }
+
             if (RenameListMode)
             {
                 if (name != OldName)
@@ -645,6 +655,7 @@ namespace DuDuChinese.Views
             {
                 DictionaryRecordList list = app.ListManager[name];
             }
+
             LoadLists();
             ListListBox.UpdateLayout();
             int index = FindListItemIndexByName(ListListBox, name);
