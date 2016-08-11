@@ -31,6 +31,7 @@ namespace DuDuChinese.Views
             NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
 
             SearchPane.DataContext = ViewModel;
+            ViewModel.Media = media;
 
             this.Loaded += new RoutedEventHandler(MainPage_Loaded);
         }
@@ -204,50 +205,13 @@ namespace DuDuChinese.Views
         /// </summary>
         /// <param name="sender">Button that triggered this event</param>
         /// <param name="e">State information about the routed event</param>
-        private async void PlayButton_Click(object sender, RoutedEventArgs e)
+        private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            // If the media is playing, the user has pressed the button to stop the playback.
-            if (media.CurrentState.Equals(MediaElementState.Playing))
-            {
-                media.Stop();
-            }
-            else
-            {
-                Button button = (Button)sender;
-                int i;
-                int.TryParse(button.Tag.ToString(), out i);
-                string text = ViewModel.Dictionary[i].Chinese.Simplified;
+            Button button = (Button)sender;
+            int i;
+            int.TryParse(button.Tag.ToString(), out i);
 
-                if (!String.IsNullOrEmpty(text))
-                {
-                    try
-                    {
-                        // Create a stream from the text. This will be played using a media element.
-                        App app = (App)Application.Current;
-                        SpeechSynthesisStream synthesisStream = await app.Synthesizer.SynthesizeTextToStreamAsync(text);
-
-                        // Set the source and start playing the synthesized audio stream.
-                        media.AutoPlay = true;
-                        media.SetSource(synthesisStream, synthesisStream.ContentType);
-                        media.Play();
-                    }
-                    catch (System.IO.FileNotFoundException)
-                    {
-                        // If media player components are unavailable, (eg, using a N SKU of windows), we won't
-                        // be able to start media playback. Handle this gracefully
-                        var messageDialog = new Windows.UI.Popups.MessageDialog("Media player components unavailable");
-                        await messageDialog.ShowAsync();
-                    }
-                    catch (Exception)
-                    {
-                        // If the text is unable to be synthesized, throw an error message to the user.
-                        media.AutoPlay = false;
-                        var messageDialog = new Windows.UI.Popups.MessageDialog(
-                            "Unable to synthesize text. Please download Chinese simplified speech language pack.");
-                        await messageDialog.ShowAsync();
-                    }
-                }
-            }
+            ViewModel.Play(i);
         }
 
         #endregion

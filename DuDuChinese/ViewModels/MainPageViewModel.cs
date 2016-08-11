@@ -9,6 +9,9 @@ using System.Collections.ObjectModel;
 using CC_CEDICT.Universal;
 using Windows.UI.Xaml;
 using System.IO.IsolatedStorage;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Controls;
+using Windows.Media.SpeechSynthesis;
 
 namespace DuDuChinese.ViewModels
 {
@@ -20,6 +23,7 @@ namespace DuDuChinese.ViewModels
         public Dictionary Dictionary { get; set; }
         public string LastQuery { get; set; } = "";
         public static string DefaultQueryText = "english, pin1yin1 or 中文";
+        public MediaElement Media { get; internal set; }
 
         private bool isActive = false;
         public bool IsActive
@@ -86,6 +90,7 @@ namespace DuDuChinese.ViewModels
 
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> suspensionState, bool suspending)
         {
+            this.Media.AutoPlay = false;
             this.ClearData();
             await Task.CompletedTask;
         }
@@ -250,6 +255,49 @@ namespace DuDuChinese.ViewModels
             Windows.ApplicationModel.DataTransfer.DataPackage dataPackage = new Windows.ApplicationModel.DataTransfer.DataPackage();
             dataPackage.SetText(r.Chinese.Simplified);
             Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dataPackage);
+        }
+
+        public async void Play(int index)
+        {
+            // If the media is playing, the user has pressed the button to stop the playback.
+            if (this.Media.CurrentState.Equals(MediaElementState.Playing))
+            {
+                this.Media.Stop();
+            }
+            else
+            {
+                string text = this.Dictionary[index].Chinese.Simplified;
+
+                if (!String.IsNullOrEmpty(text))
+                {
+                    try
+                    {
+                        // Create a stream from the text. This will be played using a media element.
+                        App app = (App)Application.Current;
+                        SpeechSynthesisStream synthesisStream = await app.Synthesizer.SynthesizeTextToStreamAsync(text);
+
+                        // Set the source and start playing the synthesized audio stream.
+                        this.Media.AutoPlay = true;
+                        this.Media.SetSource(synthesisStream, synthesisStream.ContentType);
+                        this.Media.Play();
+                    }
+                    catch (System.IO.FileNotFoundException)
+                    {
+                        // If media player components are unavailable, (eg, using a N SKU of windows), we won't
+                        // be able to start media playback. Handle this gracefully
+                        var messageDialog = new Windows.UI.Popups.MessageDialog("Media player components unavailable");
+                        await messageDialog.ShowAsync();
+                    }
+                    catch (Exception)
+                    {
+                        // If the text is unable to be synthesized, throw an error message to the user.
+                        this.Media.AutoPlay = false;
+                        var messageDialog = new Windows.UI.Popups.MessageDialog(
+                            "Unable to synthesize text. Please download Chinese simplified speech language pack.");
+                        await messageDialog.ShowAsync();
+                    }
+                }
+            }
         }
     }
 }
