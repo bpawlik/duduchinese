@@ -72,8 +72,10 @@ namespace DuDuChinese.ViewModels
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
-            //Value = (suspensionState.ContainsKey(nameof(Value))) ? suspensionState[nameof(Value)]?.ToString() : parameter?.ToString();
+            // Hide shell
+            Views.Shell.HamburgerMenu.IsFullScreen = true;
 
+            // Serialize revision engine
             RevisionEngine.Serialize();
 
             // Peek next exercise

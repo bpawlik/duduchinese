@@ -27,10 +27,8 @@ namespace DuDuChinese.ViewModels
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
-            if (suspensionState.Any())
-            {
-                //Value = suspensionState[nameof(Value)]?.ToString();
-            }
+            // Restore shell
+            Views.Shell.HamburgerMenu.IsFullScreen = false;
 
             this.IsStartEnabled = false;
             this.SelectedItemsCount.Clear();

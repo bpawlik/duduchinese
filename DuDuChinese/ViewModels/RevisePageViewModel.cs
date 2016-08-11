@@ -42,6 +42,9 @@ namespace DuDuChinese.ViewModels
                 Value = suspensionState[nameof(Value)]?.ToString();
             }
 
+            // Restore shell
+            Views.Shell.HamburgerMenu.IsFullScreen = false;
+
             this.IsStartEnabled = false;
             this.SelectedItemsCount.Clear();
 
