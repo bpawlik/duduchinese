@@ -195,6 +195,8 @@ namespace DuDuChinese.Models
                 System.Diagnostics.Debug.WriteLine("Couldn't deserialize revision list! " + ex.Message);
                 revisionList = null;
             }
+
+            await Task.CompletedTask;
         }
 
     }
