@@ -439,15 +439,6 @@ namespace DuDuChinese.Views
             }
         }
 
-        private void NewList_Click(object sender, EventArgs e)
-        {
-            ListViewModel lvm = (ListViewModel)ListsPane.DataContext;
-            lvm.EditInProgress = true;
-            ListItemViewModel item = new ListItemViewModel { Name = "", LineTwo = "", IsEditable = true };
-            lvm.Items.Insert(0, item);
-            ListListBox.ScrollIntoView(ListListBox.Items[0]);
-        }
-
         private async void AppBarUploadButton_Click(object sender, RoutedEventArgs e)
         {
             var picker = new Windows.Storage.Pickers.FileOpenPicker();
@@ -558,7 +549,6 @@ namespace DuDuChinese.Views
                 lvm.EditInProgress = true;
                 ListItemViewModel item = new ListItemViewModel { Name = "", LineTwo = "", IsEditable = true };
                 lvm.Items.Insert(0, item);
-                //((ApplicationBarIconButton)ApplicationBar.Buttons[0]).IsEnabled = false; // disable "multi-add"
                 ListListBox.ScrollIntoView(ListListBox.Items[0]);
             }
         }
@@ -630,21 +620,24 @@ namespace DuDuChinese.Views
 
         private void SetAsDefaultList_Click(object sender, RoutedEventArgs e)
         {
+            // Get the current value
+            App app = (App)Application.Current;
+            var datacontext = (e.OriginalSource as FrameworkElement).DataContext;
+            ListBoxItem lbItem = (ListBoxItem)ListListBox.ContainerFromItem(datacontext);
+            ListItemViewModel listItem = (ListItemViewModel)lbItem.DataContext;
+            bool currentValue = app.ListManager[listItem.Name].IsDefault;
+
             // Iterate through all item list and remove default options
             ListViewModel lvm = (ListViewModel)ListListBox.DataContext;
             foreach (ListItemViewModel item in lvm.Items)
                 item.IsDefault = false;
-
-            App app = (App)Application.Current;
             foreach (string key in app.ListManager.Keys)
                 app.ListManager[key].IsDefault = false;
 
-            var datacontext = (e.OriginalSource as FrameworkElement).DataContext;
-            ListBoxItem lbItem = (ListBoxItem)ListListBox.ContainerFromItem(datacontext);
-            ListItemViewModel listItem = (ListItemViewModel)lbItem.DataContext;
-
-            app.ListManager[listItem.Name].IsDefault = true;
-            listItem.IsDefault = true;
+            // Toggle flag
+            app.ListManager[listItem.Name].IsDefault = !currentValue;
+            listItem.IsDefault = !currentValue;
+            Bindings.Update();
         }
 
         void ListEdit_Loaded(object sender, RoutedEventArgs e)
@@ -659,11 +652,6 @@ namespace DuDuChinese.Views
                 return;
             textBox.Select(textBox.Text.Length, 0); // position cursor at end
             textBox.Focus(FocusState.Programmatic);
-        }
-
-        private void ListEdit_GotFocus(object sender, RoutedEventArgs e)
-        {
-            //ApplicationBar.IsVisible = false;
         }
 
         // LostFocus means "cancel"
@@ -722,9 +710,8 @@ namespace DuDuChinese.Views
             int index = FindListItemIndexByName(ListListBox, name);
             ListListBox.ScrollIntoView(ListListBox.Items[index]);
 
-            // Update binding to get IsActive property updated and then focus back to the listbox
+            // Update binding to get IsActive property updated
             Bindings.Update();
-            ListListBox.Focus(FocusState.Programmatic);
         }
 
         private int FindListItemIndexByName(ListBox list, string name)
@@ -747,21 +734,26 @@ namespace DuDuChinese.Views
             list.SelectedIndex = -1; // reset
             if (item == -1)
                 return;
-
-            
+        
             ListViewModel lvm = (ListViewModel)ListsPane.DataContext;
-            if (lvm.EditInProgress) // don't open lists while adding/renaming
+            if (lvm.EditInProgress)
                 return;
 
+            // User is selecting a target list to add an entry
             ListItemViewModel ivm = (ListItemViewModel)list.Items[item];
-            if (RecordToAdd != null) // user is selecting a target list to add an entry
+            if (RecordToAdd != null) 
             {
                 App app = (App)Application.Current;
                 DictionaryRecordList target = app.ListManager[ivm.Name];
                 if (target.IsDeleted)
-                    return; // can't add items to a deleted list
+                    return;
+
+                // Amend index of the entry (important for learning)
+                RecordToAdd.Index = target.Count;
                 target.Add(RecordToAdd);
-                RecordToAdd = null; // come out of add-to-list mode
+
+                // Reset and reload
+                RecordToAdd = null;
                 LoadLists();
                 TextNotification = "Item added to the list: " + ivm.Name;
             }

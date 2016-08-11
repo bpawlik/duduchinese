@@ -93,6 +93,9 @@ namespace DuDuChinese.ViewModels
                 List<RevisionItem> learningItems = LearningEngine.GenerateLearningItems(recordList);
                 List<RevisionItem> revisionItems = RevisionEngine.RevisionList;
 
+                if (learningItems.Count == 0 || revisionItems == null)
+                    return 0;
+
                 // Get the intersection of learningItems and revisionItems
                 var intersectList = learningItems.Select(i => i).Intersect(revisionItems);
 

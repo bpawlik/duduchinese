@@ -197,7 +197,7 @@
                                             <ToggleMenuFlyoutItem x:Name="SetAsDefault"
                                                         Text="Set as default"
                                                         Click="SetAsDefaultList_Click"
-                                                        IsChecked="{Binding IsDefault}" />
+                                                        IsChecked="{Binding IsDefault, Mode=TwoWay}" />
                                         </MenuFlyout>
                                     </FlyoutBase.AttachedFlyout>
                                     <!-- This border appears on items that are not selected as default -->
@@ -240,11 +240,10 @@
                                         <TextBox
                                             Text="{Binding Name}"
                                             Visibility="{Binding IsEditable, Converter={StaticResource VisibilityConverter}}"
-                                            Margin="5,5,0,0"
+                                            Margin="8,5,0,0"
                                             MinWidth="200"
                                             InputScope="Search"
                                             Loaded="ListEdit_Loaded"
-                                            GotFocus="ListEdit_GotFocus"
                                             LostFocus="ListEdit_LostFocus"
                                             KeyDown="ListEdit_KeyDown"/>
                                     </StackPanel>
