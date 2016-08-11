@@ -73,6 +73,15 @@ namespace DuDuChinese.Models
 
             App app = (App)Application.Current;
 
+            // Remove all revision items which list they belong to doesn't exist anymore
+            int removedCount = revisionList.RemoveAll(item => (
+                !app.ListManager.ContainsKey(item.ListName) ||
+                app.ListManager[item.ListName].Count == 0 ||
+                app.ListManager[item.ListName].Find(r => r.Index == item.Index) == null
+            ));
+            if (removedCount > 0)
+                Serialize();
+
             // Fill list with the worst items
             List<RevisionItem> revList = new List<RevisionItem>();
             for (int i = 0; i < numberOfItems && i < revisionList.Count; ++i)
@@ -176,9 +185,15 @@ namespace DuDuChinese.Models
                     }
                 }
             }
+            catch (XmlException ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Couldn't deserialize revision list. Probably it is empty. Error: " + ex.Message);
+                revisionList = new List<RevisionItem>();
+            }
             catch (Exception ex)
             {
-                string msg = ex.Message;
+                System.Diagnostics.Debug.WriteLine("Couldn't deserialize revision list! " + ex.Message);
+                revisionList = null;
             }
         }
 

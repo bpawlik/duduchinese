@@ -114,11 +114,6 @@ namespace DuDuChinese.ViewModels
 
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> suspensionState, bool suspending)
         {
-            if (suspending)
-            {
-                //suspensionState[nameof(Value)] = Value;
-            }
-
             await Task.CompletedTask;
         }
 

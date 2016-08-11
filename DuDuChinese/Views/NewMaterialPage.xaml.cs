@@ -15,15 +15,15 @@ namespace DuDuChinese.Views
             NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
         }
 
-        private void SelectedListChanged(object sender, SelectionChangedEventArgs e)
+        private void SelectedListChanged(object sender, object e)
         {
-            ViewModel.SelectedListChanged(sender, e);
+            ViewModel.SelectedListChanged(sender);
             Bindings.Update();
         }
 
-        private void NumberOfItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void NumberOfItems_SelectionChanged(object sender, object e)
         {
-            ViewModel.NumberOfItems_SelectionChanged(sender, e);
+            ViewModel.NumberOfItems_SelectionChanged(sender);
             Bindings.Update();
         }
     }

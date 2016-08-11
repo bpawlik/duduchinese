@@ -120,7 +120,7 @@ namespace DuDuChinese.ViewModels
             Summary = LearningEngine.GetStatus();
 
             this.ProgressValue = 1;
-            this.ProgressMaxValue = LearningEngine.CurrentItemList.Count;
+            this.ProgressMaxValue = LearningEngine.GetItemCountForCurrentExercise();
 
             ResetUI();
 

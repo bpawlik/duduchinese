@@ -15,11 +15,8 @@ namespace DuDuChinese.ViewModels
     public class RevisePageViewModel : ViewModelBase
     {
         public ObservableCollection<string> Items { get; private set; }
-
-        public List<string> SelectedItemsCount { get; set; } = new List<string>();
-
+        public ObservableCollection<string> SelectedItemsCount { get; set; }
         public bool IsStartEnabled { get; set; } = false;
-
         private List<RevisionItem> revisionList = null;
 
         public RevisePageViewModel()
@@ -30,10 +27,13 @@ namespace DuDuChinese.ViewModels
             }
 
             this.Items = new ObservableCollection<string>();
+            this.SelectedItemsCount = new ObservableCollection<string>();
         }
 
         string _Value = "Blah";
         public string Value { get { return _Value; } set { Set(ref _Value, value); } }
+
+        private static string AllLists = "All";
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
@@ -57,6 +57,7 @@ namespace DuDuChinese.ViewModels
             // Update lists
             App app = (App)Application.Current;
             this.Items.Clear();
+            this.Items.Add(AllLists);
             foreach (string key in app.ListManager.Keys)
                 this.Items.Add(key);
 
@@ -93,14 +94,14 @@ namespace DuDuChinese.ViewModels
 
         private int NumberOfItems { get; set; } = 0;
 
-        public void SelectedListChanged(object sender, SelectionChangedEventArgs e)
+        public void SelectedListChanged(object sender)
         {
             ComboBox cb = sender as ComboBox;
             App app = (App)Application.Current;
             if (cb.SelectedValue != null)
             {
                 string name = cb.SelectedValue.ToString();
-                this.revisionList = RevisionEngine.GetRevisionList(-1, name);
+                this.revisionList = RevisionEngine.GetRevisionList(-1, name == AllLists ? null : name);
 
                 // Update items count combobox
                 SelectedItemsCount.Clear();
@@ -110,7 +111,7 @@ namespace DuDuChinese.ViewModels
             }
         }
 
-        public void NumberOfItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        public void NumberOfItems_SelectionChanged(object sender)
         {
             ComboBox cb = sender as ComboBox;
             this.NumberOfItems = Convert.ToInt32(cb.SelectedValue);
@@ -133,7 +134,7 @@ namespace DuDuChinese.ViewModels
             }
             else
             {
-                LearningEngine.UpdateRevisionList(this.revisionList);
+                LearningEngine.UpdateRevisionList(this.revisionList.GetRange(0, this.NumberOfItems));
                 LearningEngine.Mode = LearningMode.Revision;
                 NavigationService.Navigate(typeof(Views.ProgressPage), 0);
             }

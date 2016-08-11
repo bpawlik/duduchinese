@@ -85,7 +85,7 @@ namespace DuDuChinese.ViewModels
             }
         }
 
-        public void SelectedListChanged(object sender, SelectionChangedEventArgs e)
+        public void SelectedListChanged(object sender)
         {
             ComboBox cb = sender as ComboBox;
             App app = (App)Application.Current;
@@ -113,7 +113,7 @@ namespace DuDuChinese.ViewModels
             }
         }
 
-        public void NumberOfItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        public void NumberOfItems_SelectionChanged(object sender)
         {
             ComboBox cb = sender as ComboBox;
             int itemsCount = Convert.ToInt32(cb.SelectedValue);

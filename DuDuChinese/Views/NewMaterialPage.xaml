@@ -83,12 +83,12 @@
             <TextBlock x:Name="textBlock2" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" Text="Number of items:" />
             <ComboBox x:Name="comboBoxLists" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="20,0" Height="32" VerticalAlignment="Top" MinWidth="180"
                   ItemsSource="{Binding Items}"
-                  SelectionChanged="SelectedListChanged"
+                  DropDownClosed="SelectedListChanged"
                   xmlns:m="using:DuDuChinese.Models">
             </ComboBox>
             <ComboBox x:Name="itemsCountComboBox" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Height="32" MinWidth="180" Margin="20,0"
                   VerticalAlignment="Top" ItemsSource="{x:Bind ViewModel.SelectedItemsCount}"
-                      SelectionChanged="NumberOfItems_SelectionChanged" >
+                  DropDownClosed="NumberOfItems_SelectionChanged" >
             </ComboBox>
             <RadioButton x:Name="radioButtonWords" Grid.Row="2" Grid.Column="0" IsEnabled="False" Content="Words" IsChecked="True" Tag="0" GroupName="mode" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Checked="{x:Bind ViewModel.radioButton_Checked}" />
             <RadioButton x:Name="radioButtonSentences" Grid.Row="2" Grid.Column="1" IsEnabled="False" Content="Sentences" IsChecked="False" Tag="1" GroupName="mode" HorizontalAlignment="Left" Height="32"  Margin="20,0" VerticalAlignment="Top" Checked="{x:Bind ViewModel.radioButton_Checked}" />

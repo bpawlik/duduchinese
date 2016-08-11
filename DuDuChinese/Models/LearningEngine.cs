@@ -263,12 +263,18 @@ namespace DuDuChinese.Models
             }
         }
 
+        public static int GetItemCountForCurrentExercise()
+        {
+            return GetItemCountForExercise(CurrentExercise);
+        }
+
         public static int GetItemCountForExercise(LearningExercise exercise)
         {
             if (Mode == LearningMode.Revision)
-                return ListForExercise[exercise].Count;
+                return (ListForExercise == null || !ListForExercise.ContainsKey(exercise)) ? 0
+                    : Math.Min(ListForExercise[exercise].Count, ItemsCount);
             else
-                return CurrentItemList.Count;
+                return Math.Min(CurrentItemList.Count, ItemsCount);
         }
 
         public static void SetVisibility(out Visibility PinyinVisible, out Visibility TranslationVisible, out Visibility SimplifiedVisible)
@@ -375,7 +381,8 @@ namespace DuDuChinese.Models
                         if (String.IsNullOrWhiteSpace(s) || String.IsNullOrWhiteSpace(inputText))
                             continue;
 
-                        string refText = s.ToLower();
+                        // Convert to lower-case and replace comas/dots/colons with spaces
+                        string refText = s.ToLower().Replace(',',' ').Replace('.', ' ').Replace(';', ' ').Replace(':', ' ');
 
                         // If input text contains space then match it as a whole phrase
                         if (inputText.Contains(" "))
