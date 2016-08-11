@@ -50,7 +50,9 @@
         <controls:PageHeader x:Name="pageHeader" Frame="{x:Bind Frame}"
                              RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignTopWithPanel="True" Text="{x:Bind ViewModel.PageTitle}" />
+                             RelativePanel.AlignTopWithPanel="True"
+                             Text="{x:Bind ViewModel.PageTitle}"
+                             Background="{ThemeResource CustomHeaderBackground}"/>
 
         <!--  content  -->
         <StackPanel Margin="25, 50" d:DataContext="{d:DesignData SampleData/ProgressViewModelSampleData.xaml}">

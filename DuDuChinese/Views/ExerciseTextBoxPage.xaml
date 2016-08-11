@@ -55,7 +55,8 @@
         <controls:PageHeader x:Name="pageHeader" Frame="{x:Bind Frame}"
                              RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignTopWithPanel="True" Text="Learning Exercise" />
+                             RelativePanel.AlignTopWithPanel="True" Text="Learning Exercise"
+                             Background="{ThemeResource CustomHeaderBackground}" />
 
         <!--  content  -->
         <ScrollViewer Padding="12,8,0,0" RelativePanel.AlignBottomWithPanel="True"

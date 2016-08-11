@@ -57,7 +57,9 @@
         <controls:PageHeader x:Name="pageHeader" Frame="{x:Bind Frame}"
                              RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignTopWithPanel="True" Text="{x:Bind ViewModel.Title, Mode=OneWay, FallbackValue=DesigntimeValue}" >
+                             RelativePanel.AlignTopWithPanel="True"
+                             Text="{x:Bind ViewModel.Title, Mode=OneWay, FallbackValue=DesigntimeValue}"
+                             Background="{ThemeResource CustomHeaderBackground}" >
             <!-- primary commands -->
             <controls:PageHeader.PrimaryCommands>
                 <AppBarButton Click="AppBarSortButton_Click" Label="Sort" >

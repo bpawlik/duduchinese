@@ -34,6 +34,11 @@ namespace DuDuChinese
             #endregion
         }
 
+        #region Dictionary
+
+        /// <summary>
+        /// List manager shared between pages
+        /// </summary>
         ListManager _ListManager;
         public ListManager ListManager
         {
@@ -50,11 +55,15 @@ namespace DuDuChinese
         /// </summary>
         public Dictionary Dictionary;
 
-        // Learning engine shared between all pages
-        // LearningEngine
+        #endregion
+
+        #region Speach synthesizer
 
         // Speech recognition elements
+        private ResourceContext speechContext;
+        private ResourceMap speechResourceMap;
         private SpeechSynthesizer synthesizer = null;
+
         public SpeechSynthesizer Synthesizer
         {
             get
@@ -81,8 +90,8 @@ namespace DuDuChinese
                 return this.synthesizer;
             }
         }
-        private ResourceContext speechContext;
-        private ResourceMap speechResourceMap;
+
+        #endregion
 
         public override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
@@ -103,8 +112,14 @@ namespace DuDuChinese
 
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
         {
+            // Refresh app theme based on the stored value
             var _settings = SettingsService.Instance;
             Views.Shell.HamburgerMenu.RefreshStyles(_settings.AppTheme);
+
+            // Change TitleBar colours
+            var appView = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView();
+            appView.TitleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
+            appView.TitleBar.ButtonHoverBackgroundColor = Windows.UI.Colors.LightGray;
 
             NavigationService.Navigate(typeof(Views.MainPage));
             await Task.CompletedTask;
