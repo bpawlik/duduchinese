@@ -104,7 +104,7 @@ namespace DuDuChinese.Views
 
         #endregion
 
-        #region toggle search query placeholder text
+        #region Toggle search query placeholder text
 
         void Query_GotFocus(object sender, RoutedEventArgs e)
         {
@@ -124,7 +124,7 @@ namespace DuDuChinese.Views
 
         #endregion
 
-        #region search
+        #region Search
 
         void Query_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
@@ -156,7 +156,7 @@ namespace DuDuChinese.Views
 
         #endregion
 
-        #region pivot switching
+        #region Pivot switching
 
         private void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -192,6 +192,7 @@ namespace DuDuChinese.Views
             DictionaryRecord record = ViewModel.Dictionary[i];
             ViewModel.Decompose(record);
             Results.ScrollIntoView(Results.Items[0]);
+            Bindings.Update();
         }
 
         #endregion
