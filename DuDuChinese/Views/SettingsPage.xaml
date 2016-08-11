@@ -110,18 +110,16 @@
                         <Run Text="{Binding Version}" />
 
                     </TextBlock>
-                    <TextBlock TextWrapping="WrapWholeWords"
-                               RelativePanel.Below="VersionTextBlock">
-                        <LineBreak /><LineBreak />
-                        DuDuChinese is an open-source Universal Windows Application. Sources available at https://github.com/bpawlik/duduchinese
-                        <LineBreak /><LineBreak />
-                        Dicitonary content provided by CC-CEDICT https://cc-cedict.org
-                        <LineBreak /><LineBreak />
-                        CC-CEDICT is licensed under Creative Commons Attribution-Share Alike 3.0 License http://creativecommons.org/licenses/by-sa/3.0/
-                        <LineBreak /><LineBreak />
-                        Dictionary engine based in the large part on Kuaishuo Windows Phone application: https://github.com/larryk78/Kuaishuo.WindowsPhone
-                    </TextBlock>
-
+                    <TextBox TextWrapping="Wrap"
+                             BorderThickness="0"
+                             IsReadOnly="True"
+                             RelativePanel.Below="VersionTextBlock"
+                             Text="
+                        &#x0a;&#x0a;   DuDuChinese is an open-source Universal Windows Application. Sources available at https://github.com/bpawlik/duduchinese
+                        &#x0a;&#x0a;   Dicitonary content provided by CC-CEDICT https://cc-cedict.org
+                        &#x0a;&#x0a;   CC-CEDICT is licensed under Creative Commons Attribution-Share Alike 3.0 License http://creativecommons.org/licenses/by-sa/3.0/
+                        &#x0a;&#x0a;   Dictionary engine based in the large part on Kuaishuo Windows Phone application: https://github.com/larryk78/Kuaishuo.WindowsPhone
+                        &#x0a;&#x0a; " /> 
                 </RelativePanel>
             </PivotItem>
         </Pivot>
