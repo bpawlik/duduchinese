@@ -397,7 +397,7 @@ namespace DuDuChinese.Views
         //Brush old;
         void ToggleView(ListBox list, int index, bool expand)
         {
-            ListBoxItem item = (ListBoxItem)list.ItemContainerGenerator.ContainerFromIndex(index);
+            ListBoxItem item = (ListBoxItem)list.ContainerFromIndex(index);
             if (item == null)
                 return;
 
@@ -505,7 +505,7 @@ namespace DuDuChinese.Views
         private async void SaveList_Click(object sender, RoutedEventArgs e)
         {
             var datacontext = (e.OriginalSource as FrameworkElement).DataContext;
-            ListBoxItem lbItem = (ListBoxItem)ListListBox.ItemContainerGenerator.ContainerFromItem(datacontext);
+            ListBoxItem lbItem = (ListBoxItem)ListListBox.ContainerFromItem(datacontext);
             ListItemViewModel listItem = (ListItemViewModel)lbItem.DataContext;
 
             var picker = new Windows.Storage.Pickers.FileSavePicker();
@@ -533,7 +533,7 @@ namespace DuDuChinese.Views
             ListViewModel lvm = (ListViewModel)ListsPane.DataContext;
             lvm.EditInProgress = true;
             var datacontext = (e.OriginalSource as FrameworkElement).DataContext;
-            ListBoxItem lbItem = (ListBoxItem)ListListBox.ItemContainerGenerator.ContainerFromItem(datacontext);
+            ListBoxItem lbItem = (ListBoxItem)ListListBox.ContainerFromItem(datacontext);
             ListItemViewModel listItem = (ListItemViewModel)lbItem.DataContext;
             OldName = listItem.Name;
             RenameListMode = true; // turn on editing mode
@@ -544,7 +544,7 @@ namespace DuDuChinese.Views
         private void DeleteList_Click(object sender, RoutedEventArgs e)
         {
             var datacontext = (e.OriginalSource as FrameworkElement).DataContext;
-            ListBoxItem lbItem = (ListBoxItem)ListListBox.ItemContainerGenerator.ContainerFromItem(datacontext);
+            ListBoxItem lbItem = (ListBoxItem)ListListBox.ContainerFromItem(datacontext);
             ListItemViewModel listItem = (ListItemViewModel)lbItem.DataContext;
             App app = (App)Application.Current;
             app.ListManager.Remove(listItem.Name);
@@ -579,7 +579,7 @@ namespace DuDuChinese.Views
                 app.ListManager[key].IsDefault = false;
 
             var datacontext = (e.OriginalSource as FrameworkElement).DataContext;
-            ListBoxItem lbItem = (ListBoxItem)ListListBox.ItemContainerGenerator.ContainerFromItem(datacontext);
+            ListBoxItem lbItem = (ListBoxItem)ListListBox.ContainerFromItem(datacontext);
             ListItemViewModel listItem = (ListItemViewModel)lbItem.DataContext;
 
             app.ListManager[listItem.Name].IsDefault = true;

@@ -52,7 +52,7 @@ namespace DuDuChinese.Views
 
         void ToggleView(ListBox list, int index, bool expand)
         {
-            ListBoxItem item = (ListBoxItem)list.ItemContainerGenerator.ContainerFromIndex(index);
+            ListBoxItem item = (ListBoxItem)list.ContainerFromIndex(index);
             if (item == null)
                 return;
 
