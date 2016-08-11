@@ -172,9 +172,13 @@
                 </StackPanel>
             </PivotItem>
             <PivotItem x:Name="ListsPane" Header="Lists" Margin="12,8,12,0">
-                <StackPanel x:Name="ListsPaneContent" Orientation="Vertical">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
                     <ListBox x:Name="ListListBox" VirtualizingStackPanel.VirtualizationMode="Standard" Margin="0,0,0,0"
                              ItemsSource="{Binding Items}"
+                             ScrollViewer.IsVerticalRailEnabled="True"
                              SelectionChanged="ListListBox_SelectionChanged">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -248,7 +252,7 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                </StackPanel>
+                </Grid>
             </PivotItem>
         </Pivot>
     </RelativePanel>
