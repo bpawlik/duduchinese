@@ -17,7 +17,14 @@ namespace DuDuChinese.Views
 
         private void SelectedListChanged(object sender, object e)
         {
-            ViewModel.SelectedListChanged(sender);
+            int count = ViewModel.SelectedListChanged(sender);
+
+            // Update items count combobox
+            itemsCountComboBox.Items.Clear();
+            for (int i = 10; i < count; i += 10)
+                itemsCountComboBox.Items.Add(i.ToString());
+            itemsCountComboBox.Items.Add(count.ToString());
+
             Bindings.Update();
         }
 

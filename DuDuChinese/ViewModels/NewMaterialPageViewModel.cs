@@ -16,8 +16,6 @@ namespace DuDuChinese.ViewModels
     {
         public ObservableCollection<string> Items { get; private set; }
 
-        public List<string> SelectedItemsCount { get; set; } = new List<string>();
-
         public bool IsStartEnabled { get; set; } = false;
 
         public NewMaterialPageViewModel()
@@ -31,7 +29,6 @@ namespace DuDuChinese.ViewModels
             Views.Shell.HamburgerMenu.IsFullScreen = false;
 
             this.IsStartEnabled = false;
-            this.SelectedItemsCount.Clear();
 
             // Reset learning engine
             LearningEngine.Reset();
@@ -85,7 +82,7 @@ namespace DuDuChinese.ViewModels
             }
         }
 
-        public void SelectedListChanged(object sender)
+        public int SelectedListChanged(object sender)
         {
             ComboBox cb = sender as ComboBox;
             App app = (App)Application.Current;
@@ -104,19 +101,17 @@ namespace DuDuChinese.ViewModels
                     recordList.Remove(recordList[item.Index]);
 
                 LearningEngine.CurrentItemList = recordList;
-
-                // Update items count combobox
-                SelectedItemsCount.Clear();
-                for (int i = 10; i < recordList.Count; i += 10)
-                    SelectedItemsCount.Add(i.ToString());
-                SelectedItemsCount.Add(recordList.Count.ToString());
+                return recordList.Count;
             }
+            return 0;
         }
 
         public void NumberOfItems_SelectionChanged(object sender)
         {
             ComboBox cb = sender as ComboBox;
-            int itemsCount = Convert.ToInt32(cb.SelectedValue);
+            if (cb.Items.Count == 0)
+                return;
+            int itemsCount = Convert.ToInt32(cb.SelectedItem);
             if (itemsCount > 0)
                 this.IsStartEnabled = true;
             LearningEngine.ItemsCount = itemsCount;
