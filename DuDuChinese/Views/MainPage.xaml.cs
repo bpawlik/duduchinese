@@ -475,7 +475,67 @@ namespace DuDuChinese.Views
                     App app = (App)Application.Current;
                     using (Stream stream = await file.OpenStreamForReadAsync())
                     {
-                        Dictionary list = new Dictionary(stream);
+                        Stream inStream = null;
+
+                        if (file.FileType == ".msg")
+                        {
+                            OutlookStorage.Message message = new OutlookStorage.Message(stream);
+                            MemoryStream memStream = new MemoryStream();
+                            StreamWriter writer = new StreamWriter(memStream);
+
+                            // Write header
+                            name = message.Subject.Replace("[Kuaishuo] ", "");
+                            writer.Write("#! name=" + name + "\n#! readonly=False\n#! sortorder=0\n");
+
+                            // Parse lines and add to the memory stream
+                            string text = message.BodyText;
+                            string[] lines = text.Split('\n');
+                            bool isStart = false;
+                            foreach (string line in lines)
+                            {
+                                if (line.Trim().StartsWith("CC-CEDICT ed."))
+                                {
+                                    isStart = true;
+                                    continue;
+                                }
+
+                                if (!isStart || String.IsNullOrWhiteSpace(line))
+                                    continue;
+
+                                writer.WriteLine(line);
+                            }
+                            writer.Flush();
+                            memStream.Position = 0;
+                            inStream = memStream;
+                        }
+                        else if (file.FileType == ".txt")
+                        {
+                            MemoryStream memStream = new MemoryStream();
+                            StreamWriter writer = new StreamWriter(memStream);
+
+                            // Write header
+                            writer.Write("#! name=" + name + "\n#! readonly=False\n#! sortorder=0\n");
+
+                            using (StreamReader streamReader = new StreamReader(stream))
+                            {
+                                while (streamReader.Peek() >= 0)
+                                {
+                                    string line = streamReader.ReadLine();
+                                    if (line.StartsWith("#") || String.IsNullOrWhiteSpace(line))
+                                        continue;
+                                    writer.WriteLine(line);
+                                }
+                            }
+                            writer.Flush();
+                            memStream.Position = 0;
+                            inStream = memStream;
+                        }
+                        else
+                        {
+                            inStream = stream;
+                        }
+
+                        Dictionary list = new Dictionary(inStream);
                         if (!app.ListManager.ContainsKey(name))
                             foreach (DictionaryRecord r in list)
                                 if (r.Chinese != null)
