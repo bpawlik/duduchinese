@@ -73,11 +73,11 @@ namespace DuDuChinese.Models
 
             App app = (App)Application.Current;
 
-            // Remove all revision items which list they belong to doesn't exist anymore
+            // Remove revision items which...
             int removedCount = revisionList.RemoveAll(item => (
-                !app.ListManager.ContainsKey(item.ListName) ||
-                app.ListManager[item.ListName].Count == 0 ||
-                app.ListManager[item.ListName].Find(r => r.Index == item.Index) == null
+                !app.ListManager.ContainsKey(item.ListName) ||  // ...list they belong to doesn't exist anymore
+                app.ListManager[item.ListName].Count == 0 ||    // ...list they belong to is empty...
+                app.ListManager[item.ListName].Find(r => r.Index == item.Index) == null  //  ...or doesn't exist in the list
             ));
             if (removedCount > 0)
                 Serialize();
@@ -88,6 +88,13 @@ namespace DuDuChinese.Models
             {
                 if (name != null && revisionList[i].ListName != name)
                     continue;
+
+                // Skip items having satisfying score (0)
+                if (revisionList[i].Score == 0)
+                {
+                    numberOfItems++;
+                    continue;
+                }
 
                 revList.Add(revisionList[i]);
             }
@@ -156,6 +163,7 @@ namespace DuDuChinese.Models
                     ser.WriteObject(writer, revisionList);
                 }
             }
+            await Task.CompletedTask;
         }
 
         public static async void Deserialize()
