@@ -180,7 +180,8 @@ namespace DuDuChinese.Models
                     foreach (var key in keys)
                     {
                         var shuffledItems = learningItems[key].OrderBy(a => Guid.NewGuid());
-                        learningItems[key] = new List<LearningItem>(shuffledItems).GetRange(0, itemsCount);
+                        int count = Math.Min(learningItems[key].Count, itemsCount);
+                        learningItems[key] = new List<LearningItem>(shuffledItems).GetRange(0, count);
                     }
                 }
             }
@@ -287,7 +288,11 @@ namespace DuDuChinese.Models
             // Update learning list and return items count
             UpdateLearningList(items);
 
-            return Mode == LearningMode.Revision ? items.Count : LearningItems.First().Value.Count;
+            if (Mode == LearningMode.Revision)
+                return items.Count;
+            else if (learningItems.Count > 0)
+                return LearningItems.First().Value.Count;
+            return 0;
         }
 
         public static int GetItemCountForCurrentExercise()

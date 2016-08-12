@@ -30,6 +30,9 @@ namespace DuDuChinese.ViewModels
 
             this.IsStartEnabled = false;
 
+            // Load revisions
+            RevisionEngine.Deserialize();
+
             // Reset learning engine
             LearningEngine.Reset();
             LearningEngine.Mode = LearningMode.Words;
