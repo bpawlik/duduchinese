@@ -84,6 +84,18 @@ namespace DuDuChinese.ViewModels
                         break;
                 }
             }
+            else if (parameter is string)
+            {
+                switch (parameter as string)
+                {
+                    case "Search":
+                        this.SelectedPivotIndex = 0;
+                        break;
+                    case "Lists":
+                        this.SelectedPivotIndex = 2;
+                        break;
+                }
+            }
 
             await Task.CompletedTask;
         }

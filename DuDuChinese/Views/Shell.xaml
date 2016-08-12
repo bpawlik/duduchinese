@@ -17,7 +17,7 @@
         <Controls:HamburgerMenu.PrimaryButtons>
             <!--  mainpage button  -->
             <Controls:HamburgerButtonInfo ClearHistory="True" PageType="views:MainPage" 
-                                          AutomationProperties.Name="Jerry"
+                                          AutomationProperties.Name=""
                                           >
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Width="48" Height="48"
@@ -26,7 +26,33 @@
                                Text="Home" />
                 </StackPanel>
             </Controls:HamburgerButtonInfo>
-            
+
+            <!--Search button-->
+            <Controls:HamburgerButtonInfo x:Name="SearchButton" PageType="views:MainPage" PageParameter="Search">
+                <Controls:HamburgerButtonInfo.NavigationTransitionInfo>
+                    <SuppressNavigationTransitionInfo />
+                </Controls:HamburgerButtonInfo.NavigationTransitionInfo>
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Width="48" Height="48"
+                                Symbol="Find" />
+                    <TextBlock Margin="12,0,0,0" VerticalAlignment="Center"
+                               Text="Search" />
+                </StackPanel>
+            </Controls:HamburgerButtonInfo>
+
+            <!--Lists button-->
+            <Controls:HamburgerButtonInfo x:Name="ListsButton" PageType="views:MainPage" PageParameter="Lists">
+                <Controls:HamburgerButtonInfo.NavigationTransitionInfo>
+                    <SuppressNavigationTransitionInfo />
+                </Controls:HamburgerButtonInfo.NavigationTransitionInfo>
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Width="48" Height="48"
+                                Symbol="List" />
+                    <TextBlock Margin="12,0,0,0" VerticalAlignment="Center"
+                               Text="Search" />
+                </StackPanel>
+            </Controls:HamburgerButtonInfo>
+
             <!--Revision button-->
             <Controls:HamburgerButtonInfo x:Name="ReviseButton" PageType="views:RevisePage">
                 <Controls:HamburgerButtonInfo.NavigationTransitionInfo>
