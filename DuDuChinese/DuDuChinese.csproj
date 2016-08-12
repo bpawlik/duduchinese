@@ -115,6 +115,7 @@
     <Compile Include="Models\DictionaryItemList.cs" />
     <Compile Include="Models\DictionaryManager.cs" />
     <Compile Include="Models\LearningEngine.cs" />
+    <Compile Include="Models\LearningItem.cs" />
     <Compile Include="Models\OutlookStorage.cs" />
     <Compile Include="Models\PinyinColorizer.cs" />
     <Compile Include="Models\VisualTreeHelper.cs" />

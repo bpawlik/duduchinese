@@ -32,6 +32,7 @@ namespace DuDuChinese.ViewModels
 
             // Reset learning engine
             LearningEngine.Reset();
+            LearningEngine.Mode = LearningMode.Words;
 
             App app = (App)Application.Current;
             this.Items.Clear();
@@ -62,7 +63,7 @@ namespace DuDuChinese.ViewModels
 
         public async void Start_Click(object sender, RoutedEventArgs e)
         {
-            if (LearningEngine.CurrentItemList == null)
+            if (LearningEngine.LearningItems == null)
             {
                 ContentDialog dialog = new ContentDialog();
                 dialog.Content = "Learning list is empty!";
@@ -80,28 +81,13 @@ namespace DuDuChinese.ViewModels
 
         public int SelectedListChanged(object sender)
         {
+            this.IsStartEnabled = false;
             ComboBox cb = sender as ComboBox;
             App app = (App)Application.Current;
             if (cb.SelectedValue != null)
             {
                 DictionaryRecordList recordList = app.ListManager[cb.SelectedValue.ToString()];
-
-                List<RevisionItem> learningItems = LearningEngine.GenerateLearningItems(recordList);
-                List<RevisionItem> revisionItems = RevisionEngine.RevisionList;
-
-                if (learningItems.Count > 0 && revisionItems != null)
-                {
-                    // Get the intersection of learningItems and revisionItems
-                    var intersectList = learningItems.Select(i => i).Intersect(revisionItems);
-
-                    // Remove those items from the list that overlap
-                    foreach (var item in intersectList)
-                        recordList.Remove(recordList[item.Index]);
-                }
-
-                LearningEngine.CurrentItemList = recordList;
-                this.IsStartEnabled = recordList.Count > 0;
-                return recordList.Count;
+                return LearningEngine.GenerateLearningItems(recordList);
             }
             return 0;
         }

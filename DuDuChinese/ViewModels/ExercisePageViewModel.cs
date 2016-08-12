@@ -26,6 +26,10 @@ namespace DuDuChinese.ViewModels
             get { return this.currentItem; }
             set {
                 this.Items.Clear();
+
+                if (value == null)
+                    return;
+
                 Visibility pinyinVisible, translationVisible, simplifiedVisible;
                 LearningEngine.SetVisibility(out pinyinVisible, out translationVisible, out simplifiedVisible);
                 this.Items.Add(new ItemViewModel()

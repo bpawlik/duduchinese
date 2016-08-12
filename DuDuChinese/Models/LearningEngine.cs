@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 
 namespace DuDuChinese.Models
@@ -18,11 +16,6 @@ namespace DuDuChinese.Models
 
     public enum LearningExercise
     {
-        // Display 
-
-        [Description("Display translations")]
-        Display,
-
         #region Word exercises
 
         // Radio 
@@ -78,11 +71,18 @@ namespace DuDuChinese.Models
 
         #endregion
 
+        #region Common exercises
+
+        [Description("Display translations")]
+        Display,
+
         [Description("We are at the start fo the big adventure!")]
         Start,
 
         [Description("All exercises done")]
         Done
+
+        #endregion
     }
 
     public class Description : Attribute
@@ -97,7 +97,8 @@ namespace DuDuChinese.Models
 
     public class LearningEngine
     {
-        // Predefined exercise lists
+        #region Predefined exercise lists
+
         private static readonly LearningExercise[] exerciseListWords = {
             LearningExercise.Display,
             LearningExercise.HanziPinyin2English,
@@ -107,7 +108,22 @@ namespace DuDuChinese.Models
             LearningExercise.English2Pinyin,
             LearningExercise.Hanzi2Pinyin
         };
-        private static readonly LearningExercise[] exerciseListSentences = { LearningExercise.Display, LearningExercise.FillGaps };
+
+        private static readonly LearningExercise[] exerciseListSentences = {
+            LearningExercise.Display,
+            LearningExercise.FillGaps
+        };
+
+        #endregion
+
+        #region Properties
+
+        public static List<LearningExercise> ExerciseList { get; set; } = null;
+        public static LearningExercise CurrentExercise { get; private set; } = LearningExercise.Start;
+        public static DictionaryRecord CurrentItem { get; private set; } = null;
+        private static int currentItemIndex = 0;
+        private static int correctCount = 0;
+        private static int wrongCount = 0;
 
         private static LearningMode mode = LearningMode.Words;
         public static LearningMode Mode
@@ -126,23 +142,82 @@ namespace DuDuChinese.Models
             }
         }
 
-        public static List<LearningExercise> ExerciseList { get; set; } = null;
+        private static int itemsCount = 0;
+        public static int ItemsCount
+        {
+            get
+            {
+                return itemsCount;
+            }
+            set
+            {
+                itemsCount = value;
+
+                if (learningItems == null)
+                    return;
+
+                // Shuffle entries
+                if (Mode == LearningMode.Revision)
+                {
+                    // Shuffle keys
+                    var keys = learningItems.Keys;
+                    var shuffledKeys = keys.OrderBy(a => Guid.NewGuid());
+
+                    // Shuffle lists
+                    int counter = 0;
+                    foreach (var key in shuffledKeys)
+                    {
+                        var shuffledItems = new List<LearningItem>(learningItems[key].OrderBy(a => Guid.NewGuid()));
+                        learningItems[key].Clear();
+                        for (int i = 0; i < shuffledItems.Count && counter < itemsCount; ++i, ++counter)
+                            learningItems[key].Add(shuffledItems[i]);
+                    }
+                }
+                else
+                {
+                    // Shuffle lists
+                    var keys = new List<LearningExercise>(learningItems.Keys);
+                    foreach (var key in keys)
+                    {
+                        var shuffledItems = learningItems[key].OrderBy(a => Guid.NewGuid());
+                        learningItems[key] = new List<LearningItem>(shuffledItems).GetRange(0, itemsCount);
+                    }
+                }
+            }
+        }
+
+        private static Dictionary<LearningExercise, List<LearningItem>> learningItems = null;
+        public static Dictionary<LearningExercise, List<LearningItem>> LearningItems
+        {
+            get
+            {
+                if (learningItems == null)
+                    learningItems = new Dictionary<LearningExercise, List<LearningItem>>();
+                return learningItems;
+            }
+            set
+            {
+                learningItems = value;
+            }
+        }
 
         private static int currentExerciseIndex = -1;
-        public static int CurrentExerciseIndex {
+        private static int CurrentExerciseIndex {
             get
             {
                 if (currentExerciseIndex < 0)
                     return 0;
                 return currentExerciseIndex;
             }
-            private set
+            set
             {
                 currentExerciseIndex = value;
                 if (currentExerciseIndex > ExerciseList.Count)
                     currentExerciseIndex = 0;
             }
         }
+
+        #endregion
 
         public static LearningExercise PeekNextExercise(out int index)
         {
@@ -167,100 +242,52 @@ namespace DuDuChinese.Models
             else
             {
                 CurrentExercise = ExerciseList[++currentExerciseIndex];
-                if (Mode == LearningMode.Revision)
-                    CurrentItemList = RevisionEngine.ToDictionaryRecordList(ListForExercise[CurrentExercise]);
             }
             return CurrentExercise;
         }
 
-        public static void UpdateRevisionList(List<RevisionItem> revisionList)
+        public static void UpdateLearningList(List<LearningItem> learningList)
         {
-            ListForExercise.Clear();
-            foreach (RevisionItem item in revisionList)
+            LearningItems.Clear();
+            foreach (LearningItem item in learningList)
             {
-                if (!ListForExercise.ContainsKey(item.Exercise))
-                    ListForExercise.Add(item.Exercise, new List<RevisionItem>());
-                ListForExercise[item.Exercise].Add(item);
+                if (!LearningItems.ContainsKey(item.Exercise))
+                    LearningItems.Add(item.Exercise, new List<LearningItem>());
+                LearningItems[item.Exercise].Add(item);
             }
 
             List<LearningExercise> exerciseList = new List<LearningExercise>();
-            foreach (var key in ListForExercise.Keys)
+            foreach (var key in LearningItems.Keys)
                 exerciseList.Add(key);
             ExerciseList = exerciseList;
             currentExerciseIndex = -1;
         }
 
-        public static List<RevisionItem> GenerateLearningItems(DictionaryRecordList recordList)
+        public static int GenerateLearningItems(DictionaryRecordList recordList)
         {
-            List<RevisionItem> items = new List<RevisionItem>();
+            List<LearningItem> items = new List<LearningItem>();
             foreach (var record in recordList)
             {
                 foreach (LearningExercise exercise in ExerciseList)
-                    items.Add(new RevisionItem() { Index = record.Index, Exercise = exercise, ListName = recordList.Name, Score = 10 });
+                    items.Add(new LearningItem(record) { Exercise = exercise, ListName = recordList.Name, Score = 10 });
             }
 
-            return items;
-        }
-
-        public static LearningExercise CurrentExercise { get; private set; } = LearningExercise.Start;
-
-        public static DictionaryRecord CurrentItem { get; private set; } = null;
-
-        private static int currentItemIndex = 0;
-        private static DictionaryRecordList currentItemList = null;
-        private static List<DictionaryRecord> shuffledItems = null;
-        public static DictionaryRecordList CurrentItemList
-        {
-            get
+            // Remove overlapping items between new material and revisions
+            List<LearningItem> revisionItems = RevisionEngine.RevisionList;
+            if (items.Count > 0 && revisionItems != null)
             {
-                return currentItemList;
-            }
-            set
-            {
-                currentItemList = value;
+                // Get the intersection of learningItems and revisionItems
+                var intersectList = new List<LearningItem>(items.Intersect(revisionItems));
 
-                // Shuffle entries
-                if (currentItemList != null)
-                {
-                    var shuffledList = currentItemList.OrderBy(a => Guid.NewGuid());
-                    shuffledItems = new List<DictionaryRecord>(shuffledList);
-                }
+                // Remove those items from the list that overlap
+                foreach (var item in intersectList)
+                    items.Remove(item);
             }
-        }
 
-        private static int itemsCount = 0;
-        public static int ItemsCount
-        {
-            get
-            {
-                return itemsCount;
-            }
-            set
-            {
-                itemsCount = value;
+            // Update learning list and return items count
+            UpdateLearningList(items);
 
-                // Shuffle entries
-                if (currentItemList != null)
-                {
-                    var shuffledList = currentItemList.OrderBy(a => Guid.NewGuid());
-                    shuffledItems = new List<DictionaryRecord>(shuffledList).GetRange(0, itemsCount);
-                }
-            }
-        }
-
-        private static Dictionary<LearningExercise, List<RevisionItem> > listForExercise = null;
-        public static Dictionary<LearningExercise, List<RevisionItem> > ListForExercise
-        {
-            get
-            {
-                if (listForExercise == null)
-                    listForExercise = new Dictionary<LearningExercise, List<RevisionItem>>();
-                return listForExercise;
-            }
-            set
-            {
-                listForExercise = value;
-            }
+            return Mode == LearningMode.Revision ? items.Count : LearningItems.First().Value.Count;
         }
 
         public static int GetItemCountForCurrentExercise()
@@ -270,11 +297,8 @@ namespace DuDuChinese.Models
 
         public static int GetItemCountForExercise(LearningExercise exercise)
         {
-            if (Mode == LearningMode.Revision)
-                return (ListForExercise == null || !ListForExercise.ContainsKey(exercise)) ? 0
-                    : Math.Min(ListForExercise[exercise].Count, ItemsCount);
-            else
-                return Math.Min(CurrentItemList.Count, ItemsCount);
+            return (LearningItems == null || !LearningItems.ContainsKey(exercise)) ? 0
+                    : Math.Min(LearningItems[exercise].Count, ItemsCount);
         }
 
         public static void SetVisibility(out Visibility PinyinVisible, out Visibility TranslationVisible, out Visibility SimplifiedVisible)
@@ -322,48 +346,49 @@ namespace DuDuChinese.Models
             currentExerciseIndex = -1;
             CurrentExercise = LearningExercise.Start;
             currentItemIndex = 0;
-            currentItemList = null;
+            LearningItems = null;
             correctCount = 0;
             wrongCount = 0;
         }
 
         public static DictionaryRecord GetNextItem()
         {
-            if (shuffledItems == null || currentItemIndex >= shuffledItems.Count)
+            if (LearningItems == null || currentItemIndex >= LearningItems[CurrentExercise].Count)
             {
                 currentItemIndex = 0;
                 return null;
             }
             else
             {
-                CurrentItem = shuffledItems[currentItemIndex++];
+                LearningItem item = LearningItems[CurrentExercise][currentItemIndex++];
+                if (item.Record == null)
+                {
+                    App app = (App)Application.Current;
+                    item.Record = app.ListManager[item.ListName].Find(r => LearningItem.ComputeHash(r) == item.Hash);
+                }
+                CurrentItem = item.Record;
                 return CurrentItem;
             }
         }
-
-        private static int correctCount = 0;
-        private static int wrongCount = 0;
 
         public static string GetStatus()
         {
             if (correctCount > 0 || wrongCount > 0)
             {
-                int totalItems = shuffledItems.Count;
+                int totalItems = LearningItems[CurrentExercise].Count;
                 string score = "Total: " + ((int)(100.0 * Convert.ToDouble(correctCount) / Convert.ToDouble(totalItems))).ToString() + " %" + Environment.NewLine;
                 string correct = "Correct: " + correctCount.ToString() + Environment.NewLine;
                 string wrong = "Wrong: " + wrongCount.ToString() + Environment.NewLine;
                 
                 return correct + wrong + score;
             }
-            else
-            {
-                return "";
-            }
+
+            return String.Empty;
         }
 
         public static bool Validate(string inputText)
         {
-            if (currentItemIndex > shuffledItems.Count)
+            if (currentItemIndex > LearningItems[CurrentExercise].Count)
                 return false;
 
             bool result = false;
@@ -423,10 +448,7 @@ namespace DuDuChinese.Models
                 wrongCount++;
 
             // Update revision list
-            if (Mode == LearningMode.Revision)
-                RevisionEngine.UpdateRevisionList(ListForExercise[CurrentExercise][currentItemIndex - 1], result);
-            else
-                RevisionEngine.UpdateRevisionList(CurrentItemList.Name, CurrentItem, ExerciseList[CurrentExerciseIndex], result);
+            RevisionEngine.UpdateRevisionList(LearningItems[CurrentExercise][currentItemIndex - 1], result);
 
             return result;
         }

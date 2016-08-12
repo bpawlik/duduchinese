@@ -8,44 +8,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using Windows.Storage;
-using DuDuChinese.Models;
 using Windows.UI.Xaml;
 
 namespace DuDuChinese.Models
 {
-    [DataContract]
-    public class RevisionItem
-    {
-        [DataMember]
-        public int Index;
-
-        [DataMember]
-        public string ListName;
-
-        [DataMember]
-        public LearningExercise Exercise;
-
-        [DataMember]
-        public int Score;
-
-        public RevisionItem()
-        {
-            Score = 10;
-        }
-    }
-
     public class RevisionEngine
     {
         private static readonly string revisionsFile = "revisions.xml";
 
         // DictionaryItem - learning exercise - score (10, +1 for wrong, -1 for correct)
-        // Priritize items with highest score
-        private static List<RevisionItem> revisionList = null;
+        // Prioritize items with highest score
+        private static List<LearningItem> revisionList = null;
 
         [DataMember]
-        public static List<RevisionItem> RevisionList
+        public static List<LearningItem> RevisionList
         {
-            get {
+            get
+            {
                 if (revisionList == null)
                 {
                     Deserialize();
@@ -60,10 +39,10 @@ namespace DuDuChinese.Models
             }
         }
 
-        public static List<RevisionItem> GetRevisionList(int numberOfItems, string name = null)
+        public static List<LearningItem> GetRevisionList(int numberOfItems, string name = null)
         {
             if (numberOfItems == 0 || revisionList == null)
-                return new List<RevisionItem>();
+                return new List<LearningItem>();
 
             if (numberOfItems < 0 || numberOfItems > revisionList.Count)
                 numberOfItems = revisionList.Count;
@@ -77,13 +56,13 @@ namespace DuDuChinese.Models
             int removedCount = revisionList.RemoveAll(item => (
                 !app.ListManager.ContainsKey(item.ListName) ||  // ...list they belong to doesn't exist anymore
                 app.ListManager[item.ListName].Count == 0 ||    // ...list they belong to is empty...
-                app.ListManager[item.ListName].Find(r => r.Index == item.Index) == null  //  ...or doesn't exist in the list
+                app.ListManager[item.ListName].Find(r => LearningItem.ComputeHash(r) == item.Hash) == null  //  ...or doesn't exist in the list
             ));
             if (removedCount > 0)
                 Serialize();
 
             // Fill list with the worst items
-            List<RevisionItem> revList = new List<RevisionItem>();
+            List<LearningItem> revList = new List<LearningItem>();
             for (int i = 0; i < numberOfItems && i < revisionList.Count; ++i)
             {
                 if (name != null && revisionList[i].ListName != name)
@@ -102,7 +81,7 @@ namespace DuDuChinese.Models
             return revList;
         }
 
-        public static void UpdateRevisionList(RevisionItem revItem, bool correct)
+        public static void UpdateRevisionList(LearningItem revItem, bool correct)
         {
             // Find given record and exercise
             var find = RevisionList.FirstOrDefault(x => (revItem == x));
@@ -119,29 +98,15 @@ namespace DuDuChinese.Models
         public static void UpdateRevisionList(string listName, DictionaryRecord record, LearningExercise exercise, bool correct)
         {
             // Find given record and exercise
-            var find = RevisionList.FirstOrDefault(x => (x.ListName == listName && x.Index == record.Index && x.Exercise == exercise));
+            var find = RevisionList.FirstOrDefault(x => (x.ListName == listName && x.Hash == LearningItem.ComputeHash(record) && x.Exercise == exercise));
             if (find != null)
             {
                 find.Score += (correct ? -1 : 1);
             }
             else
             {
-                RevisionList.Add(new RevisionItem() { ListName = listName, Index = record.Index, Exercise = exercise, Score = (10 + (correct ? -1 : 1)) });
+                RevisionList.Add(new LearningItem(record) { ListName = listName, Exercise = exercise, Score = (10 + (correct ? -1 : 1)) });
             }
-        }
-
-        // Conversion form List<RevisionItem> to DicitonaryRecordList
-        public static DictionaryRecordList ToDictionaryRecordList(List<RevisionItem> revList)
-        {
-            App app = (App)Application.Current;
-            DictionaryRecordList recordList = new DictionaryRecordList("revision");
-            foreach (RevisionItem item in revList)
-            {
-                DictionaryRecord record = app.ListManager[item.ListName][item.Index];
-                recordList.Add(record);
-            }
-
-            return recordList;
         }
 
         public static async void Serialize()
@@ -155,11 +120,10 @@ namespace DuDuChinese.Models
             // Write the data
             using (Stream s = await file.OpenStreamForWriteAsync())
             {
-                //var ms = new MemoryStream();
                 // Write an object to the Stream and leave it opened
                 using (var writer = XmlDictionaryWriter.CreateTextWriter(s, Encoding.UTF8, ownsStream: false))
                 {
-                    var ser = new DataContractSerializer(typeof(List<RevisionItem>));
+                    var ser = new DataContractSerializer(typeof(List<LearningItem>));
                     ser.WriteObject(writer, revisionList);
                 }
             }
@@ -175,7 +139,7 @@ namespace DuDuChinese.Models
 
                 if (!File.Exists(Path.Combine(data_folder.Path, revisionsFile)))
                 {
-                    revisionList = new List<RevisionItem>();
+                    revisionList = new List<LearningItem>();
                     return;
                 }
 
@@ -188,15 +152,15 @@ namespace DuDuChinese.Models
                     // Read Stream to the Serializer and Deserialize and close it
                     using (var reader = XmlDictionaryReader.CreateTextReader(s, Encoding.UTF8, new XmlDictionaryReaderQuotas(), null))
                     {
-                        var serializer = new DataContractSerializer(typeof(List<RevisionItem>));
-                        revisionList = (List<RevisionItem>)serializer.ReadObject(reader);
+                        var serializer = new DataContractSerializer(typeof(List<LearningItem>));
+                        revisionList = (List<LearningItem>)serializer.ReadObject(reader);
                     }
                 }
             }
             catch (XmlException ex)
             {
                 System.Diagnostics.Debug.WriteLine("Couldn't deserialize revision list. Probably it is empty. Error: " + ex.Message);
-                revisionList = new List<RevisionItem>();
+                revisionList = new List<LearningItem>();
             }
             catch (Exception ex)
             {
@@ -206,6 +170,5 @@ namespace DuDuChinese.Models
 
             await Task.CompletedTask;
         }
-
     }
 }

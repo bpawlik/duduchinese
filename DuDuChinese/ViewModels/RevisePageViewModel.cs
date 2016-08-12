@@ -17,7 +17,7 @@ namespace DuDuChinese.ViewModels
         public ObservableCollection<string> Items { get; private set; }
         public ObservableCollection<string> SelectedItemsCount { get; set; }
         public bool IsStartEnabled { get; set; } = false;
-        private List<RevisionItem> revisionList = null;
+        private List<LearningItem> revisionList = null;
 
         public RevisePageViewModel()
         {
@@ -134,7 +134,7 @@ namespace DuDuChinese.ViewModels
             }
             else
             {
-                LearningEngine.UpdateRevisionList(this.revisionList.GetRange(0, this.NumberOfItems));
+                LearningEngine.UpdateLearningList(this.revisionList.GetRange(0, this.NumberOfItems));
                 LearningEngine.Mode = LearningMode.Revision;
                 NavigationService.Navigate(typeof(Views.ProgressPage), 0);
             }
