@@ -556,16 +556,22 @@ namespace DuDuChinese.Views
             lvm.IsActive = true;
         }
 
+        private List<string> listsToBeDeleted = new List<string>();
         private void DeleteList_Click(object sender, RoutedEventArgs e)
         {
             var datacontext = (e.OriginalSource as FrameworkElement).DataContext;
             ListBoxItem lbItem = (ListBoxItem)ListListBox.ContainerFromItem(datacontext);
             ListItemViewModel listItem = (ListItemViewModel)lbItem.DataContext;
             App app = (App)Application.Current;
-            app.ListManager.Remove(listItem.Name);
+            string filename = app.ListManager.Remove(listItem.Name);
             LoadLists();
             ListViewModel lvm = (ListViewModel)ListsPane.DataContext;
             lvm.IsActive = true;
+
+            // Store the list for removal on the next launch
+            Template10.Services.SettingsService.ISettingsHelper _helper = new Template10.Services.SettingsService.SettingsHelper();
+            listsToBeDeleted.Add(filename);
+            _helper.Write<List<string>>("ListsToBeRemoved", listsToBeDeleted);
         }
 
         private void ListItem_RightTapped(object sender, RightTappedRoutedEventArgs e)

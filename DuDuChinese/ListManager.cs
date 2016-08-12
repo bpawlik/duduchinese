@@ -86,26 +86,6 @@ namespace DuDuChinese
                 }
             }
 
-            public async void Delete(string name)
-            {
-                try
-                {
-                    if (!IsDeleted)
-                        return;
-
-                    Debug.WriteLine("ManagedList.Delete(): {0}", SavePath);
-
-                    StorageFolder dataFolder = ApplicationData.Current.LocalFolder;
-                    StorageFolder listsFolder = await dataFolder.GetFolderAsync(_ListsDirectory);
-                    StorageFile file = await listsFolder.GetFileAsync(SaveFilename);
-                    await file.DeleteAsync();
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine("Couldn't delete list: {0}", ex.Message);
-                }
-            }
-
             public void Delete()
             {
                 try
@@ -113,13 +93,14 @@ namespace DuDuChinese
                     if (!IsDeleted)
                         return;
 
-                    Debug.WriteLine("ManagedList.Delete(): {0}", SavePath);
+                    Debug.WriteLine(String.Format("ManagedList.Delete(): {0}", SavePath));
                     using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForApplication())
-                        store.DeleteFile(SavePath);
+                        if (store.FileExists(SavePath))
+                            store.DeleteFile(SavePath);
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine("Couldn't delete list: {0}", ex.Message);
+                    Debug.WriteLine(String.Format("Couldn't delete list: {0}", ex.Message));
                 }
             }
         }
@@ -189,15 +170,16 @@ namespace DuDuChinese
         /// Mark a list for deletion.
         /// </summary>
         /// <param name="key">Name of the list to mark as deleted</param>
-        public new void Remove(string key)
+        public new string Remove(string key)
         {
             if (this.ContainsKey(key))
             {
                 this[key].IsDeleted = true;
                 ManagedList list = (ManagedList)this[key];
-                list.Delete(key);
                 base.Remove(key);
+                return list.SavePath;
             }
+            return String.Empty;
         }
 
         public void Save(Stream stream, string name)

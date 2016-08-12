@@ -10,6 +10,8 @@ using Windows.UI.Xaml.Data;
 using CC_CEDICT.Universal;
 using Windows.Media.SpeechSynthesis;
 using Windows.ApplicationModel.Resources.Core;
+using System.Collections.Generic;
+using System.IO.IsolatedStorage;
 
 namespace DuDuChinese
 {
@@ -112,6 +114,18 @@ namespace DuDuChinese
 
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
         {
+            // Remove lists to be removed
+            Template10.Services.SettingsService.ISettingsHelper _helper = new Template10.Services.SettingsService.SettingsHelper();
+            List<string> listsToBeRemoved = _helper.Read<List<string>>("ListsToBeRemoved", new List<string>());
+            foreach (string filename in listsToBeRemoved)
+            {
+                System.Diagnostics.Debug.WriteLine(String.Format("ManagedList.Delete(): {0}", filename));
+                using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForApplication())
+                    if (store.FileExists(filename))
+                        store.DeleteFile(filename);
+            }
+            _helper.Write<List<string>>("ListsToBeRemoved", new List<string>());
+
             // Refresh app theme based on the stored value
             var _settings = SettingsService.Instance;
             Views.Shell.HamburgerMenu.RefreshStyles(_settings.AppTheme);
