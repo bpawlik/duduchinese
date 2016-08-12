@@ -80,7 +80,7 @@ namespace DuDuChinese.ViewModels
             // Refresh task list
             if (this.ProgressItems == null)
                 this.ProgressItems = new List<ProgressItem>();
-            foreach (LearningExercise exerc in LearningEngine.ExerciseList)
+            foreach (LearningExercise exerc in LearningEngine.CurrentExerciseList)
             {
                 this.ProgressItems.Add(new ProgressItem()
                 {
@@ -125,36 +125,36 @@ namespace DuDuChinese.ViewModels
             if (LearningEngine.Mode != LearningMode.Revision)
                 foreach (var item in ProgressItems)
                     if (!item.IsChecked)
-                        LearningEngine.ExerciseList.Remove(item.Exercise);
+                        LearningEngine.CurrentExerciseList.Remove(item.Exercise);
 
             // Move to the next exercise
             LearningEngine.NextExercise();
 
-            if (LearningEngine.CurrentExercise == LearningExercise.Done)
+            switch (LearningEngine.CurrentExercise)
             {
-                // We're done!
-                // Go back to new material / revision page
-                if (LearningEngine.Mode == LearningMode.Revision)
-                    NavigationService.Navigate(typeof(Views.RevisePage), 0);
-                else
-                    NavigationService.Navigate(typeof(Views.NewMaterialPage), 0);
-            }
-            else
-            {
-                switch (LearningEngine.CurrentExercise)
-                {
-                    case LearningExercise.Display:
-                        NavigationService.Navigate(typeof(Views.ExerciseDisplayPage), 0);
-                        break;
-                    case LearningExercise.HanziPinyin2English:
-                    case LearningExercise.Hanzi2Pinyin:
-                    case LearningExercise.Pinyin2English:
-                    case LearningExercise.Pinyin2Hanzi:
-                    case LearningExercise.English2Hanzi:
-                    case LearningExercise.English2Pinyin:
-                        NavigationService.Navigate(typeof(Views.ExerciseTextBoxPage), 0);
-                        break;
-                }
+                case LearningExercise.Done:
+                    // We're done!
+                    // Go back to new material / revision page
+                    if (LearningEngine.Mode == LearningMode.Revision)
+                        NavigationService.Navigate(typeof(Views.RevisePage), 0);
+                    else
+                        NavigationService.Navigate(typeof(Views.NewMaterialPage), 0);
+                    break;
+
+                case LearningExercise.Display:
+                    NavigationService.Navigate(typeof(Views.ExerciseDisplayPage), 0);
+                    break;
+
+                case LearningExercise.HanziPinyin2English:
+                case LearningExercise.Hanzi2Pinyin:
+                case LearningExercise.Hanzi2English:
+                case LearningExercise.Pinyin2English:
+                case LearningExercise.Pinyin2Hanzi:
+                case LearningExercise.English2Hanzi:
+                case LearningExercise.English2Pinyin:
+                default:
+                    NavigationService.Navigate(typeof(Views.ExerciseTextBoxPage), 0);
+                    break;
             }
         }
 

@@ -45,19 +45,19 @@ namespace DuDuChinese.Models
         [Description("Translate from Pinyin to English")]
         Pinyin2English,
 
-        [Description("Translate from Chinese characters to English")]
+        [Description("Translate from 汉字 to English")]
         Hanzi2English,
 
         [Description("Translate from English to Pinyin")]
         English2Pinyin,
 
-        [Description("Translate from English to Chinese characters")]
+        [Description("Translate from English to 汉字")]
         English2Hanzi,
 
-        [Description("Translate from Pinyin to Chinese characters")]
+        [Description("Translate from Pinyin to 汉字")]
         Pinyin2Hanzi,
 
-        [Description("Translate from Chinese characters to Pinyin")]
+        [Description("Translate from 汉字 to Pinyin")]
         Hanzi2Pinyin,
 
         #endregion
@@ -118,7 +118,8 @@ namespace DuDuChinese.Models
 
         #region Properties
 
-        public static List<LearningExercise> ExerciseList { get; set; } = null;
+        private static List<LearningExercise> ExerciseList { get; set; } = null;
+        public static List<LearningExercise> CurrentExerciseList { get; private set; } = null;
         public static LearningExercise CurrentExercise { get; private set; } = LearningExercise.Start;
         public static DictionaryRecord CurrentItem { get; private set; } = null;
         private static int currentItemIndex = 0;
@@ -213,7 +214,7 @@ namespace DuDuChinese.Models
             set
             {
                 currentExerciseIndex = value;
-                if (currentExerciseIndex > ExerciseList.Count)
+                if (currentExerciseIndex > CurrentExerciseList.Count)
                     currentExerciseIndex = 0;
             }
         }
@@ -223,10 +224,10 @@ namespace DuDuChinese.Models
         public static LearningExercise PeekNextExercise(out int index)
         {
             index = currentExerciseIndex + 1;
-            if (CurrentExercise == LearningExercise.Done || index == ExerciseList.Count)
+            if (CurrentExercise == LearningExercise.Done || index == CurrentExerciseList.Count)
                 return LearningExercise.Done;
             else
-                return ExerciseList[index];
+                return CurrentExerciseList[index];
         }
 
         public static LearningExercise NextExercise()
@@ -235,14 +236,14 @@ namespace DuDuChinese.Models
             {
                 // return current exercise (LearningExercise.Done)
             }
-            else if (currentExerciseIndex + 1 == ExerciseList.Count)
+            else if (currentExerciseIndex + 1 == CurrentExerciseList.Count)
             {
                 currentExerciseIndex = -1;
                 CurrentExercise = LearningExercise.Done;
             }
             else
             {
-                CurrentExercise = ExerciseList[++currentExerciseIndex];
+                CurrentExercise = CurrentExerciseList[++currentExerciseIndex];
             }
             return CurrentExercise;
         }
@@ -260,7 +261,7 @@ namespace DuDuChinese.Models
             List<LearningExercise> exerciseList = new List<LearningExercise>();
             foreach (var key in LearningItems.Keys)
                 exerciseList.Add(key);
-            ExerciseList = exerciseList;
+            CurrentExerciseList = exerciseList;
             currentExerciseIndex = -1;
         }
 
@@ -308,7 +309,7 @@ namespace DuDuChinese.Models
 
         public static void SetVisibility(out Visibility PinyinVisible, out Visibility TranslationVisible, out Visibility SimplifiedVisible)
         {
-            switch (ExerciseList[CurrentExerciseIndex])
+            switch (CurrentExerciseList[CurrentExerciseIndex])
             {
                 case LearningExercise.Display:
                     PinyinVisible = Visibility.Visible;
@@ -399,7 +400,7 @@ namespace DuDuChinese.Models
             bool result = false;
             inputText = inputText.ToLower();
 
-            switch (ExerciseList[CurrentExerciseIndex])
+            switch (CurrentExerciseList[CurrentExerciseIndex])
             {
                 case LearningExercise.Display:
                     return true;

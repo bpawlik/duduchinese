@@ -18,30 +18,18 @@ namespace DuDuChinese.ViewModels
         public ObservableCollection<string> SelectedItemsCount { get; set; }
         public bool IsStartEnabled { get; set; } = false;
         private List<LearningItem> revisionList = null;
+        private int NumberOfItems { get; set; } = 0;
 
         public RevisePageViewModel()
         {
-            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-            {
-                Value = "Designtime value";
-            }
-
             this.Items = new ObservableCollection<string>();
             this.SelectedItemsCount = new ObservableCollection<string>();
         }
-
-        string _Value = "Blah";
-        public string Value { get { return _Value; } set { Set(ref _Value, value); } }
 
         private static string AllLists = "All";
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
-            if (suspensionState.Any())
-            {
-                Value = suspensionState[nameof(Value)]?.ToString();
-            }
-
             // Restore shell
             Views.Shell.HamburgerMenu.IsFullScreen = false;
 
@@ -56,27 +44,25 @@ namespace DuDuChinese.ViewModels
 
             // Update lists
             App app = (App)Application.Current;
+            List<string> items = new List<string>();
+            foreach (string key in app.ListManager.Keys)
+                items.Add(key);
+            items.Sort();
+
             this.Items.Clear();
             this.Items.Add(AllLists);
-            foreach (string key in app.ListManager.Keys)
-                this.Items.Add(key);
+            foreach (string val in items)
+                this.Items.Add(val);
 
             // Update items count combobox
             this.revisionList = RevisionEngine.RevisionList;
-            SelectedItemsCount.Clear();
-            for (int i = 10; i < this.revisionList.Count; i += 10)
-                SelectedItemsCount.Add(i.ToString());
-            SelectedItemsCount.Add(this.revisionList.Count.ToString());
+            UpdateItemsCount();
 
             await Task.CompletedTask;
         }
 
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> suspensionState, bool suspending)
         {
-            if (suspending)
-            {
-                suspensionState[nameof(Value)] = Value;
-            }
             await Task.CompletedTask;
         }
 
@@ -92,7 +78,13 @@ namespace DuDuChinese.ViewModels
         public void GotoAbout() =>
             NavigationService.Navigate(typeof(Views.SettingsPage), 1);
 
-        private int NumberOfItems { get; set; } = 0;
+        private void UpdateItemsCount()
+        {
+            SelectedItemsCount.Clear();
+            for (int i = 10; i < this.revisionList.Count; i += 10)
+                SelectedItemsCount.Add(i.ToString());
+            SelectedItemsCount.Add(this.revisionList.Count.ToString());
+        }
 
         public void SelectedListChanged(object sender)
         {
@@ -104,10 +96,7 @@ namespace DuDuChinese.ViewModels
                 this.revisionList = RevisionEngine.GetRevisionList(-1, name == AllLists ? null : name);
 
                 // Update items count combobox
-                SelectedItemsCount.Clear();
-                for (int i = 10; i < this.revisionList.Count; i += 10)
-                    SelectedItemsCount.Add(i.ToString());
-                SelectedItemsCount.Add(this.revisionList.Count.ToString());
+                UpdateItemsCount();
             }
         }
 

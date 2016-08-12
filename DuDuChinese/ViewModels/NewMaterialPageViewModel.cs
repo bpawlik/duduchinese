@@ -15,12 +15,14 @@ namespace DuDuChinese.ViewModels
     public class NewMaterialPageViewModel : ViewModelBase
     {
         public ObservableCollection<string> Items { get; private set; }
-
+        public ObservableCollection<string> SelectedItemsCount { get; set; }
         public bool IsStartEnabled { get; set; } = false;
+        private int NumberOfItems { get; set; } = 0;
 
         public NewMaterialPageViewModel()
         {
             this.Items = new ObservableCollection<string>();
+            this.SelectedItemsCount = new ObservableCollection<string>();
         }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
@@ -29,6 +31,7 @@ namespace DuDuChinese.ViewModels
             Views.Shell.HamburgerMenu.IsFullScreen = false;
 
             this.IsStartEnabled = false;
+            this.SelectedItemsCount.Clear();
 
             // Load revisions
             RevisionEngine.Deserialize();
@@ -38,11 +41,16 @@ namespace DuDuChinese.ViewModels
             LearningEngine.Mode = LearningMode.Words;
 
             App app = (App)Application.Current;
-            this.Items.Clear();
+            List<string> items = new List<string>();
             foreach (string key in app.ListManager.Keys)
-            {
-                this.Items.Add(key);
-            }
+                items.Add(key);
+            items.Sort();
+
+            this.Items.Clear();
+            foreach (string val in items)
+                this.Items.Add(val);
+
+            UpdateItemsCount();
 
             await Task.CompletedTask;
         }
@@ -82,6 +90,14 @@ namespace DuDuChinese.ViewModels
             }
         }
 
+        private void UpdateItemsCount()
+        {
+            SelectedItemsCount.Clear();
+            for (int i = 10; i < this.NumberOfItems; i += 10)
+                SelectedItemsCount.Add(i.ToString());
+            SelectedItemsCount.Add(this.NumberOfItems.ToString());
+        }
+
         public int SelectedListChanged(object sender)
         {
             this.IsStartEnabled = false;
@@ -90,7 +106,10 @@ namespace DuDuChinese.ViewModels
             if (cb.SelectedValue != null)
             {
                 DictionaryRecordList recordList = app.ListManager[cb.SelectedValue.ToString()];
-                return LearningEngine.GenerateLearningItems(recordList);
+                this.NumberOfItems = LearningEngine.GenerateLearningItems(recordList);
+
+                // Update items count combobox
+                UpdateItemsCount();
             }
             return 0;
         }
