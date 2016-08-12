@@ -218,7 +218,7 @@
                                         </StackPanel>
                                     </Border>
                                     <!-- This border appears on item that is selected as default -->
-                                    <Border Height="40" Width="40" Background="LightSalmon" Visibility="{Binding IsDefault, Converter={StaticResource VisibilityConverter}}">
+                                    <Border Height="40" Width="40" Background="DarkOrange" Visibility="{Binding IsDefault, Converter={StaticResource VisibilityConverter}}">
                                         <StackPanel VerticalAlignment="Center">
                                             <TextBlock
                                                 Text="{Binding LineTwo}"
