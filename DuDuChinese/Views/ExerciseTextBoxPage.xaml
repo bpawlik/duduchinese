@@ -107,8 +107,9 @@
                         </ListBox>
                     </ScrollViewer>
                 </StackPanel>
-                <TextBox x:Name="inputTextBox" Grid.Row="2" Margin="20" Width="200"
+                <TextBox x:Name="inputTextBox" Grid.Row="2" Margin="17" Width="200"
                          HorizontalAlignment="Left"
+                         FontSize="24"
                          KeyUp="{x:Bind TextBox_KeyDown}"
                          Background="{x:Bind ViewModel.BgColour, Mode=TwoWay}"
                          Text="{x:Bind ViewModel.InputText, Mode=TwoWay}"
