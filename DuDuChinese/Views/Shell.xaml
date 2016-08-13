@@ -49,7 +49,7 @@
                     <SymbolIcon Width="48" Height="48"
                                 Symbol="List" />
                     <TextBlock Margin="12,0,0,0" VerticalAlignment="Center"
-                               Text="Search" />
+                               Text="Lists" />
                 </StackPanel>
             </Controls:HamburgerButtonInfo>
 
