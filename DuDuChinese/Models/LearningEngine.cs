@@ -412,8 +412,8 @@ namespace DuDuChinese.Models
                         if (String.IsNullOrWhiteSpace(s) || String.IsNullOrWhiteSpace(inputText))
                             continue;
 
-                        // Convert to lower-case and replace comas/dots/colons with spaces
-                        string refText = s.ToLower().Replace(',',' ').Replace('.', ' ').Replace(';', ' ').Replace(':', ' ');
+                        // Convert to lower-case and replace comas/dots/colons/brackets with spaces
+                        string refText = s.ToLower().Replace(',',' ').Replace('.',' ').Replace(';',' ').Replace(':',' ').Replace('(',' ').Replace(')',' ');
 
                         // If input text contains space then match it as a whole phrase
                         if (inputText.Contains(" "))
