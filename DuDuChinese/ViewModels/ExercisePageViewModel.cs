@@ -167,6 +167,7 @@ namespace DuDuChinese.ViewModels
             else
             {
                 CurrentItem = nextItem;
+                this.ProgressMaxValue = LearningEngine.GetItemCountForCurrentExercise();
                 Summary = LearningEngine.GetStatus();
                 this.ProgressValue++;
             }

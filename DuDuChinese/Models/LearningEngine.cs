@@ -304,7 +304,7 @@ namespace DuDuChinese.Models
         public static int GetItemCountForExercise(LearningExercise exercise)
         {
             return (LearningItems == null || !LearningItems.ContainsKey(exercise)) ? 0
-                    : Math.Min(LearningItems[exercise].Count, ItemsCount);
+                    : LearningItems[exercise].Count;
         }
 
         public static void SetVisibility(out Visibility PinyinVisible, out Visibility TranslationVisible, out Visibility SimplifiedVisible)
@@ -455,6 +455,10 @@ namespace DuDuChinese.Models
 
             // Update revision list
             RevisionEngine.UpdateRevisionList(LearningItems[CurrentExercise][currentItemIndex - 1], result);
+
+            // Put item at the end of the list if wrong
+            if (!result)
+                LearningItems[CurrentExercise].Add(LearningItems[CurrentExercise][currentItemIndex - 1]);
 
             return result;
         }
