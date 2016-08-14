@@ -105,6 +105,8 @@
     </Compile>
     <Compile Include="Converters\BooleanColorConverter.cs" />
     <Compile Include="Converters\BooleanDoubleConverter.cs" />
+    <Compile Include="Converters\DictionaryRecordToStringConverter.cs" />
+    <Compile Include="Converters\LearningExerciseToStringConverter.cs" />
     <Compile Include="Converters\MinimumLengthConverter.cs" />
     <Compile Include="Converters\NotepadLookupConvertor.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
