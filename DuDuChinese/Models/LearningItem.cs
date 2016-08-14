@@ -10,19 +10,33 @@ namespace DuDuChinese.Models
     [DataContract]
     public class LearningItem
     {
-        public DictionaryRecord Record { get; set; }
+        private DictionaryRecord record = null;
+        public DictionaryRecord Record {
+            get
+            {
+                if (this.record == null && this.ListName != null && this.Hash != null)
+                {
+                    App app = (App)Windows.UI.Xaml.Application.Current;
+                    if (app.ListManager.ContainsKey(this.ListName))
+                        this.record = app.ListManager[this.ListName].Find(r => LearningItem.ComputeHash(r) == this.Hash);
+                }
+                return this.record;
+
+            }
+            set { this.record = value; }
+        }
 
         [DataMember]
-        public string Hash { get; private set; }
+        public string Hash { get; private set; } = null;
 
         [DataMember]
-        public string ListName;
+        public string ListName { get; set; } = null;
 
         [DataMember]
-        public LearningExercise Exercise;
+        public LearningExercise Exercise { get; set; }
 
         [DataMember]
-        public int Score = 10;
+        public int Score { get; set; } = 10;
 
         public LearningItem(DictionaryRecord record)
         {

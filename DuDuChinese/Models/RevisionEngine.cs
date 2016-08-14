@@ -47,8 +47,8 @@ namespace DuDuChinese.Models
             if (numberOfItems < 0 || numberOfItems > revisionList.Count)
                 numberOfItems = revisionList.Count;
 
-            // Sort item by the score
-            revisionList.Sort((s1, s2) => s1.Score.CompareTo(s2.Score));
+            // Sort item by the score in descending order
+            revisionList.Sort((s1, s2) => s2.Score.CompareTo(s1.Score));
 
             App app = (App)Application.Current;
 
@@ -156,6 +156,9 @@ namespace DuDuChinese.Models
                         revisionList = (List<LearningItem>)serializer.ReadObject(reader);
                     }
                 }
+
+                // Sort the list in descending order
+                revisionList.Sort((s1, s2) => s2.Score.CompareTo(s1.Score));
             }
             catch (XmlException ex)
             {

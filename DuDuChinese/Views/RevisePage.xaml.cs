@@ -26,5 +26,12 @@ namespace DuDuChinese.Views
             ViewModel.NumberOfItems_SelectionChanged(sender);
             Bindings.Update();
         }
+
+        private void Details_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+
+            ViewModel.UpdateDetails();
+            Bindings.Update();
+        }
     }
 }

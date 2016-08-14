@@ -16,14 +16,17 @@ namespace DuDuChinese.ViewModels
     {
         public ObservableCollection<string> Items { get; private set; }
         public ObservableCollection<string> SelectedItemsCount { get; set; }
+        public ObservableCollection<LearningItem> RevisionItems { get; set; }
         public bool IsStartEnabled { get; set; } = false;
         private List<LearningItem> revisionList = null;
         private int NumberOfItems { get; set; } = 0;
+        public bool IsDetailExpanded { get; set; } = false;
 
         public RevisePageViewModel()
         {
             this.Items = new ObservableCollection<string>();
             this.SelectedItemsCount = new ObservableCollection<string>();
+            this.RevisionItems = new ObservableCollection<LearningItem>();
         }
 
         private static string AllLists = "All";
@@ -97,6 +100,7 @@ namespace DuDuChinese.ViewModels
 
                 // Update items count combobox
                 UpdateItemsCount();
+                UpdateDetails(toggle: false);
             }
         }
 
@@ -105,7 +109,12 @@ namespace DuDuChinese.ViewModels
             ComboBox cb = sender as ComboBox;
             this.NumberOfItems = Convert.ToInt32(cb.SelectedValue);
             if (this.NumberOfItems > 0)
+            {
                 this.IsStartEnabled = true;
+                this.revisionList = this.revisionList.GetRange(0, this.NumberOfItems);
+            }
+
+            UpdateDetails(toggle: false);
             LearningEngine.ItemsCount = this.NumberOfItems;
         }
 
@@ -123,12 +132,27 @@ namespace DuDuChinese.ViewModels
             }
             else
             {
-                LearningEngine.UpdateLearningList(this.revisionList.GetRange(0, this.NumberOfItems));
+                LearningEngine.UpdateLearningList(this.revisionList);
                 LearningEngine.Mode = LearningMode.Revision;
                 NavigationService.Navigate(typeof(Views.ProgressPage), 0);
             }
         }
 
+        public void UpdateDetails(bool toggle = true)
+        {
+            if (this.revisionList == null)
+                return;
+
+            if (toggle)
+                this.IsDetailExpanded = !this.IsDetailExpanded;
+            this.RevisionItems.Clear();
+
+            if (!this.IsDetailExpanded)
+                return;
+
+            foreach (var item in this.revisionList)
+                this.RevisionItems.Add(item);
+        }
     }
 }
 

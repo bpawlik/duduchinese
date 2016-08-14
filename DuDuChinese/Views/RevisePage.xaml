@@ -1,4 +1,4 @@
-<Page x:Class="DuDuChinese.Views.RevisePage"
+﻿<Page x:Class="DuDuChinese.Views.RevisePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:Behaviors="using:Template10.Behaviors"
@@ -6,13 +6,22 @@
       xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
       xmlns:controls="using:Template10.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:c="using:DuDuChinese.Converters"
       xmlns:local="using:DuDuChinese.Views"
+      xmlns:m="using:DuDuChinese.Models"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:vm="using:DuDuChinese.ViewModels" mc:Ignorable="d">
+      xmlns:vm="using:DuDuChinese.ViewModels" mc:Ignorable="d"
+      xmlns:mycontrols="using:MyToolkit.Controls">
 
     <Page.DataContext>
         <vm:RevisePageViewModel x:Name="ViewModel" />
     </Page.DataContext>
+
+    <Page.Resources>
+        <c:LearningExerciseToStringConverter x:Key="LearningExerciseToStringConverter" />
+        <c:DictionaryRecordToStringConverter x:Key="DictionaryRecordToStringConverter" />
+        <c:VisibilityConverter x:Key="VisibilityConverter" True="Visible" False="Collapsed"/>
+    </Page.Resources>
 
     <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -69,6 +78,8 @@
                 <RowDefinition MinHeight="40" />
                 <RowDefinition MinHeight="40" />
                 <RowDefinition MinHeight="40" />
+                <RowDefinition MinHeight="50" />
+                <RowDefinition MinHeight="500" Height="*" />
             </Grid.RowDefinitions>
             <TextBlock x:Name="textBlock" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" Text="Select list (optional):" />
             <ComboBox x:Name="comboBoxLists" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="20,0" Height="32" VerticalAlignment="Top" MinWidth="180"
@@ -91,6 +102,54 @@
                     </Core:EventTriggerBehavior>
                 </Interactivity:Interaction.Behaviors>
             </Button>
+            <Button x:Name="ShowDetails" Grid.Column="1" Grid.Row="3" Margin="-130,20,0,0" Click="Details_Click">
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="More" />
+                </StackPanel>
+            </Button>
+            <mycontrols:DataGrid
+                ItemsSource="{Binding RevisionItems}"
+                Visibility="{x:Bind ViewModel.IsDetailExpanded, Converter={StaticResource VisibilityConverter}}"
+                x:Name="DataGrid" Grid.Row="4" Grid.Column="1"  Margin="-130,0" VerticalAlignment="Stretch"
+                SelectionMode="Multiple"
+                FontSize="10"
+                FontWeight="Light"
+                Background="Transparent"
+                HeaderBackground="{ThemeResource CustomColorBrush}"
+                DefaultOrderIndex="1"
+                mycontrols:DataGridExtensions.UseSingleSelectionAndDeselection="true" >
+
+                <mycontrols:DataGrid.RowStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Padding" Value="0"></Setter>
+                    </Style>
+                </mycontrols:DataGrid.RowStyle>
+                
+                <mycontrols:DataGrid.Columns>
+                    <mycontrols:DataGridTextColumn FontSize="15" Width="100" Header="汉字" Binding="{Binding Record, Converter={StaticResource DictionaryRecordToStringConverter}}" />
+                    <mycontrols:DataGridTextColumn FontSize="15" Width="100" Header="List Name" Binding="{Binding ListName}"  />
+                    <mycontrols:DataGridTextColumn FontSize="15" Width="200" Header="Exercise" Binding="{Binding Exercise}" />
+                    <mycontrols:DataGridTextColumn FontSize="15" Width="50"  Binding="{Binding Score}" IsAscendingDefault="False" >
+                        <mycontrols:DataGridTextColumn.Header>
+                            <TextBlock Text="#" Foreground="DarkOrange" />
+                        </mycontrols:DataGridTextColumn.Header>
+                    </mycontrols:DataGridTextColumn>
+                </mycontrols:DataGrid.Columns>
+                <mycontrols:DataGrid.ItemDetailsTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="20,10,10,5" >
+                            <TextBlock Text="Details: " FontSize="15" Margin="-10,0,0,5"/>
+                            <TextBlock Text="{Binding Record, Converter={StaticResource DictionaryRecordToStringConverter}}" FontSize="15" />
+                            <TextBlock Text="{Binding ListName}" FontSize="15"/>
+                            <TextBlock Text="{Binding Exercise, Converter={StaticResource LearningExerciseToStringConverter}}" FontSize="15" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Number of reviews left: " FontSize="15" />
+                                <TextBlock Text="{Binding Score}" FontSize="15" Margin="10,0,0,0" />
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </mycontrols:DataGrid.ItemDetailsTemplate>
+            </mycontrols:DataGrid>
         </Grid>
     </RelativePanel>
 </Page>
