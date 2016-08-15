@@ -20,6 +20,37 @@ namespace DuDuChinese.ViewModels
 {
     public class ExercisePageViewModel : ViewModelBase
     {
+        #region Brushes
+
+        private static readonly Brush whiteBrush = new SolidColorBrush(Windows.UI.Colors.White);
+        private static readonly Brush blackBrush = new SolidColorBrush(Windows.UI.Colors.Black);
+        private static readonly Brush transparentBrush = new SolidColorBrush(Windows.UI.Colors.Transparent);
+        private static readonly Brush redBrush = new SolidColorBrush(Windows.UI.Colors.Red);
+        private static readonly Brush greenBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0x32, 0xCD, 0x32));
+
+        private Brush bgcolour = transparentBrush;
+        public Brush BgColour
+        {
+            get { return this.bgcolour; }
+            set { this.Set(ref this.bgcolour, value); }
+        }
+
+        private Brush fgcolour = blackBrush;
+        public Brush FgColour
+        {
+            get { return this.fgcolour; }
+            set { this.Set(ref this.fgcolour, value); }
+        }
+
+        #endregion
+
+        public ObservableCollection<ItemViewModel> Items { get; private set; } = new ObservableCollection<ItemViewModel>();
+        public bool Validated { get; set; } = false;
+        public bool InputTextDisabled { get; set; } = false;
+        public MediaElement Media { get; internal set; }
+
+        #region RaisePropertyChanged properties
+
         private DictionaryRecord currentItem = null;
         public DictionaryRecord CurrentItem
         {
@@ -49,16 +80,12 @@ namespace DuDuChinese.ViewModels
             }
         }
 
-        public ObservableCollection<ItemViewModel> Items { get; private set; } = new ObservableCollection<ItemViewModel>();
-
         private string status = "Enter translation:";
         public string Status
         {
             get { return this.status; }
             set { this.Set(ref this.status, value); }
         }
-
-        public bool Validated { get; set; } = false;
 
         public string inputText = "";
         public string InputText
@@ -67,36 +94,12 @@ namespace DuDuChinese.ViewModels
             set { this.Set(ref this.inputText, value); }
         }
 
-        public bool InputTextDisabled { get; set; } = false;
-
-        private static readonly Brush whiteBrush = new SolidColorBrush(Windows.UI.Colors.White);
-        private static readonly Brush blackBrush = new SolidColorBrush(Windows.UI.Colors.Black);
-        private static readonly Brush transparentBrush = new SolidColorBrush(Windows.UI.Colors.Transparent);
-        private static readonly Brush redBrush = new SolidColorBrush(Windows.UI.Colors.Red);
-        private static readonly Brush greenBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0x32, 0xCD, 0x32));
-
-        private Brush bgcolour = transparentBrush;
-        public Brush BgColour
-        {
-            get { return this.bgcolour; }
-            set { this.Set(ref this.bgcolour, value); }
-        }
-
-        private Brush fgcolour = blackBrush;
-        public Brush FgColour
-        {
-            get { return this.fgcolour; }
-            set { this.Set(ref this.fgcolour, value); }
-        }
-
         private string summary = "Exercises started.";
         public string Summary
         {
             get { return this.summary; }
             set { this.Set(ref this.summary, value); }
         }
-
-        public MediaElement Media { get; internal set; }
 
         private int progressValue = 1;
         public int ProgressValue
@@ -111,6 +114,15 @@ namespace DuDuChinese.ViewModels
             get { return this.progressMaxValue; }
             set { this.Set(ref this.progressMaxValue, value); }
         }
+
+        private bool isWrongAnswer = false;
+        public bool IsWrongAnswer
+        {
+            get { return this.isWrongAnswer; }
+            set { this.Set(ref this.isWrongAnswer, value); }
+        }
+
+        #endregion
 
         public ExercisePageViewModel() {}
 
@@ -173,6 +185,15 @@ namespace DuDuChinese.ViewModels
             }
         }
 
+        public void Accept_Click(object sender, RoutedEventArgs e)
+        {
+            // Need to revert Validate result
+            LearningEngine.RevertLastValidate();
+
+            this.Validated = true;
+            Continue_Click(sender, e);
+        }
+
         // TextBox key down
         public void TextBox_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
@@ -186,6 +207,7 @@ namespace DuDuChinese.ViewModels
         {
             // Validate the answer
             bool pass = LearningEngine.Validate(input == null ? this.InputText : input);
+            this.IsWrongAnswer = !pass;
 
             if (pass)
             {
@@ -222,6 +244,7 @@ namespace DuDuChinese.ViewModels
             this.InputTextDisabled = (LearningEngine.CurrentExercise == LearningExercise.Display);
             this.Validated = false;
             this.InputText = "";
+            this.IsWrongAnswer = false;
 
             // Set visibility
             if (this.Items.Count > 0)

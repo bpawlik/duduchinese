@@ -7,6 +7,7 @@
       xmlns:controls="using:Template10.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="using:DuDuChinese.Views"
+      xmlns:c="using:DuDuChinese.Converters"
       xmlns:m="using:DuDuChinese.Models"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:vm="using:DuDuChinese.ViewModels" x:Name="ThisPage"
@@ -18,6 +19,7 @@
 
     <Page.Resources>
         <m:StringFormatter x:Key="StringFormatterValueConverter"/>
+        <c:VisibilityConverter x:Key="VisibilityConverter" True="Visible" False="Collapsed"/>
     </Page.Resources>
 
     <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -137,9 +139,13 @@
                         </Button.Content>
                     </Button>
                 </StackPanel>
-                <StackPanel Grid.Row="3">
+                <StackPanel Grid.Row="3" Orientation="Horizontal">
                     <Button x:Name="continueButton" Content="Continue" Margin="150,10,0,0" HorizontalAlignment="Left"
                             Click="{x:Bind Continue_Click}" />
+                    <Button x:Name="acceptButton" Content="Accept" Margin="20,10,0,0" HorizontalAlignment="Left"
+                            Click="{x:Bind Accept_Click}"
+                            Visibility="{Binding IsWrongAnswer, Converter={StaticResource VisibilityConverter}}"
+                            />
                 </StackPanel>
                 <TextBlock Grid.Row="4" Margin="20,0,0,5" VerticalAlignment="Bottom">
                     <Run Text="{x:Bind ViewModel.ProgressValue}" /> 

@@ -463,6 +463,12 @@ namespace DuDuChinese.Models
             return result;
         }
 
+        public static void RevertLastValidate()
+        {
+            wrongCount--;
+            LearningItems[CurrentExercise].RemoveAt(LearningItems[CurrentExercise].Count - 1);
+        }
+
         // Helper function to display enums description
         public static string GetDescription(LearningExercise code)
         {
