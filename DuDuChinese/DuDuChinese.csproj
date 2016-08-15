@@ -110,9 +110,9 @@
     <Compile Include="Converters\MinimumLengthConverter.cs" />
     <Compile Include="Converters\NotepadLookupConvertor.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
-    <Compile Include="DictionaryRecordList.cs" />
+    <Compile Include="Models\DictionaryRecordList.cs" />
     <Compile Include="Converters\InvertedBoolConverter.cs" />
-    <Compile Include="ListManager.cs" />
+    <Compile Include="Models\ListManager.cs" />
     <Compile Include="Models\DictionaryItem.cs" />
     <Compile Include="Models\DictionaryItemList.cs" />
     <Compile Include="Models\DictionaryManager.cs" />
