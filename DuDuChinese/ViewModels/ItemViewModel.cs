@@ -88,7 +88,8 @@ namespace DuDuChinese.ViewModels
             }
         }
 
-        // Visibility flags
+        #region Visibility flags
+
         private Visibility pinyinVisible = Visibility.Collapsed;
         public Visibility PinyinVisible
         {
@@ -110,14 +111,6 @@ namespace DuDuChinese.ViewModels
             set { this.Set(ref this.simplifiedVisible, value); }
         }
 
-        //public event PropertyChangedEventHandler PropertyChanged;
-        //private void NotifyPropertyChanged(String propertyName)
-        //{
-        //    PropertyChangedEventHandler handler = PropertyChanged;
-        //    if (null != handler)
-        //    {
-        //        handler(this, new PropertyChangedEventArgs(propertyName));
-        //    }
-        //}
+        #endregion
     }
 }

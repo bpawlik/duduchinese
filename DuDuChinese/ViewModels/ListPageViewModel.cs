@@ -153,6 +153,19 @@ namespace DuDuChinese.ViewModels
             }
         }
 
+        public async void AddSentence()
+        {
+            var dialog = new DuDuChinese.Views.Controls.AddSentenceDialog();
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                string chinese = dialog.Chinese;
+                string english = dialog.English;
+
+
+            }
+        }
+
         public void Sort()
         {
             switch (list.SortOrder)

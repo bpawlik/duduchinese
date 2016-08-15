@@ -74,11 +74,6 @@ namespace DuDuChinese.Views
             }
         }
 
-        private void AppBarAddButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Add sentence
-        }
-
         private void AppBarSortButton_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.Sort();
@@ -92,6 +87,11 @@ namespace DuDuChinese.Views
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.Play();
+        }
+
+        private void AddSentenceButton_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.AddSentence();
         }
 
         void CopyButton_Click(object sender, RoutedEventArgs e)

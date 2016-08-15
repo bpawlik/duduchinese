@@ -136,6 +136,9 @@
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\DetailPageViewModel.cs" />
     <Compile Include="ViewModels\SettingsPageViewModel.cs" />
+    <Compile Include="Views\Controls\AddSentenceDialog.xaml.cs">
+      <DependentUpon>AddSentenceDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ExerciseTextBoxPage.xaml.cs">
       <DependentUpon>ExerciseTextBoxPage.xaml</DependentUpon>
     </Compile>
@@ -194,6 +197,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Views\Controls\AddSentenceDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ExerciseTextBoxPage.xaml">
       <Generator>MSBuild:Compile</Generator>

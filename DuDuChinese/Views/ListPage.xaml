@@ -68,9 +68,6 @@
                 <AppBarButton Click="AppBarEmailButton_Click" Label="Email" >
                     <SymbolIcon Symbol="MailForward" Height="20" VerticalAlignment="Top" />
                 </AppBarButton>
-                <AppBarButton Click="AppBarAddButton_Click" Label="Add" >
-                    <SymbolIcon Symbol="Add" Height="20" VerticalAlignment="Top" />
-                </AppBarButton>
             </controls:PageHeader.PrimaryCommands>
         </controls:PageHeader>
 
@@ -103,6 +100,11 @@
                                     <Button x:Name="PlayButton" Tag="{Binding Index}" Click="PlayButton_Click" Background="Transparent">
                                         <Button.Content>
                                             <SymbolIcon Symbol="Play" />
+                                        </Button.Content>
+                                    </Button>
+                                    <Button x:Name="AddSentenceButton" Tag="{Binding Index}"  Background="Transparent" Click="AddSentenceButton_Click">
+                                        <Button.Content>
+                                            <SymbolIcon Symbol="Add" />
                                         </Button.Content>
                                     </Button>
                                     <Button x:Name="CopyButton" Tag="{Binding Index}"  Background="Transparent" Click="CopyButton_Click">
