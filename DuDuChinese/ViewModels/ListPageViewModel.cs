@@ -95,7 +95,8 @@ namespace DuDuChinese.ViewModels
                     English = String.Join("; ", r.English),
                     EnglishWithNewlines = String.Join("\n", r.English),
                     Chinese = r.Chinese.Simplified,
-                    Index = r.Index
+                    Index = r.Index,
+                    Sentence = String.Join(" - ", r.Sentence)
                 });
             }
         }
@@ -105,7 +106,7 @@ namespace DuDuChinese.ViewModels
             this.Items.Clear();
         }
 
-        public async void Play()
+        public async void Play(bool sentence = false)
         {
             // If the media is playing, the user has pressed the button to stop the playback.
             if (Media.CurrentState.Equals(MediaElementState.Playing))
@@ -120,7 +121,7 @@ namespace DuDuChinese.ViewModels
                     return;
             }
 
-            string text = SelectedItem.Chinese.Simplified;
+            string text = (sentence && SelectedItem.Sentence.Count > 0) ? SelectedItem.Sentence[0] : SelectedItem.Chinese.Simplified;
 
             if (!String.IsNullOrEmpty(text))
             {
@@ -155,15 +156,39 @@ namespace DuDuChinese.ViewModels
 
         public async void AddSentence()
         {
-            var dialog = new DuDuChinese.Views.Controls.AddSentenceDialog();
+            var dialog = new DuDuChinese.Views.Controls.AddSentenceDialog(SelectedItem.Sentence);
             var result = await dialog.ShowAsync();
             if (result == ContentDialogResult.Primary)
             {
                 string chinese = dialog.Chinese;
                 string english = dialog.English;
 
+                int idx = list.IndexOf(SelectedItem);
+                if (idx == -1)
+                    return;
 
+                list[idx].Sentence.Clear();
+                if (!String.IsNullOrWhiteSpace(chinese) && !String.IsNullOrWhiteSpace(english))
+                    list[idx].Sentence.AddRange(new List<string>() { chinese, english });
+
+                list.IsModified = true;
+                LoadListData();
+
+                // Create toast
+                string message = list[idx].Sentence.Count == 2 ? "Sentence added for the list item: "
+                    : "Sentence removed from the list item: ";
+                var xmlDoc = CreateToast(message + list[idx].Chinese.Simplified);
+                var toast = new Windows.UI.Notifications.ToastNotification(xmlDoc);
+                toast.Tag = "AddSentence";
+                var notifi = Windows.UI.Notifications.ToastNotificationManager.CreateToastNotifier();
+                notifi.Show(toast);
+
+                // Wait for a while and remove toast
+                await System.Threading.Tasks.Task.Delay(TimeSpan.FromMilliseconds(2000));
+                Windows.UI.Notifications.ToastNotificationManager.History.Remove("AddSentence");
             }
+
+            return;
         }
 
         public void Sort()
@@ -180,7 +205,7 @@ namespace DuDuChinese.ViewModels
             LoadListData(); // reload
         }
 
-        public static Windows.Data.Xml.Dom.XmlDocument CreateToast()
+        public static Windows.Data.Xml.Dom.XmlDocument CreateToast(string text = null)
         {
             var xDoc = new XDocument(
                 new XElement("toast",
@@ -188,7 +213,7 @@ namespace DuDuChinese.ViewModels
                         new XElement("binding",
                             new XAttribute("template", "ToastGeneric"),
                             new XElement("text", "DuDuChinese"),
-                            new XElement("text", "Text copied to the clipboard")
+                            new XElement("text", text == null ? "Text copied to the clipboard" : text)
                             )
                         )
                     )

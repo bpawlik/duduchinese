@@ -37,11 +37,20 @@ namespace DuDuChinese.Views.Controls
             set { SetValue(EnglishProperty, value); }
         }
 
-        public AddSentenceDialog()
+        public AddSentenceDialog(List<string> sentence)
         {
             this.InitializeComponent();
-            chineseTextBox.Text = "中文";
-            englishTextBox.Text = "English";
+
+            if (sentence.Count == 2)
+            {
+                chineseTextBox.Text = sentence[0];
+                englishTextBox.Text = sentence[1];
+            }
+            else
+            {
+                chineseTextBox.Text = "中文";
+                englishTextBox.Text = "English";
+            }
             chineseTextBox.SelectAll();
         }
 
@@ -53,6 +62,16 @@ namespace DuDuChinese.Views.Controls
 
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
+        }
+
+        private void chineseTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            chineseTextBox.SelectAll();
+        }
+
+        private void englishTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            englishTextBox.SelectAll();
         }
     }
 }

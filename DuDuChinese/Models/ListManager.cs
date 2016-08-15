@@ -54,7 +54,7 @@ namespace DuDuChinese
                     if (IsDeleted || !IsModified) // save not required
                         return;
 
-                    Debug.WriteLine("ManagedList.Save(): {0} ({1} entries)", SaveFilename, this.Count);
+                    Debug.WriteLine(String.Format("ManagedList.Save(): {0} ({1} entries)", SaveFilename, this.Count));
                     StorageFolder dataFolder = ApplicationData.Current.LocalFolder;
                     StorageFolder listsFolder = await dataFolder.GetFolderAsync(_ListsDirectory);
                     StorageFile file = await listsFolder.CreateFileAsync(SaveFilename, CreationCollisionOption.ReplaceExisting);
@@ -69,7 +69,7 @@ namespace DuDuChinese
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine("Couldn't save list: {0}", ex.Message);
+                    Debug.WriteLine(String.Format("Couldn't save list: {0}", ex.Message));
                 }
             }
 
@@ -82,7 +82,7 @@ namespace DuDuChinese
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine("Couldn't save list: {0}", ex.Message);
+                    Debug.WriteLine(String.Format("Couldn't save list: {0}", ex.Message));
                 }
             }
 
@@ -117,7 +117,7 @@ namespace DuDuChinese
                     foreach (string file in store.GetFileNames(String.Format("{0}/*.list", ListsDirectory)))
                     {
                         string path = String.Format("{0}/{1}", ListsDirectory, file);
-                        Debug.WriteLine("Loading list: {0}", path);
+                        Debug.WriteLine(String.Format("Loading list: {0}", path));
                         Dictionary dictionary = new Dictionary(path);
                         ManagedList list = new ManagedList(dictionary);
                         list.SavePath = path;
@@ -163,7 +163,7 @@ namespace DuDuChinese
 
         private new void Add(string key, DictionaryRecordList value)
         {
-            throw new NotSupportedException("ListManager2.Add(...) is not supported. Use ListManager2[string key] instead.");
+            throw new NotSupportedException("ListManager.Add(...) is not supported. Use ListManager[string key] instead.");
         }
 
         /// <summary>

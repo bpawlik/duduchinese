@@ -17,7 +17,7 @@
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <TextBox Name="chineseTextBox" Text="{Binding ElementName=ContentDialog, Path=Chinese, Mode=TwoWay}" Grid.Row="0"  Margin="0,10,0,0"  />
-        <TextBox Name="englishTextBox" Text="{Binding ElementName=ContentDialog, Path=English, Mode=TwoWay}" Grid.Row="1"  Margin="0,10,0,0" />
+        <TextBox Name="chineseTextBox" GotFocus="chineseTextBox_GotFocus" Text="{Binding ElementName=ContentDialog, Path=Chinese, Mode=TwoWay}" Grid.Row="0"  Margin="0,10,0,0"  />
+        <TextBox Name="englishTextBox" GotFocus="englishTextBox_GotFocus" Text="{Binding ElementName=ContentDialog, Path=English, Mode=TwoWay}" Grid.Row="1"  Margin="0,10,0,0" />
     </Grid>
 </ContentDialog>

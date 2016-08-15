@@ -88,6 +88,13 @@ namespace DuDuChinese.ViewModels
             }
         }
 
+        private string sentence;
+        public string Sentence
+        {
+            get { return this.sentence; }
+            set { Set(ref this.sentence, value); }
+        }
+
         #region Visibility flags
 
         private Visibility pinyinVisible = Visibility.Collapsed;

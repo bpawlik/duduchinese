@@ -95,6 +95,13 @@
                                     <TextBlock Text="{Binding Pinyin}" Loaded="Pinyin_Loaded" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="26"  />
                                     <TextBlock Text="{Binding EnglishWithNewlines}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="22"   />
                                     <TextBlock Text="{Binding Chinese}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="26"  />
+                                    <StackPanel x:Name="SentencePanel" Orientation="Horizontal" Visibility="Collapsed" Margin="-3,5,0,5">
+                                        <Button Click="PlaySentence_Click" Background="Transparent" Padding="0,3,0,5">
+                                            <Button.Content>
+                                                <TextBlock Text="{Binding Sentence}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="22"  />
+                                            </Button.Content>
+                                        </Button>
+                                    </StackPanel>
                                 </StackPanel>
                                 <StackPanel x:Name="ActionPanel" Margin="-5,2,0,0" Orientation="Horizontal" Visibility="Collapsed">
                                     <Button x:Name="PlayButton" Tag="{Binding Index}" Click="PlayButton_Click" Background="Transparent">

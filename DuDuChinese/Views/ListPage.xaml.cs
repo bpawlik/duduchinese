@@ -36,11 +36,12 @@ namespace DuDuChinese.Views
             if (item == -1)
                 return;
 
-            ViewModel.SelectedItem = ((ItemViewModel)list.SelectedItem).Record;
+            ItemViewModel currentItemViewModel = (ItemViewModel)list.SelectedItem;
+            ViewModel.SelectedItem = currentItemViewModel.Record;
 
             if (previous != item)
             {
-                ToggleView(list, item, true);
+                ToggleView(list, item, true, !String.IsNullOrWhiteSpace(currentItemViewModel.Sentence));
                 if (previous != -1)
                     ToggleView(list, previous, false);
                 previous = item;
@@ -50,7 +51,7 @@ namespace DuDuChinese.Views
             list.ScrollIntoView(list.Items[item]);
         }
 
-        void ToggleView(ListBox list, int index, bool expand)
+        void ToggleView(ListBox list, int index, bool expand, bool showSentence = false)
         {
             ListBoxItem item = (ListBoxItem)list.ContainerFromIndex(index);
             if (item == null)
@@ -59,6 +60,7 @@ namespace DuDuChinese.Views
             StackPanel defaultView = VisualTreeHelperHelper.FindFrameworkElementByName<StackPanel>(item, "DefaultView");
             StackPanel expandedView = VisualTreeHelperHelper.FindFrameworkElementByName<StackPanel>(item, "ExpandedView");
             StackPanel actionPanel = VisualTreeHelperHelper.FindFrameworkElementByName<StackPanel>(item, "ActionPanel");
+            StackPanel sentencePanel = VisualTreeHelperHelper.FindFrameworkElementByName<StackPanel>(item, "SentencePanel");
 
             if (expand)
             {
@@ -72,6 +74,8 @@ namespace DuDuChinese.Views
                 expandedView.Visibility = Visibility.Collapsed;
                 actionPanel.Visibility = Visibility.Collapsed;
             }
+
+            sentencePanel.Visibility = showSentence ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void AppBarSortButton_Click(object sender, RoutedEventArgs e)
@@ -92,6 +96,12 @@ namespace DuDuChinese.Views
         private void AddSentenceButton_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.AddSentence();
+            previous = -1;
+        }
+
+        private void PlaySentence_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Play(sentence: true);
         }
 
         void CopyButton_Click(object sender, RoutedEventArgs e)

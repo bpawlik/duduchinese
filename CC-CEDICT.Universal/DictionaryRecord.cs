@@ -7,6 +7,7 @@ namespace CC_CEDICT.Universal
     {
         public Chinese Chinese = null;
         public List<string> English = new List<string>();
+        public List<string> Sentence = new List<string>();
         public int Relevance = 100;
 
         #region ILine initialization
@@ -48,7 +49,11 @@ namespace CC_CEDICT.Universal
                 return;
             English.Add(line.Substring(i, j - i));
 
-            while (line.Length > j + 1)
+            int k = line.IndexOf("//", i) - 1;
+            if (k == -2)
+                k = line.Length;
+
+            while (k > j + 1)
             {
                 i = j + 1;
                 j = line.IndexOf("/", i);
@@ -56,17 +61,37 @@ namespace CC_CEDICT.Universal
                     break;
                 English.Add(line.Substring(i, j - i));
             }
+
+            if (k == line.Length)
+                return;
+
+            // Parse sentence
+            i = j + 4;
+            k = line.IndexOf("//", i);
+            if (k == -1)
+                return;
+            Sentence.Add(line.Substring(i, k - i));
+
+            i = k + 2;
+            k = line.IndexOf("//", i);
+            if (k == -1)
+            {
+                Sentence.Clear();
+                return;
+            }
+            Sentence.Add(line.Substring(i, k - i));
         }
 
         #endregion
 
         public override string ToString()
         {
-            return String.Format("{0} {1} [{2}] /{3}/",
+            return String.Format("{0} {1} [{2}] /{3}/ //{4}//",
                 Chinese.Traditional,
                 Chinese.Simplified,
                 Chinese.PinyinNoMarkup,
-                String.Join("/", English));
+                String.Join("/", English),
+                String.Join("//", Sentence));
         }
 
         #region IComparable interface
