@@ -83,6 +83,8 @@ namespace DuDuChinese.ViewModels
                         Decompose(record);
                         break;
                 }
+
+                SessionState.Remove(parameter as string);
             }
             else if (parameter is string)
             {

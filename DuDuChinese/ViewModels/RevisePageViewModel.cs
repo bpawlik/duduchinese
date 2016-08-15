@@ -84,6 +84,9 @@ namespace DuDuChinese.ViewModels
 
         private void UpdateItemsCount()
         {
+            if (this.revisionList == null)
+                return;
+
             SelectedItemsCount.Clear();
             for (int i = 10; i < this.revisionList.Count; i += 10)
                 SelectedItemsCount.Add(i.ToString());
@@ -109,7 +112,7 @@ namespace DuDuChinese.ViewModels
         {
             ComboBox cb = sender as ComboBox;
             this.NumberOfItems = Convert.ToInt32(cb.SelectedValue);
-            if (this.NumberOfItems > 0)
+            if (this.NumberOfItems > 0 && this.revisionList != null)
             {
                 this.IsStartEnabled = true;
                 this.revisionList = this.revisionList.GetRange(0, this.NumberOfItems);
@@ -157,7 +160,7 @@ namespace DuDuChinese.ViewModels
 
         public void RemoveSelectedItem()
         {
-            if (this.SelectedItem != null)
+            if (this.SelectedItem != null && this.revisionList != null)
             {
                 this.revisionList.Remove(this.SelectedItem);
                 this.RevisionItems.Remove(this.SelectedItem);
