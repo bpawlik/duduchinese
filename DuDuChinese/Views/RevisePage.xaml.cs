@@ -29,9 +29,20 @@ namespace DuDuChinese.Views
 
         private void Details_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-
             ViewModel.UpdateDetails();
             Bindings.Update();
+        }
+
+        private void Remove_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            ViewModel.RemoveSelectedItem();
+            Bindings.Update();
+        }
+
+        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MyToolkit.Controls.DataGrid dg = (MyToolkit.Controls.DataGrid)sender;
+            ViewModel.SelectedItem = (Models.LearningItem)dg.SelectedItem;
         }
     }
 }

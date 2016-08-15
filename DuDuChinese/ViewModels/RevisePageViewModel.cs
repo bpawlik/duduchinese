@@ -21,6 +21,7 @@ namespace DuDuChinese.ViewModels
         private List<LearningItem> revisionList = null;
         private int NumberOfItems { get; set; } = 0;
         public bool IsDetailExpanded { get; set; } = false;
+        public LearningItem SelectedItem { get; set; } = null;
 
         public RevisePageViewModel()
         {
@@ -152,6 +153,17 @@ namespace DuDuChinese.ViewModels
 
             foreach (var item in this.revisionList)
                 this.RevisionItems.Add(item);
+        }
+
+        public void RemoveSelectedItem()
+        {
+            if (this.SelectedItem != null)
+            {
+                this.revisionList.Remove(this.SelectedItem);
+                this.RevisionItems.Remove(this.SelectedItem);
+                RevisionEngine.RevisionList.Remove(this.SelectedItem);
+                RevisionEngine.Serialize();
+            }    
         }
     }
 }

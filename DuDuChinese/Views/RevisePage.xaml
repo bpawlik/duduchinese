@@ -116,6 +116,7 @@
                 FontWeight="Light"
                 Background="Transparent"
                 HeaderBackground="{ThemeResource CustomColorBrush}"
+                SelectionChanged="DataGrid_SelectionChanged"
                 DefaultOrderIndex="1"
                 mycontrols:DataGridExtensions.UseSingleSelectionAndDeselection="true" >
 
@@ -137,16 +138,30 @@
                 </mycontrols:DataGrid.Columns>
                 <mycontrols:DataGrid.ItemDetailsTemplate>
                     <DataTemplate>
-                        <StackPanel Margin="20,10,10,5" >
-                            <TextBlock Text="Details: " FontSize="15" Margin="-10,0,0,5"/>
-                            <TextBlock Text="{Binding Record, Converter={StaticResource DictionaryRecordToStringConverter}}" FontSize="15" />
-                            <TextBlock Text="{Binding ListName}" FontSize="15"/>
-                            <TextBlock Text="{Binding Exercise, Converter={StaticResource LearningExerciseToStringConverter}}" FontSize="15" />
-                            <StackPanel Orientation="Horizontal">
+                        <Grid Margin="20,10,10,5" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Button x:Name="removeButton" Click="Remove_Click" Grid.Row="0" Grid.Column="0" Grid.RowSpan="4" VerticalAlignment="Center">
+                                <Button.Content>
+                                    <SymbolIcon Symbol="Delete" />
+                                </Button.Content>
+                            </Button>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Record, Converter={StaticResource DictionaryRecordToStringConverter}}" FontSize="15" />
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ListName}" FontSize="15"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Exercise, Converter={StaticResource LearningExerciseToStringConverter}}" FontSize="15" />
+                            <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
                                 <TextBlock Text="Number of reviews left: " FontSize="15" />
                                 <TextBlock Text="{Binding Score}" FontSize="15" Margin="10,0,0,0" />
                             </StackPanel>
-                        </StackPanel>
+                        </Grid>
                     </DataTemplate>
                 </mycontrols:DataGrid.ItemDetailsTemplate>
             </mycontrols:DataGrid>
