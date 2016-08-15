@@ -1,6 +1,7 @@
 ﻿using Template10.Mvvm;
 using CC_CEDICT.Universal;
 using Windows.UI.Xaml;
+using System;
 
 namespace DuDuChinese.ViewModels
 {
@@ -116,6 +117,21 @@ namespace DuDuChinese.ViewModels
         {
             get { return this.simplifiedVisible; }
             set { this.Set(ref this.simplifiedVisible, value); }
+        }
+
+        private Visibility sentenceVisible = Visibility.Collapsed;
+        public Visibility SentenceVisible
+        {
+            get {
+                if (String.IsNullOrWhiteSpace(this.Sentence))
+                    this.sentenceVisible = Visibility.Collapsed;
+                return this.sentenceVisible;
+            }
+            set {
+                if (String.IsNullOrWhiteSpace(this.Sentence))
+                    this.sentenceVisible = Visibility.Collapsed;
+                this.Set(ref this.sentenceVisible, value);
+            }
         }
 
         #endregion

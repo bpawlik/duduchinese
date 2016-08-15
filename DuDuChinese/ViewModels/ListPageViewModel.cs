@@ -187,8 +187,6 @@ namespace DuDuChinese.ViewModels
                 await System.Threading.Tasks.Task.Delay(TimeSpan.FromMilliseconds(2000));
                 Windows.UI.Notifications.ToastNotificationManager.History.Remove("AddSentence");
             }
-
-            return;
         }
 
         public void Sort()

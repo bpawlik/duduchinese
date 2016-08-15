@@ -73,7 +73,9 @@ namespace DuDuChinese.ViewModels
                     Index = value.Index,
                     PinyinVisible = pinyinVisible,
                     TranslationVisible = translationVisible,
-                    SimplifiedVisible = simplifiedVisible
+                    SimplifiedVisible = simplifiedVisible,
+                    SentenceVisible = simplifiedVisible,
+                    Sentence = String.Join(" - ", value.Sentence)
                 });
                 this.Set(ref this.currentItem, value);
                 Play();
@@ -228,6 +230,7 @@ namespace DuDuChinese.ViewModels
                 this.Items[0].PinyinVisible = Visibility.Visible;
                 this.Items[0].TranslationVisible = Visibility.Visible;
                 this.Items[0].SimplifiedVisible = Visibility.Visible;
+                this.Items[0].SentenceVisible = Visibility.Visible;
             }
             this.Validated = true;
             this.InputTextDisabled = true;
@@ -255,10 +258,11 @@ namespace DuDuChinese.ViewModels
                 this.Items[0].PinyinVisible = pinyinVisible;
                 this.Items[0].TranslationVisible = translationVisible;
                 this.Items[0].SimplifiedVisible = simplifiedVisible;
+                this.Items[0].SentenceVisible = simplifiedVisible;
             }
         }
 
-        public async void Play()
+        public async void Play(bool sentence = false)
         {
             // If the media is playing, the user has pressed the button to stop the playback.
             if (Media.CurrentState.Equals(MediaElementState.Playing))
@@ -273,7 +277,7 @@ namespace DuDuChinese.ViewModels
                     return;
             }
 
-            string text = this.currentItem.Chinese.Simplified;
+            string text = (sentence && this.currentItem.Sentence.Count > 0) ? this.currentItem.Sentence[0] : this.currentItem.Chinese.Simplified;
 
             if (!String.IsNullOrEmpty(text))
             {

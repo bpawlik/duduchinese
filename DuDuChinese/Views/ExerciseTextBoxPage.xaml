@@ -103,6 +103,14 @@
                                                        Visibility="{Binding SimplifiedVisible, Mode=TwoWay}"
                                                        TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="26" />
                                         </StackPanel>
+                                        <StackPanel x:Name="SentencePanel" Orientation="Horizontal" Margin="-3,5,0,5"
+                                                    Visibility="{Binding SentenceVisible, Mode=TwoWay}" >
+                                            <Button Click="PlaySentence_Click" Background="Transparent" Padding="0,3,0,5">
+                                                <Button.Content>
+                                                    <TextBlock Text="{Binding Sentence}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="22"  />
+                                                </Button.Content>
+                                            </Button>
+                                        </StackPanel>
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>

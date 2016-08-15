@@ -33,6 +33,11 @@ namespace DuDuChinese.Views
             ViewModel.Play();
         }
 
+        private void PlaySentence_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Play(sentence: true);
+        }
+
         private void Continue_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             ViewModel.Continue_Click(sender, e);
