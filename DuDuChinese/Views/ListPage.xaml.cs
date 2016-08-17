@@ -97,6 +97,7 @@ namespace DuDuChinese.Views
         {
             ViewModel.AddSentence();
             previous = -1;
+            Bindings.Update();
         }
 
         private void PlaySentence_Click(object sender, RoutedEventArgs e)

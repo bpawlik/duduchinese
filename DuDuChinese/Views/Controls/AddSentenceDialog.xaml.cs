@@ -45,11 +45,13 @@ namespace DuDuChinese.Views.Controls
             {
                 chineseTextBox.Text = sentence[0];
                 englishTextBox.Text = sentence[1];
+                PrimaryButtonText = "Save";
             }
             else
             {
                 chineseTextBox.Text = "中文";
                 englishTextBox.Text = "English";
+                PrimaryButtonText = "Add";
             }
             chineseTextBox.SelectAll();
         }

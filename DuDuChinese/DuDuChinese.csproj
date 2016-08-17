@@ -109,6 +109,7 @@
     <Compile Include="Converters\LearningExerciseToStringConverter.cs" />
     <Compile Include="Converters\MinimumLengthConverter.cs" />
     <Compile Include="Converters\NotepadLookupConvertor.cs" />
+    <Compile Include="Converters\VisibilityToSymbolConverter.cs" />
     <Compile Include="Converters\VisibilityConverter.cs" />
     <Compile Include="Models\DictionaryRecordList.cs" />
     <Compile Include="Converters\InvertedBoolConverter.cs" />

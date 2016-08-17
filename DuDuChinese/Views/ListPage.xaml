@@ -8,6 +8,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="using:DuDuChinese.Views"
       xmlns:m="using:DuDuChinese.Models"
+      xmlns:c="using:DuDuChinese.Converters"
       xmlns:cc="using:CC_CEDICT.Universal"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:vm="using:DuDuChinese.ViewModels" x:Name="ThisPage"
@@ -18,8 +19,7 @@
     </Page.DataContext>
 
     <Page.Resources>
-        <m:ColourFormatter x:Key="EntryToForegroundConverter"/>
-        <m:StringFormatter x:Key="StringFormatterValueConverter"/>
+        <c:VisibilityToSymbolConverter x:Key="VisibilityToSymbolConverter"/>
     </Page.Resources>
 
     <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -111,7 +111,7 @@
                                     </Button>
                                     <Button x:Name="AddSentenceButton" Tag="{Binding Index}"  Background="Transparent" Click="AddSentenceButton_Click">
                                         <Button.Content>
-                                            <SymbolIcon Symbol="Add" />
+                                            <SymbolIcon Symbol="{Binding SentenceVisible, Converter={StaticResource VisibilityToSymbolConverter}}" />
                                         </Button.Content>
                                     </Button>
                                     <Button x:Name="CopyButton" Tag="{Binding Index}"  Background="Transparent" Click="CopyButton_Click">

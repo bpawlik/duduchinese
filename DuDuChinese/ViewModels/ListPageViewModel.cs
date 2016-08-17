@@ -96,7 +96,8 @@ namespace DuDuChinese.ViewModels
                     EnglishWithNewlines = String.Join("\n", r.English),
                     Chinese = r.Chinese.Simplified,
                     Index = r.Index,
-                    Sentence = String.Join(" - ", r.Sentence)
+                    Sentence = String.Join(" - ", r.Sentence),
+                    SentenceVisible = (r.Sentence.Count > 0 ? Visibility.Visible : Visibility.Collapsed)
                 });
             }
         }
@@ -175,7 +176,7 @@ namespace DuDuChinese.ViewModels
                 LoadListData();
 
                 // Create toast
-                string message = list[idx].Sentence.Count == 2 ? "Sentence added for the list item: "
+                string message = list[idx].Sentence.Count == 2 ? "Sentence saved for the list item: "
                     : "Sentence removed from the list item: ";
                 var xmlDoc = CreateToast(message + list[idx].Chinese.Simplified);
                 var toast = new Windows.UI.Notifications.ToastNotification(xmlDoc);
