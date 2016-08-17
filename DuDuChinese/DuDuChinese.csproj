@@ -139,6 +139,10 @@
     <Compile Include="Views\Controls\AddSentenceDialog.xaml.cs">
       <DependentUpon>AddSentenceDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\WrapPanel.cs" />
+    <Compile Include="Views\ExerciseFillGapPage.xaml.cs">
+      <DependentUpon>ExerciseFillGapPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ExerciseTextBoxPage.xaml.cs">
       <DependentUpon>ExerciseTextBoxPage.xaml</DependentUpon>
     </Compile>
@@ -201,6 +205,10 @@
     <Page Include="Views\Controls\AddSentenceDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ExerciseFillGapPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\ExerciseTextBoxPage.xaml">
       <Generator>MSBuild:Compile</Generator>

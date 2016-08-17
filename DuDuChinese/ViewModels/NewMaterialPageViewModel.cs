@@ -18,6 +18,7 @@ namespace DuDuChinese.ViewModels
         public ObservableCollection<string> SelectedItemsCount { get; set; }
         public bool IsStartEnabled { get; set; } = false;
         private int NumberOfItems { get; set; } = 0;
+        private DictionaryRecordList CurrentRecordList { get; set; } = null;
 
         public NewMaterialPageViewModel()
         {
@@ -69,7 +70,17 @@ namespace DuDuChinese.ViewModels
         public void radioButton_Checked(object sender, RoutedEventArgs e)
         {
             RadioButton rb = sender as RadioButton;
+            LearningMode oldMode = LearningEngine.Mode;
             LearningEngine.Mode = rb.Tag == null ? LearningMode.Words : (LearningMode)Convert.ToInt32(rb.Tag);
+
+            // Update items count combobox
+            if (oldMode != LearningEngine.Mode && this.CurrentRecordList != null)
+            {
+                this.IsStartEnabled = false;
+                this.NumberOfItems = LearningEngine.GenerateLearningItems(this.CurrentRecordList);
+
+                UpdateItemsCount();
+            }
         }
 
         public async void Start_Click(object sender, RoutedEventArgs e)
@@ -105,8 +116,8 @@ namespace DuDuChinese.ViewModels
             App app = (App)Application.Current;
             if (cb.SelectedValue != null)
             {
-                DictionaryRecordList recordList = app.ListManager[cb.SelectedValue.ToString()];
-                this.NumberOfItems = LearningEngine.GenerateLearningItems(recordList);
+                this.CurrentRecordList = app.ListManager[cb.SelectedValue.ToString()];
+                this.NumberOfItems = LearningEngine.GenerateLearningItems(this.CurrentRecordList);
 
                 // Update items count combobox
                 UpdateItemsCount();

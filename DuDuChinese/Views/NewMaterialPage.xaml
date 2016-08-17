@@ -73,30 +73,31 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition MinHeight="40" />
-                <RowDefinition MinHeight="40" />
-                <RowDefinition MinHeight="40" />
-                <RowDefinition MinHeight="40" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="50" />
             </Grid.RowDefinitions>
 
             <TextBlock x:Name="textBlock" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" Text="Select list:" />
-            <TextBlock x:Name="textBlock2" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" Text="Number of items:" />
-            <ComboBox x:Name="comboBoxLists" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="20,0" Height="32" VerticalAlignment="Top" MinWidth="180"
+            <ComboBox x:Name="comboBoxLists" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="20,0" Height="32" MinWidth="180"
                   ItemsSource="{Binding Items}"
+                  VerticalAlignment="Center"
                   DropDownClosed="SelectedListChanged"
                   xmlns:m="using:DuDuChinese.Models">
             </ComboBox>
-            <ComboBox x:Name="itemsCountComboBox" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Height="32" MinWidth="180" Margin="20,0"
-                  VerticalAlignment="Top"
+            <RadioButton x:Name="radioButtonWords" Grid.Row="1" Grid.Column="0" Content="Words" IsChecked="True" Tag="0" GroupName="mode" HorizontalAlignment="Left" Height="32" VerticalAlignment="Center" Checked="{x:Bind ViewModel.radioButton_Checked}" />
+            <RadioButton x:Name="radioButtonSentences" Grid.Row="1" Grid.Column="1" Content="Sentences" IsChecked="False" Tag="1" GroupName="mode" HorizontalAlignment="Left" Height="32"  Margin="20,0" VerticalAlignment="Center" Checked="{x:Bind ViewModel.radioButton_Checked}" />
+            <TextBlock x:Name="textBlock2" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" Text="Number of items:" />
+            <ComboBox x:Name="itemsCountComboBox" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Height="32" MinWidth="180" Margin="20,0"
+                  VerticalAlignment="Center"
                   ItemsSource="{Binding SelectedItemsCount}"
                   DropDownClosed="NumberOfItems_SelectionChanged" >
             </ComboBox>
-            <RadioButton x:Name="radioButtonWords" Grid.Row="2" Grid.Column="0" IsEnabled="False" Content="Words" IsChecked="True" Tag="0" GroupName="mode" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Checked="{x:Bind ViewModel.radioButton_Checked}" />
-            <RadioButton x:Name="radioButtonSentences" Grid.Row="2" Grid.Column="1" IsEnabled="False" Content="Sentences" IsChecked="False" Tag="1" GroupName="mode" HorizontalAlignment="Left" Height="32"  Margin="20,0" VerticalAlignment="Top" Checked="{x:Bind ViewModel.radioButton_Checked}" />
             <Button x:Name="button" Content="Start" HorizontalAlignment="Left" Height="35" IsEnabled="{x:Bind ViewModel.IsStartEnabled}"
-                VerticalAlignment="Top" Width="150" Click="{x:Bind ViewModel.Start_Click}" Grid.Column="1" Grid.Row="3" Margin="-50,0">
+                VerticalAlignment="Center" Width="150" Click="{x:Bind ViewModel.Start_Click}" Grid.Column="1" Grid.Row="3" Margin="-50,5">
                 <Interactivity:Interaction.Behaviors>
-                    <!--  focus on textbox when page loads  -->
+                    <!--  focus on button when page loads  -->
                     <Core:EventTriggerBehavior>
                         <Behaviors:FocusAction />
                     </Core:EventTriggerBehavior>

@@ -44,7 +44,48 @@ namespace DuDuChinese.ViewModels
 
         #endregion
 
+        #region UI Controls
+
+        private static TextBlock GetErrorTextBlock(string message)
+        {
+            return new TextBlock()
+            {
+                Text = message,
+                Foreground = redBrush,
+                FontSize = 24.0,
+                Margin = new Thickness(10)
+            };
+        }
+
+        private static TextBlock GetTextBlock(string text)
+        {
+            return new TextBlock()
+            {
+                Text = text,
+                FontSize = 24.0,
+                Margin = new Thickness(-10, 0, -10, 0),
+                VerticalAlignment = VerticalAlignment.Center
+            };
+        }
+
+        public static TextBox GetTextBox()
+        {
+            return new TextBox()
+            {
+                Width = 125.0,
+                Margin = new Thickness(-5, 0, -5, 0),
+                FontSize = 24.0,
+                IsSpellCheckEnabled = false,
+                AcceptsReturn = false,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+        }
+
+        #endregion
+
         public ObservableCollection<ItemViewModel> Items { get; private set; } = new ObservableCollection<ItemViewModel>();
+        public ObservableCollection<object> SentenceItems { get; private set; } = new ObservableCollection<object>();
+        public TextBox KeywordTextBox { get; set; } = null;
         public bool Validated { get; set; } = false;
         public bool InputTextDisabled { get; set; } = false;
         public MediaElement Media { get; internal set; }
@@ -78,7 +119,9 @@ namespace DuDuChinese.ViewModels
                     Sentence = String.Join(" - ", value.Sentence)
                 });
                 this.Set(ref this.currentItem, value);
-                Play();
+
+                if (LearningEngine.CurrentExercise == LearningExercise.Display)
+                    Play(LearningEngine.Mode == LearningMode.Sentences);   
             }
         }
 
@@ -142,6 +185,9 @@ namespace DuDuChinese.ViewModels
 
             ResetUI();
 
+            if (LearningEngine.Mode == LearningMode.Sentences)
+                ShowFillGapTextBox();
+
             await Task.CompletedTask;
         }
 
@@ -160,10 +206,72 @@ namespace DuDuChinese.ViewModels
             await Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Dissect sentence into List<TextBlock> before,  TextBox keyword, List<TextBlock> after
+        /// </summary>
+        private void ShowFillGapTextBox()
+        {
+            if (this.currentItem.Sentence.Count == 0)
+                return;
+
+            string sentence, keyword = "";
+            switch (LearningEngine.CurrentExercise)
+            {
+                case LearningExercise.FillGapsChinese:
+                    sentence = this.currentItem.Sentence[0];
+                    keyword = this.currentItem.Chinese.Simplified;
+                    break;
+                case LearningExercise.FillGapsEnglish:
+                    sentence = this.currentItem.Sentence[1];
+                    // TODO: add logic in case of abbreviations, apostrophes, change of person, etc
+                    foreach (string word in this.currentItem.English)
+                        if (sentence.Contains(word))
+                        {
+                            keyword = word;
+                            break;
+                        }
+                    break;
+                default:
+                    return;
+            }
+
+            if (String.IsNullOrWhiteSpace(sentence) || String.IsNullOrWhiteSpace(keyword))
+            {
+                SentenceItems.Add(GetErrorTextBlock("Keyword and/or sentence is empty!"));
+                return;
+            }
+
+            int idx = sentence.IndexOf(keyword);
+            if (idx == -1)
+            {
+                SentenceItems.Add(GetErrorTextBlock("Keyword not found in the sentence!"));
+                return;
+            }
+
+            string[] before = sentence.Substring(0, idx).Split(new char[] {' ', ',' });
+            string[] after = sentence.Substring(idx + keyword.Length, sentence.Length - idx - keyword.Length).Split(' ');
+
+            // Add words before the keyword
+            foreach (string item in before)
+                SentenceItems.Add(GetTextBlock(item));
+
+            // Add keyword
+            SentenceItems.Add(this.KeywordTextBox);
+
+            // Add words after the keyword
+            foreach (string item in after)
+                SentenceItems.Add(GetTextBlock(item));
+
+            this.KeywordTextBox.Focus(Windows.UI.Xaml.FocusState.Programmatic);
+        }
+
         public void Continue_Click(object sender, RoutedEventArgs e)
         {
             if (!Validated && !InputTextDisabled)
             {
+                if (LearningEngine.CurrentExercise != LearningExercise.Display)
+                    Play(LearningEngine.Mode == LearningMode.Sentences);
+
                 if (e.OriginalSource.GetType() == typeof(Windows.UI.Xaml.Controls.TextBox))
                     Validate((e.OriginalSource as Windows.UI.Xaml.Controls.TextBox).Text);
                 else
@@ -184,6 +292,9 @@ namespace DuDuChinese.ViewModels
                 this.ProgressMaxValue = LearningEngine.GetItemCountForCurrentExercise();
                 Summary = LearningEngine.GetStatus();
                 this.ProgressValue++;
+
+                if (LearningEngine.Mode == LearningMode.Sentences)
+                    ShowFillGapTextBox();
             }
         }
 
@@ -224,6 +335,14 @@ namespace DuDuChinese.ViewModels
                 this.FgColour = redBrush;
             }
 
+            if (LearningEngine.Mode == LearningMode.Sentences)
+            {
+                // Find textbox and colour it!
+                foreach (var control in this.SentenceItems)
+                    if (control is TextBox)
+                        (control as TextBox).Background = this.BgColour;
+            }
+
             // Set visibility
             if (this.Items.Count > 0)
             {
@@ -248,6 +367,13 @@ namespace DuDuChinese.ViewModels
             this.Validated = false;
             this.InputText = "";
             this.IsWrongAnswer = false;
+            this.SentenceItems.Clear();
+            if (this.KeywordTextBox != null)
+            {
+                this.KeywordTextBox.Text = "";
+                this.KeywordTextBox.Background = transparentBrush;
+                this.KeywordTextBox.Foreground = defaultTextColor;
+            }
 
             // Set visibility
             if (this.Items.Count > 0)

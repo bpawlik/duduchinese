@@ -66,14 +66,17 @@ namespace DuDuChinese.Models
 
         // Textbox
 
-        [Description("Fill gaps")]
-        FillGaps,
+        [Description("Fill gaps with English")]
+        FillGapsEnglish,
+
+        [Description("Fill gaps with 汉字")]
+        FillGapsChinese,
 
         #endregion
 
         #region Common exercises
 
-        [Description("Display translations")]
+        [Description("Display learning items")]
         Display,
 
         [Description("We are at the start fo the big adventure!")]
@@ -111,7 +114,7 @@ namespace DuDuChinese.Models
 
         private static readonly LearningExercise[] exerciseListSentences = {
             LearningExercise.Display,
-            LearningExercise.FillGaps
+            LearningExercise.FillGapsChinese
         };
 
         #endregion
@@ -267,30 +270,37 @@ namespace DuDuChinese.Models
 
         public static int GenerateLearningItems(DictionaryRecordList recordList)
         {
-            List<LearningItem> items = new List<LearningItem>();
+            List<LearningItem> allItems = new List<LearningItem>();
             foreach (var record in recordList)
             {
                 foreach (LearningExercise exercise in ExerciseList)
-                    items.Add(new LearningItem(record) { Exercise = exercise, ListName = recordList.Name, Score = 10 });
+                    allItems.Add(new LearningItem(record) { Exercise = exercise, ListName = recordList.Name, Score = 10 });
             }
 
             // Remove overlapping items between new material and revisions
             List<LearningItem> revisionItems = RevisionEngine.RevisionList;
-            if (items.Count > 0 && revisionItems != null)
+            if (allItems.Count > 0 && revisionItems != null)
             {
                 // Get the intersection of learningItems and revisionItems
-                var intersectList = new List<LearningItem>(items.Intersect(revisionItems));
+                var intersectList = new List<LearningItem>(allItems.Intersect(revisionItems));
 
                 // Remove those items from the list that overlap
                 foreach (var item in intersectList)
-                    items.Remove(item);
+                    allItems.Remove(item);
             }
 
+            // If learning sentences then select only those word that have sentence defined
+            List<LearningItem> selectedItems;
+            if (Mode == LearningMode.Sentences)
+                selectedItems = new List<LearningItem>(allItems.Where(i => i.Record.Sentence.Count == 2));
+            else
+                selectedItems = allItems;
+
             // Update learning list and return items count
-            UpdateLearningList(items);
+            UpdateLearningList(selectedItems);
 
             if (Mode == LearningMode.Revision)
-                return items.Count;
+                return selectedItems.Count;
             else if (learningItems.Count > 0)
                 return LearningItems.First().Value.Count;
             return 0;
@@ -338,6 +348,12 @@ namespace DuDuChinese.Models
                     PinyinVisible = Visibility.Collapsed;
                     TranslationVisible = Visibility.Collapsed;
                     SimplifiedVisible = Visibility.Visible;
+                    break;
+                case LearningExercise.FillGapsChinese:
+                case LearningExercise.FillGapsEnglish:
+                    PinyinVisible = Visibility.Collapsed;
+                    TranslationVisible = Visibility.Collapsed;
+                    SimplifiedVisible = Visibility.Collapsed;
                     break;
                 default:
                     PinyinVisible = Visibility.Visible;
@@ -407,6 +423,7 @@ namespace DuDuChinese.Models
                 case LearningExercise.HanziPinyin2English:
                 case LearningExercise.Hanzi2English:
                 case LearningExercise.Pinyin2English:
+                case LearningExercise.FillGapsEnglish:
                     foreach (string s in CurrentItem.English)
                     {
                         if (String.IsNullOrWhiteSpace(s) || String.IsNullOrWhiteSpace(inputText))
@@ -440,6 +457,7 @@ namespace DuDuChinese.Models
                     break;
                 case LearningExercise.English2Hanzi:
                 case LearningExercise.Pinyin2Hanzi:
+                case LearningExercise.FillGapsChinese:
                     result = CurrentItem.Chinese.Simplified == inputText;
                     break;
                 case LearningExercise.Hanzi2Pinyin:
