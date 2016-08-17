@@ -102,8 +102,8 @@ namespace DuDuChinese.ViewModels
                 if (value == null)
                     return;
 
-                Visibility pinyinVisible, translationVisible, simplifiedVisible;
-                LearningEngine.SetVisibility(out pinyinVisible, out translationVisible, out simplifiedVisible);
+                Visibility pinyinVisible, translationVisible, simplifiedVisible, sentenceVisible;
+                LearningEngine.SetVisibility(out pinyinVisible, out translationVisible, out simplifiedVisible, out sentenceVisible);
                 this.Items.Add(new ItemViewModel()
                 {
                     Record = value,
@@ -115,7 +115,7 @@ namespace DuDuChinese.ViewModels
                     PinyinVisible = pinyinVisible,
                     TranslationVisible = translationVisible,
                     SimplifiedVisible = simplifiedVisible,
-                    SentenceVisible = simplifiedVisible,
+                    SentenceVisible = sentenceVisible,
                     Sentence = String.Join(Environment.NewLine + " - ", value.Sentence)
                 });
                 this.Set(ref this.currentItem, value);
@@ -378,13 +378,13 @@ namespace DuDuChinese.ViewModels
             // Set visibility
             if (this.Items.Count > 0)
             {
-                Visibility pinyinVisible, translationVisible, simplifiedVisible;
-                LearningEngine.SetVisibility(out pinyinVisible, out translationVisible, out simplifiedVisible);
+                Visibility pinyinVisible, translationVisible, simplifiedVisible, sentenceVisible;
+                LearningEngine.SetVisibility(out pinyinVisible, out translationVisible, out simplifiedVisible, out sentenceVisible);
                 ItemViewModel c = this.Items[0];
                 this.Items[0].PinyinVisible = pinyinVisible;
                 this.Items[0].TranslationVisible = translationVisible;
                 this.Items[0].SimplifiedVisible = simplifiedVisible;
-                this.Items[0].SentenceVisible = simplifiedVisible;
+                this.Items[0].SentenceVisible = sentenceVisible;
             }
         }
 

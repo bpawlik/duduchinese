@@ -317,8 +317,9 @@ namespace DuDuChinese.Models
                     : LearningItems[exercise].Count;
         }
 
-        public static void SetVisibility(out Visibility PinyinVisible, out Visibility TranslationVisible, out Visibility SimplifiedVisible)
+        public static void SetVisibility(out Visibility PinyinVisible, out Visibility TranslationVisible, out Visibility SimplifiedVisible, out Visibility SentenceVisible)
         {
+            SentenceVisible = CurrentExercise == LearningExercise.Display ? Visibility.Visible : Visibility.Collapsed;
             switch (CurrentExerciseList[CurrentExerciseIndex])
             {
                 case LearningExercise.Display:

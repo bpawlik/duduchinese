@@ -33,14 +33,14 @@ namespace DuDuChinese.Views
         private void Continue_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             ViewModel.Continue_Click(sender, e);
-            //this.inputTextBox.Focus(Windows.UI.Xaml.FocusState.Programmatic);
+            this.ViewModel.KeywordTextBox.Focus(Windows.UI.Xaml.FocusState.Programmatic);
             Bindings.Update();
         }
 
         private void Accept_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             ViewModel.Accept_Click(sender, e);
-            //this.inputTextBox.Focus(Windows.UI.Xaml.FocusState.Programmatic);
+            this.ViewModel.KeywordTextBox.Focus(Windows.UI.Xaml.FocusState.Programmatic);
             Bindings.Update();
         }
 
