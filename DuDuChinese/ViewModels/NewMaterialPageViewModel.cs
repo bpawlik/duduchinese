@@ -39,7 +39,6 @@ namespace DuDuChinese.ViewModels
 
             // Reset learning engine
             LearningEngine.Reset();
-            LearningEngine.Mode = LearningMode.Words;
 
             App app = (App)Application.Current;
             List<string> items = new List<string>();

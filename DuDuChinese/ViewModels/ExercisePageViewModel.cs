@@ -209,7 +209,7 @@ namespace DuDuChinese.ViewModels
         /// <summary>
         /// Dissect sentence into List<TextBlock> before,  TextBox keyword, List<TextBlock> after
         /// </summary>
-        private void ShowFillGapTextBox()
+        private async void ShowFillGapTextBox()
         {
             if (this.currentItem.Sentence.Count == 0)
                 return;
@@ -262,6 +262,8 @@ namespace DuDuChinese.ViewModels
             foreach (string item in after)
                 SentenceItems.Add(GetTextBlock(item));
 
+            // A little bit of sleep to make sure that control is setup and ready
+            await Task.Delay(100);
             this.KeywordTextBox.Focus(Windows.UI.Xaml.FocusState.Programmatic);
         }
 
