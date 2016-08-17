@@ -116,7 +116,7 @@ namespace DuDuChinese.ViewModels
                     TranslationVisible = translationVisible,
                     SimplifiedVisible = simplifiedVisible,
                     SentenceVisible = simplifiedVisible,
-                    Sentence = String.Join(" - ", value.Sentence)
+                    Sentence = String.Join(Environment.NewLine + " - ", value.Sentence)
                 });
                 this.Set(ref this.currentItem, value);
 

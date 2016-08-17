@@ -96,7 +96,7 @@ namespace DuDuChinese.ViewModels
                     EnglishWithNewlines = String.Join("\n", r.English),
                     Chinese = r.Chinese.Simplified,
                     Index = r.Index,
-                    Sentence = String.Join(" - ", r.Sentence),
+                    Sentence = String.Join(Environment.NewLine + " - ", r.Sentence),
                     SentenceVisible = (r.Sentence.Count > 0 ? Visibility.Visible : Visibility.Collapsed)
                 });
             }
