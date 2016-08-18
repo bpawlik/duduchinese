@@ -125,6 +125,13 @@ namespace DuDuChinese.Models
             // Get the local folder.
             StorageFolder data_folder = Windows.Storage.ApplicationData.Current.LocalFolder;
 
+            // If revision list is null or empty, but file exists, then try to deserialize
+            if ((revisionList == null || (revisionList != null && revisionList.Count == 0))
+                && File.Exists(Path.Combine(data_folder.Path, revisionsFile)))
+            {
+                await Deserialize();
+            }
+
             // Create a new file named data_file.xml
             StorageFile file = await data_folder.CreateFileAsync(revisionsFile, CreationCollisionOption.ReplaceExisting);
 
@@ -141,7 +148,7 @@ namespace DuDuChinese.Models
             await Task.CompletedTask;
         }
 
-        public static async void Deserialize()
+        public static async Task Deserialize()
         {
             try
             {
