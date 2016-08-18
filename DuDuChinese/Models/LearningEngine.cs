@@ -266,6 +266,11 @@ namespace DuDuChinese.Models
             {
                 CurrentExercise = CurrentExerciseList[++currentExerciseIndex];
             }
+
+            // Reset counters
+            correctCount = 0;
+            wrongCount = 0;
+
             return CurrentExercise;
         }
 
