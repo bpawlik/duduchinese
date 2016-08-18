@@ -312,12 +312,24 @@ namespace DuDuChinese.Models
                     allItems.Remove(item);
             }
 
-            // If learning sentences then select only those word that have sentence defined
+            // Remove those words from display exercise that do not appear in other exercises
+            List<LearningItem> reducedItems = new List<LearningItem>(allItems);
+            foreach (var item in allItems)
+            {
+                if (item.Exercise == LearningExercise.Display)
+                {
+                    // If only one match found then remove (one match = Display exercise)
+                    if (reducedItems.FindAll(i => i.Hash == item.Hash).Count == 1)
+                        reducedItems.Remove(item);
+                }
+            }
+
+            // If learning sentences then select only those words that have sentence defined
             List<LearningItem> selectedItems;
             if (Mode == LearningMode.Sentences)
-                selectedItems = new List<LearningItem>(allItems.Where(i => i.Record.Sentence.Count == 2));
+                selectedItems = new List<LearningItem>(reducedItems.Where(i => i.Record.Sentence.Count == 2));
             else
-                selectedItems = allItems;
+                selectedItems = reducedItems;
 
             // Update learning list and return items count
             UpdateLearningList(selectedItems);
@@ -326,6 +338,7 @@ namespace DuDuChinese.Models
                 return selectedItems.Count;
             else if (learningItems.Count > 0)
                 return LearningItems.First().Value.Count;
+
             return 0;
         }
 
@@ -487,6 +500,9 @@ namespace DuDuChinese.Models
                 case LearningExercise.Hanzi2Pinyin:
                 case LearningExercise.English2Pinyin:
                     result = CurrentItem.Chinese.PinyinNoMarkup == inputText;
+                    // If failed then remove 5th tone notation and try again
+                    if (!result)
+                        result = CurrentItem.Chinese.PinyinNoMarkup.Replace("5", "") == inputText;
                     break;
             }
 
