@@ -521,10 +521,21 @@ namespace DuDuChinese.Models
             return result;
         }
 
-        public static void RevertLastValidate()
+        public static void RevertLastValidate(bool newResult = true)
         {
-            wrongCount--;
-            LearningItems[CurrentExercise].RemoveAt(LearningItems[CurrentExercise].Count - 1);
+            if (newResult)
+            {
+                wrongCount--;
+                correctCount++;
+                LearningItems[CurrentExercise].RemoveAt(LearningItems[CurrentExercise].Count - 1);
+            }
+            else
+            {
+                wrongCount++;
+                correctCount--;
+                LearningItems[CurrentExercise].Add(LearningItems[CurrentExercise][currentItemIndex - 1]);
+            }
+            RevisionEngine.UpdateRevisionList(LearningItems[CurrentExercise][currentItemIndex - 1], newResult);
         }
 
         // Helper function to display enums description

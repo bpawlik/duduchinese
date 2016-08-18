@@ -303,7 +303,7 @@ namespace DuDuChinese.ViewModels
         public void Accept_Click(object sender, RoutedEventArgs e)
         {
             // Need to revert Validate result
-            LearningEngine.RevertLastValidate();
+            LearningEngine.RevertLastValidate(true);
 
             this.Validated = true;
             Continue_Click(sender, e);
