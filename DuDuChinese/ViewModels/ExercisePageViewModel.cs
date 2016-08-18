@@ -121,7 +121,7 @@ namespace DuDuChinese.ViewModels
                 this.Set(ref this.currentItem, value);
 
                 if (LearningEngine.CurrentExercise == LearningExercise.Display)
-                    Play(LearningEngine.Mode == LearningMode.Sentences);   
+                    Play(LearningEngine.IsSentence);   
             }
         }
 
@@ -185,7 +185,7 @@ namespace DuDuChinese.ViewModels
 
             ResetUI();
 
-            if (LearningEngine.Mode == LearningMode.Sentences)
+            if (LearningEngine.IsSentence)
                 ShowFillGapTextBox();
 
             await Task.CompletedTask;
@@ -272,7 +272,7 @@ namespace DuDuChinese.ViewModels
             if (!Validated && !InputTextDisabled)
             {
                 if (LearningEngine.CurrentExercise != LearningExercise.Display)
-                    Play(LearningEngine.Mode == LearningMode.Sentences);
+                    Play(LearningEngine.IsSentence);
 
                 if (e.OriginalSource.GetType() == typeof(Windows.UI.Xaml.Controls.TextBox))
                     Validate((e.OriginalSource as Windows.UI.Xaml.Controls.TextBox).Text);
@@ -295,7 +295,7 @@ namespace DuDuChinese.ViewModels
                 Summary = LearningEngine.GetStatus();
                 this.ProgressValue++;
 
-                if (LearningEngine.Mode == LearningMode.Sentences)
+                if (LearningEngine.IsSentence)
                     ShowFillGapTextBox();
             }
         }
@@ -337,7 +337,7 @@ namespace DuDuChinese.ViewModels
                 this.FgColour = redBrush;
             }
 
-            if (LearningEngine.Mode == LearningMode.Sentences)
+            if (LearningEngine.IsSentence)
             {
                 // Find textbox and colour it!
                 foreach (var control in this.SentenceItems)

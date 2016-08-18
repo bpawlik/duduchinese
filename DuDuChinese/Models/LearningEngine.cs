@@ -222,6 +222,24 @@ namespace DuDuChinese.Models
             }
         }
 
+        public static bool IsSentence
+        {
+            get
+            {
+                if (Mode == LearningMode.Sentences)
+                    return true;
+
+                switch (CurrentExercise)
+                {
+                    case LearningExercise.FillGapsChinese:
+                    case LearningExercise.FillGapsEnglish:
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        }
+
         #endregion
 
         public static LearningExercise PeekNextExercise(out int index)
