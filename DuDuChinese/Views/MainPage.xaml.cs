@@ -649,6 +649,9 @@ namespace DuDuChinese.Views
             if (e.Key != Windows.System.VirtualKey.Enter)
                 return;
 
+            // Mark event as handled to avoid unintentional taps
+            e.Handled = true;
+
             TextBox textBox = (TextBox)sender;
             string name = textBox.Text.Trim();
             if (name.Length == 0)
