@@ -558,12 +558,24 @@ namespace DuDuChinese.Views
         }
 
         private List<string> listsToBeDeleted = new List<string>();
-        private void DeleteList_Click(object sender, RoutedEventArgs e)
+        private async void DeleteList_Click(object sender, RoutedEventArgs e)
         {
             var datacontext = (e.OriginalSource as FrameworkElement).DataContext;
             ListBoxItem lbItem = (ListBoxItem)ListListBox.ContainerFromItem(datacontext);
             ListItemViewModel listItem = (ListItemViewModel)lbItem.DataContext;
             App app = (App)Application.Current;
+
+            // Ask for confirmation
+            var yesCommand = new Windows.UI.Popups.UICommand("Yes");
+            var noCommand = new Windows.UI.Popups.UICommand("No");
+            var yesNoDialog = new Windows.UI.Popups.MessageDialog(
+                    String.Format("Are you sure you want to delete list: {0}?", listItem.Name));
+            yesNoDialog.Commands.Add(yesCommand);
+            yesNoDialog.Commands.Add(noCommand);
+            var result = await yesNoDialog.ShowAsync();
+            if (result == noCommand)
+                return;
+
             string filename = app.ListManager.Remove(listItem.Name);
             LoadLists();
             ListViewModel lvm = (ListViewModel)ListsPane.DataContext;
