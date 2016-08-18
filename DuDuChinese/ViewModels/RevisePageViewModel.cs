@@ -59,7 +59,7 @@ namespace DuDuChinese.ViewModels
                 this.Items.Add(val);
 
             // Update items count combobox
-            this.revisionList = RevisionEngine.RevisionList;
+            this.revisionList = RevisionEngine.GetRevisionList();
             UpdateItemsCount();
 
             await Task.CompletedTask;

@@ -39,7 +39,7 @@ namespace DuDuChinese.Models
             }
         }
 
-        public static List<LearningItem> GetRevisionList(int numberOfItems, string name = null)
+        public static List<LearningItem> GetRevisionList(int numberOfItems = -1, string name = null)
         {
             if (numberOfItems == 0 || revisionList == null)
                 return new List<LearningItem>();
@@ -167,6 +167,9 @@ namespace DuDuChinese.Models
                         revisionList = (List<LearningItem>)serializer.ReadObject(reader);
                     }
                 }
+
+                if (revisionList == null)
+                    revisionList = new List<LearningItem>();
 
                 // Sort the list in descending order
                 revisionList.Sort((s1, s2) => s2.Score.CompareTo(s1.Score));
