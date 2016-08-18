@@ -109,6 +109,17 @@ namespace DuDuChinese.Models
             }
         }
 
+        public static void RenameList(string oldName, string newName)
+        {
+            foreach (var item in RevisionList)
+            {
+                if (item.ListName == oldName)
+                    item.ListName = newName;
+            }
+
+            Serialize();
+        }
+
         public static async void Serialize()
         {
             // Get the local folder.

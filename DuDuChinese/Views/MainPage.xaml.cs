@@ -50,6 +50,7 @@ namespace DuDuChinese.Views
                 ViewModel.LoadDictionary();
                 ViewModel.RealizePreinstalledLists();
                 LoadLists();
+                RevisionEngine.Deserialize();
                 ViewModel.IsDataLoaded = true;
                 Bindings.Update();
             }  
@@ -668,7 +669,13 @@ namespace DuDuChinese.Views
             if (RenameListMode)
             {
                 if (name != OldName)
+                {
+                    // Rename list in list manager
                     app.ListManager.Rename(OldName, name);
+
+                    // Rename list in revision list
+                    RevisionEngine.RenameList(OldName, name);
+                }
             }
             else // create a new list
             {
