@@ -23,6 +23,22 @@ namespace DuDuChinese.ViewModels
         public bool IsDetailExpanded { get; set; } = false;
         public LearningItem SelectedItem { get; set; } = null;
 
+        private string selectedListName = null;
+        private string SelectedListName
+        {
+            get
+            {
+                if (this.selectedListName == AllLists)
+                    return null;
+                else
+                    return this.selectedListName;
+            }
+            set
+            {
+                this.selectedListName = value;
+            }
+        }
+
         public RevisePageViewModel()
         {
             this.Items = new ObservableCollection<string>();
@@ -99,8 +115,8 @@ namespace DuDuChinese.ViewModels
             App app = (App)Application.Current;
             if (cb.SelectedValue != null)
             {
-                string name = cb.SelectedValue.ToString();
-                this.revisionList = RevisionEngine.GetRevisionList(-1, name == AllLists ? null : name);
+                this.SelectedListName = cb.SelectedValue.ToString();
+                this.revisionList = RevisionEngine.GetRevisionList(-1, this.SelectedListName);
 
                 // Update items count combobox
                 UpdateItemsCount();
@@ -115,7 +131,11 @@ namespace DuDuChinese.ViewModels
             if (this.NumberOfItems > 0 && this.revisionList != null)
             {
                 this.IsStartEnabled = true;
-                this.revisionList = this.revisionList.GetRange(0, this.NumberOfItems);
+                if (this.NumberOfItems > this.revisionList.Count)
+                    this.revisionList = RevisionEngine.GetRevisionList(-1, this.SelectedListName);
+
+                if (this.NumberOfItems < this.revisionList.Count)
+                    this.revisionList = this.revisionList.GetRange(0, this.NumberOfItems);
             }
 
             UpdateDetails(toggle: false);
