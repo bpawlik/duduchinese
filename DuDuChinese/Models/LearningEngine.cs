@@ -180,7 +180,7 @@ namespace DuDuChinese.Models
                 else
                 {
                     // If we've got only display exercises then we have nothing to learn anymore from this list
-                    if (learningItems.Keys.Count == 1 && learningItems.First().Key == LearningExercise.Display)
+                    if (learningItems.Count == 0 || (learningItems.Keys.Count == 1 && learningItems.First().Key == LearningExercise.Display))
                     {
                         itemsCount = 0;
                         return;

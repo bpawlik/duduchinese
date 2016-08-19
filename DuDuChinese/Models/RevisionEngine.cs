@@ -130,6 +130,10 @@ namespace DuDuChinese.Models
                 && File.Exists(Path.Combine(data_folder.Path, revisionsFile)))
             {
                 await Deserialize();
+
+                // Never ever serialize empty list!
+                await Task.CompletedTask;
+                return;
             }
 
             // Create a new file named data_file.xml
