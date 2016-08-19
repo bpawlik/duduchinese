@@ -516,10 +516,11 @@ namespace DuDuChinese.Models
                     break;
                 case LearningExercise.Hanzi2Pinyin:
                 case LearningExercise.English2Pinyin:
-                    result = CurrentItem.Chinese.PinyinNoMarkup == inputText;
+                    string pinyin = CurrentItem.Chinese.PinyinNoMarkup.ToLower();
+                    result = pinyin == inputText;
                     // If failed then remove 5th tone notation and try again
                     if (!result)
-                        result = CurrentItem.Chinese.PinyinNoMarkup.Replace("5", "") == inputText;
+                        result = pinyin.Replace("5", "") == inputText;
                     break;
             }
 
