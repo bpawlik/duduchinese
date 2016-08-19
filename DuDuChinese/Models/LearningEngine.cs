@@ -179,13 +179,30 @@ namespace DuDuChinese.Models
                 }
                 else
                 {
-                    // Shuffle lists
+                    // If we've got only display exercises then we have nothing to learn anymore from this list
+                    if (learningItems.Keys.Count == 1 && learningItems.First().Key == LearningExercise.Display)
+                    {
+                        itemsCount = 0;
+                        return;
+                    }
+
+                    // Consider Display exercise only
+                    var shuffledDisplayItems = learningItems[LearningExercise.Display].OrderBy(a => Guid.NewGuid());
+
+                    // Limit number of items participating in shuffling
+                    int count = Math.Min(learningItems[LearningExercise.Display].Count, itemsCount);
+                    List<LearningItem> displayItems = new List<LearningItem>(shuffledDisplayItems).GetRange(0, count);
+
+                    // Shuffle all lists
                     var keys = new List<LearningExercise>(learningItems.Keys);
                     foreach (var key in keys)
                     {
-                        var shuffledItems = learningItems[key].OrderBy(a => Guid.NewGuid());
-                        int count = Math.Min(learningItems[key].Count, itemsCount);
-                        learningItems[key] = new List<LearningItem>(shuffledItems).GetRange(0, count);
+                        // Foreach exercise select only those items that overlap with displayItems
+                        var items = learningItems[key].Intersect(displayItems, new LearningItemHashComparer());
+
+                        // Shuffle and update
+                        var shuffledItems = items.OrderBy(a => Guid.NewGuid());
+                        learningItems[key] = new List<LearningItem>(shuffledItems);
                     }
                 }
             }
@@ -312,9 +329,16 @@ namespace DuDuChinese.Models
                     allItems.Remove(item);
             }
 
+            // If learning sentences then select only those words that have sentence defined
+            List<LearningItem> selectedItems;
+            if (Mode == LearningMode.Sentences)
+                selectedItems = new List<LearningItem>(allItems.Where(i => i.Record.Sentence.Count == 2));
+            else
+                selectedItems = allItems;
+
             // Remove those words from display exercise that do not appear in other exercises
-            List<LearningItem> reducedItems = new List<LearningItem>(allItems);
-            foreach (var item in allItems)
+            List<LearningItem> reducedItems = new List<LearningItem>(selectedItems);
+            foreach (var item in selectedItems)
             {
                 if (item.Exercise == LearningExercise.Display)
                 {
@@ -324,18 +348,11 @@ namespace DuDuChinese.Models
                 }
             }
 
-            // If learning sentences then select only those words that have sentence defined
-            List<LearningItem> selectedItems;
-            if (Mode == LearningMode.Sentences)
-                selectedItems = new List<LearningItem>(reducedItems.Where(i => i.Record.Sentence.Count == 2));
-            else
-                selectedItems = reducedItems;
-
             // Update learning list and return items count
-            UpdateLearningList(selectedItems);
+            UpdateLearningList(reducedItems);
 
             if (Mode == LearningMode.Revision)
-                return selectedItems.Count;
+                return reducedItems.Count;
             else if (learningItems.Count > 0)
                 return LearningItems.First().Value.Count;
 
@@ -523,6 +540,9 @@ namespace DuDuChinese.Models
 
         public static void RevertLastValidate(bool newResult = true)
         {
+            if (CurrentExercise == LearningExercise.Display)
+                return;
+
             if (newResult)
             {
                 wrongCount--;
@@ -535,6 +555,7 @@ namespace DuDuChinese.Models
                 correctCount--;
                 LearningItems[CurrentExercise].Add(LearningItems[CurrentExercise][currentItemIndex - 1]);
             }
+
             RevisionEngine.UpdateRevisionList(LearningItems[CurrentExercise][currentItemIndex - 1], newResult);
         }
 

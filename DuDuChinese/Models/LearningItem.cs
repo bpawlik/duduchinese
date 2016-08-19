@@ -1,5 +1,6 @@
 ﻿using CC_CEDICT.Universal;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.Core;
@@ -87,6 +88,25 @@ namespace DuDuChinese.Models
             }
 
             return false;
+        }
+    }
+
+    public class LearningItemHashComparer : IEqualityComparer<LearningItem>
+    {
+        public bool Equals(LearningItem item1, LearningItem item2)
+        {
+            if (object.ReferenceEquals(item1, item2))
+                return true;
+
+            if (item1 == null || item2 == null)
+                return false;
+
+            return item1.Hash.Equals(item2.Hash);
+        }
+
+        public int GetHashCode(LearningItem obj)
+        {
+            return obj.Hash.GetHashCode();
         }
     }
 }
