@@ -23,40 +23,8 @@
         <c:VisibilityConverter x:Key="VisibilityConverter" True="Visible" False="Collapsed"/>
     </Page.Resources>
 
-    <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="AdaptiveVisualStateGroup">
-                <VisualState x:Name="VisualStateNarrow">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="{StaticResource NarrowMinWidth}" />
-                    </VisualState.StateTriggers>
-                    <!--<VisualState.Setters>
-                        --><!--  TODO: change properties for narrow view  --><!--
-                        <Setter Target="stateTextBox.Text" Value="Narrow Visual State" />
-                    </VisualState.Setters>-->
-                </VisualState>
-                <VisualState x:Name="VisualStateNormal">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="{StaticResource NormalMinWidth}" />
-                    </VisualState.StateTriggers>
-                    <!--<VisualState.Setters>
-                        --><!--  TODO: change properties for normal view  --><!--
-                        <Setter Target="stateTextBox.Text" Value="Normal Visual State" />
-                    </VisualState.Setters>-->
-                </VisualState>
-                <VisualState x:Name="VisualStateWide">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="{StaticResource WideMinWidth}" />
-                    </VisualState.StateTriggers>
-                    <!--<VisualState.Setters>
-                        --><!--  TODO: change properties for wide view  --><!--
-                        <Setter Target="stateTextBox.Text" Value="Wide Visual State" />
-                    </VisualState.Setters>-->
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
-
+    <RelativePanel x:Name="relativePanel"  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        
         <controls:PageHeader x:Name="pageHeader" RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
                              RelativePanel.AlignTopWithPanel="True" Text="Revision"
@@ -69,17 +37,19 @@
             </controls:PageHeader.SecondaryCommands>
 
         </controls:PageHeader>
-        <Grid Margin="10,60" MinWidth="300">
+        
+        <Grid Margin="10,60" MinWidth="300"
+              Width="{Binding ActualWidth, ElementName=relativePanel}" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="135" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition MinHeight="40" />
-                <RowDefinition MinHeight="40" />
-                <RowDefinition MinHeight="40" />
-                <RowDefinition MinHeight="50" />
-                <RowDefinition MinHeight="500" Height="*" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <TextBlock x:Name="textBlock" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" Text="Select list (optional):" />
             <ComboBox x:Name="comboBoxLists" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="20,0" Height="32" VerticalAlignment="Top" MinWidth="180"
@@ -110,7 +80,9 @@
             <mycontrols:DataGrid
                 ItemsSource="{Binding RevisionItems}"
                 Visibility="{x:Bind ViewModel.IsDetailExpanded, Converter={StaticResource VisibilityConverter}}"
-                x:Name="DataGrid" Grid.Row="4" Grid.Column="1"  Margin="-130,0" VerticalAlignment="Stretch"
+                x:Name="dataGrid" Grid.Row="4" Grid.Column="1"  Margin="-130,0,0,0"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Stretch"
                 SelectionMode="Multiple"
                 FontSize="10"
                 FontWeight="Light"
