@@ -76,6 +76,7 @@ namespace DuDuChinese
                     synthesizer = new SpeechSynthesizer();
                     speechContext = ResourceContext.GetForCurrentView();
                     speechContext.Languages = new string[] { SpeechSynthesizer.DefaultVoice.Language };
+                    bool chineseLanguageFound = false;
                     foreach (var voice in SpeechSynthesizer.AllVoices)
                     {
                         var v = voice;
@@ -84,9 +85,16 @@ namespace DuDuChinese
                         {
                             speechContext.Languages = new string[] { lang };
                             synthesizer.Voice = voice;
+                            chineseLanguageFound = true;
                             break;  // Select female voice
                         }
                     }
+                    if (!chineseLanguageFound)
+                    {
+                        this.synthesizer = null;
+                        return null;
+                    }
+
                     speechResourceMap = ResourceManager.Current.MainResourceMap.GetSubtree("LocalizationTTSResources");
                 }
                 return this.synthesizer;

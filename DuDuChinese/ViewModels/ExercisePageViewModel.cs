@@ -121,7 +121,7 @@ namespace DuDuChinese.ViewModels
                 this.Set(ref this.currentItem, value);
 
                 if (LearningEngine.CurrentExercise == LearningExercise.Display)
-                    Play(LearningEngine.IsSentence);   
+                    Play(LearningEngine.IsSentence, ignoreException: true);   
             }
         }
 
@@ -272,7 +272,7 @@ namespace DuDuChinese.ViewModels
             if (!Validated && !InputTextDisabled)
             {
                 if (LearningEngine.CurrentExercise != LearningExercise.Display)
-                    Play(LearningEngine.IsSentence);
+                    Play(LearningEngine.IsSentence, ignoreException: true);
 
                 if (e.OriginalSource.GetType() == typeof(Windows.UI.Xaml.Controls.TextBox))
                     Validate((e.OriginalSource as Windows.UI.Xaml.Controls.TextBox).Text);
@@ -390,7 +390,7 @@ namespace DuDuChinese.ViewModels
             }
         }
 
-        public async void Play(bool sentence = false)
+        public async void Play(bool sentence = false, bool ignoreException = false)
         {
             // If the media is playing, the user has pressed the button to stop the playback.
             if (Media.CurrentState.Equals(MediaElementState.Playing))
@@ -422,6 +422,8 @@ namespace DuDuChinese.ViewModels
                 }
                 catch (System.IO.FileNotFoundException)
                 {
+                    if (ignoreException)
+                        return;
                     // If media player components are unavailable, (eg, using a N SKU of windows), we won't
                     // be able to start media playback. Handle this gracefully
                     var messageDialog = new Windows.UI.Popups.MessageDialog("Media player components unavailable");
@@ -431,8 +433,13 @@ namespace DuDuChinese.ViewModels
                 {
                     // If the text is unable to be synthesized, throw an error message to the user.
                     Media.AutoPlay = false;
+                    if (ignoreException)
+                        return;
                     var messageDialog = new Windows.UI.Popups.MessageDialog(
-                        "Unable to synthesize text. Please download Chinese simplified speech language pack.");
+                        "\nUnable to synthesize text. Please download Chinese simplified speech language pack.\n\n" +
+                        "In order to do that go to Region & language -> Add a language -> Chinese (Simplified)\n\n" +
+                        "Choose newly installed language from the list, select Options -> Speech -> Download.");
+                    messageDialog.Title = "Language Pack missing";
                     await messageDialog.ShowAsync();
                 }
             }

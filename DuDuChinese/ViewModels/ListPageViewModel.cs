@@ -149,7 +149,10 @@ namespace DuDuChinese.ViewModels
                     // If the text is unable to be synthesized, throw an error message to the user.
                     Media.AutoPlay = false;
                     var messageDialog = new Windows.UI.Popups.MessageDialog(
-                        "Unable to synthesize text. Please download Chinese simplified speech language pack.");
+                        "\nUnable to synthesize text. Please download Chinese simplified speech language pack.\n\n" +
+                        "In order to do that go to Region & language -> Add a language -> Chinese (Simplified)\n\n" +
+                        "Choose newly installed language from the list, select Options -> Speech -> Download.");
+                    messageDialog.Title = "Language Pack missing";
                     await messageDialog.ShowAsync();
                 }
             }
