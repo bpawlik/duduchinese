@@ -57,7 +57,7 @@ namespace DuDuChinese.ViewModels
             this.SelectedItemsCount.Clear();
 
             // Load revisions
-            RevisionEngine.Deserialize();
+            await RevisionEngine.Deserialize();
 
             // Reset learning engine
             LearningEngine.Reset();
@@ -135,7 +135,12 @@ namespace DuDuChinese.ViewModels
                     this.revisionList = RevisionEngine.GetRevisionList(-1, this.SelectedListName);
 
                 if (this.NumberOfItems < this.revisionList.Count)
-                    this.revisionList = this.revisionList.GetRange(0, this.NumberOfItems);
+                {
+                    // Shuffle list and limit number of elements
+                    var shuffledList = new List<LearningItem>(this.revisionList.OrderBy(a => Guid.NewGuid()));
+                    this.revisionList = shuffledList.GetRange(0, this.NumberOfItems);
+                }
+                    
             }
 
             UpdateDetails(toggle: false);
