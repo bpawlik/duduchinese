@@ -10,7 +10,7 @@ using System.ComponentModel;
 using CC_CEDICT.Universal;
 using Windows.UI.Core;
 using DuDuChinese.Models;
-using SevenZip.Compression.LZMA.WindowsPhone;
+using SevenZip.Compression.LZMA.Universal;
 using System.Reflection;
 using System.IO;
 using Template10.Services.NavigationService;

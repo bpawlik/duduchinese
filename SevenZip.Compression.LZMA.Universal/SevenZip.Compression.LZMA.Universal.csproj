@@ -119,8 +119,10 @@
     <Compile Include="7zip\Compress\RangeCoder\RangeCoderBit.cs" />
     <Compile Include="7zip\Compress\RangeCoder\RangeCoderBitTree.cs" />
     <Compile Include="7zip\ICoder.cs" />
+    <Compile Include="IsolatedStorageEncoder.cs" />
     <Compile Include="IsolatedStorageDecoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StreamEncoder.cs" />
     <Compile Include="StreamDecoder.cs" />
     <EmbeddedResource Include="Properties\SevenZip.Compression.LZMA.Universal.rd.xml" />
   </ItemGroup>

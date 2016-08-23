@@ -8,55 +8,55 @@ using System.Windows;
 
 namespace SevenZip.Compression.LZMA.Universal
 {
-    public class StreamDecoder : BackgroundWorker, ICodeProgress
+    public class StreamEncoder : BackgroundWorker, ICodeProgress
     {
         Stream outStream;
         protected long outSize;
         protected string currentItem;
 
         /// <summary>
-        /// Permit multiple instances to decode concurrently (default=true).
+        /// Permit multiple instances to encode concurrently (default=true).
         /// </summary>
         public static bool AllowConcurrentDecoding = true;
         static AutoResetEvent concurrency = new AutoResetEvent(true);
 
         /// <summary>
-        /// Encapsulates the decompression function of the LZMA SDK; implemented as a BackgroundWorker.
+        /// Encapsulates the compression function of the LZMA SDK; implemented as a BackgroundWorker.
         /// </summary>
         /// <remarks>Register your own ProgressChanged and RunWorkerCompleted event handlers, e.g.</remarks>
         /// <example>
         /// using SevenZip.Compression.LZMA.Universal;
         /// ...
-        /// StreamDecoder decoder = new StreamDecoder();
-        /// decoder.ProgressChanged += new ProgressChangedEventHandler(decoder_ProgressChanged);
-        /// decoder.RunWorkerCompleted += new RunWorkerCompletedEventHandler(decoder_RunWorkerCompleted);
-        /// decoder.DecodeAsync(inStream, outStream);
+        /// StreamEncoder encoder = new StreamEncoder();
+        /// encoder.ProgressChanged += new ProgressChangedEventHandler(encoder_ProgressChanged);
+        /// encoder.RunWorkerCompleted += new RunWorkerCompletedEventHandler(encoder_RunWorkerCompleted);
+        /// encoder.EncodeAsync(inStream, outStream);
         /// ...
-        /// void decoder_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        /// void encoder_ProgressChanged(object sender, ProgressChangedEventArgs e)
         /// {
         ///     // TODO: do something with e.ProgressPercentage
         /// ...
-        /// void decoder_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        /// void encoder_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         /// {
         ///     // TODO: if (e.Error) ... else ...
         /// ...
         /// </example>
         /// <see cref="System.ComponentModel.BackgroundWorker"/>
-        public StreamDecoder()
+        public StreamEncoder()
         {
             WorkerReportsProgress = true;
             WorkerSupportsCancellation = false;
-            DoWork += new DoWorkEventHandler(decoder_DoWork);
+            DoWork += new DoWorkEventHandler(encoder_DoWork);
         }
 
         /// <summary>
-        /// Starts the stream-to-stream asynchronous LZMA decompression operation.
+        /// Starts the stream-to-stream asynchronous LZMA compression operation.
         /// </summary>
         /// <param name="inStream">The System.IO.Stream from which to read the compressed data.</param>
         /// <param name="outStream">The System.IO.Stream to which the decompressed data should be written.</param>
         /// <remarks>Make sure your RunWorkerCompletedEventHandler is attached before calling this method.</remarks>
         /// <see cref="System.ComponentModel.BackgroundWorker.RunWorkerCompleted"/>
-        public void DecodeAsync(Stream inStream, Stream outStream)
+        public void EncodeAsync(Stream inStream, Stream outStream)
         {
             this.outStream = outStream;
             RunWorkerAsync(inStream);
@@ -68,12 +68,12 @@ namespace SevenZip.Compression.LZMA.Universal
         /// <exception cref="ArgumentException" />
         /// <exception cref="InsufficientFreeSpaceException" />
         /// <remarks>Implementation taken from LzmaAlone.cs (in the LZMA SDK).</remarks>
-        void decoder_DoWork(object sender, DoWorkEventArgs e)
+        void encoder_DoWork(object sender, DoWorkEventArgs e)
         {
             if (!AllowConcurrentDecoding)
                 concurrency.WaitOne(); // block until signaled
 
-            StreamDecoder decoder = (StreamDecoder)sender;
+            StreamEncoder encoder = (StreamEncoder)sender;
             Stream inStream = (Stream)e.Argument;
             DateTime start = DateTime.Now;
             
@@ -81,8 +81,8 @@ namespace SevenZip.Compression.LZMA.Universal
             if (inStream.Read(properties, 0, 5) != 5)
                 throw new ArgumentException("LZMA input data is too short");
 
-            Compression.LZMA.Decoder lzmaDecoder = new Compression.LZMA.Decoder();
-            lzmaDecoder.SetDecoderProperties(properties);
+            Compression.LZMA.Encoder lzmaEncoder = new Compression.LZMA.Encoder();
+            //lzmaEncoder.SetEncoderProperties(properties);
 
             outSize = 0;
             for (int i = 0; i < 8; i++)
@@ -95,7 +95,7 @@ namespace SevenZip.Compression.LZMA.Universal
 
             try
             {
-                if (!decoder.FreeSpaceRequired(outSize))
+                if (!encoder.FreeSpaceRequired(outSize))
                 {
                     Exception blame = new Exception(String.Format("Sorry, {0} didn't explain what went wrong.", this.GetType()));
                     throw new InsufficientFreeSpaceException(blame); // unknown issue; name and shame :)
@@ -111,11 +111,11 @@ namespace SevenZip.Compression.LZMA.Universal
             }
 
             long compressedSize = inStream.Length - inStream.Position;
-            lzmaDecoder.Code(inStream, outStream, compressedSize, outSize, this);
+            lzmaEncoder.Code(inStream, outStream, compressedSize, outSize, this);
 
             TimeSpan elapsed = DateTime.Now - start;
             double speed = outSize / 1024 / elapsed.TotalSeconds;
-            Debug.WriteLine(String.Format("LZMA decompression took {0}s. for {1}(c.)/{2}(u.) bytes at {3}KB/s", elapsed.TotalSeconds, compressedSize, outSize, (int)speed));
+            Debug.WriteLine(String.Format("LZMA compression took {0}s. for {1}(c.)/{2}(u.) bytes at {3}KB/s", elapsed.TotalSeconds, compressedSize, outSize, (int)speed));
             
             if (!AllowConcurrentDecoding)
                 concurrency.Set(); // reset signal
@@ -125,7 +125,7 @@ namespace SevenZip.Compression.LZMA.Universal
         }
 
         /// <summary>
-        /// Thrown when decompression would produce more data than can be handled by the target storage location.
+        /// Thrown when compression would produce more data than can be handled by the target storage location.
         /// </summary>
         /// <remarks>Examine InnerException for the specific reason for failure.</remarks>
         public class InsufficientFreeSpaceException : Exception
@@ -142,7 +142,7 @@ namespace SevenZip.Compression.LZMA.Universal
         }
 
         /// <summary>
-        /// Called after reading the LZMA header and before starting decompression.
+        /// Called after reading the LZMA header and before starting compression.
         /// </summary>
         /// <param name="outSize">Number of bytes that will be written to the outStream.</param>
         /// <remarks>Intended to be overridden by extending classes to handle free space requirements.</remarks>

@@ -7,47 +7,47 @@ using System.Windows;
 
 namespace SevenZip.Compression.LZMA.Universal
 {
-    public class IsolatedStorageDecoder : StreamDecoder
+    public class IsolatedStorageEncoder : StreamEncoder
     {
         IsolatedStorageFile store = null;
         IsolatedStorageFileStream outStream;
 
         /// <summary>
-        /// Extends StreamDecoder to decompress LZMA to a file in IsolatedStorage.
+        /// Extends StreamEncoder to decompress LZMA to a file in IsolatedStorage.
         /// </summary>
         /// <see cref="SevenZip.Compression.LZMA.Universal.StreamDecoder"/>
-        public IsolatedStorageDecoder()
+        public IsolatedStorageEncoder()
             : base()
         {
-            RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(IsolatedStorageDecoder_RunWorkerCompleted);
+            RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(IsolatedStorageEncoder_RunWorkerCompleted);
         }
 
         /// <summary>
-        /// Starts the file-to-file asynchronous LZMA decompression operation.
+        /// Starts the file-to-file asynchronous LZMA compression operation.
         /// </summary>
         /// <param name="inFile">The path to the file from which to read the compressed data.</param>
         /// <param name="outFile">The path to the file (to be created) to which the decompressed data should be written.</param>
         /// <exception cref="System.IO.IsolatedStorage.IsolatedStorageException" />
-        public void DecodeAsync(string inFile, string outFile)
+        public void EncodeAsync(string inFile, string outFile)
         {
             store = IsolatedStorageFile.GetUserStoreForApplication();
             IsolatedStorageFileStream inStream = new IsolatedStorageFileStream(inFile, FileMode.Open, store);
-            DecodeAsync(inStream, outFile);
+            EncodeAsync(inStream, outFile);
         }
 
         /// <summary>
-        /// Starts the stream-to-file asynchronous LZMA decompression operation.
+        /// Starts the stream-to-file asynchronous LZMA compression operation.
         /// </summary>
         /// <param name="inStream">The stream from which to read the compressed data.</param>
         /// <param name="outFile">The path to the file (to be created) to which the decompressed data should be written.</param>
         /// <exception cref="System.IO.IsolatedStorage.IsolatedStorageException" />
-        public void DecodeAsync(Stream inStream, string outFile)
+        public void EncodeAsync(Stream inStream, string outFile)
         {
             if (store == null)
                 store = IsolatedStorageFile.GetUserStoreForApplication();
             outStream = new IsolatedStorageFileStream(outFile, FileMode.Create, store);
             currentItem = outFile;
-            DecodeAsync(inStream, outStream);
+            EncodeAsync(inStream, outStream);
         }
 
         /// <summary>
@@ -64,12 +64,10 @@ namespace SevenZip.Compression.LZMA.Universal
         }
 
         /// <summary>
-        /// Clean up resources on completion of decompression.
+        /// Clean up resources on completion of compression.
         /// </summary>
-        void IsolatedStorageDecoder_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        void IsolatedStorageEncoder_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            //if (outStream != null)
-            //    outStream.Close();
             if (store != null)
                 store.Dispose();
         }
