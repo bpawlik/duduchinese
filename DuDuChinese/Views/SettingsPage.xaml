@@ -71,6 +71,33 @@
                                       IsOn="{Binding UseLightThemeButton, Mode=TwoWay}"
                                       OnContent="Light theme" OffContent="Dark theme"
                                       RelativePanel.AlignLeftWithPanel="True" />
+                        <TextBlock x:Name="revisionsTextBlock"
+                            Margin="0,20,0,10"
+                                   RelativePanel.Below="UseLightThemeToggleSwitch">
+                            Revisions
+                        </TextBlock>
+                        <Button x:Name="backupButton"
+                                RelativePanel.AlignLeftWithPanel="True"
+                                RelativePanel.Below="revisionsTextBlock"
+                                Click="backupButton_Click">
+                            <Button.Content>
+                                <TextBlock>Backup Now</TextBlock>
+                            </Button.Content>
+                        </Button>
+                        <Button x:Name="restoreButton" Margin="10,0"
+                                RelativePanel.Below="revisionsTextBlock"
+                                RelativePanel.RightOf="backupButton"
+                                Click="restoreButton_Click">
+                            <Button.Content>
+                                <TextBlock>Restore Backup</TextBlock>
+                            </Button.Content>
+                        </Button>
+                        <TextBlock x:Name="backupStatus"
+                                   RelativePanel.Below="backupButton"
+                                   Margin="0,5"
+                                   FontSize="10">
+                            Backup successful.
+                        </TextBlock>
                     </RelativePanel>
 
                 </ScrollViewer>

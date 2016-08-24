@@ -142,14 +142,19 @@ namespace DuDuChinese.Models
             // Write the data
             using (Stream s = await file.OpenStreamForWriteAsync())
             {
-                // Write an object to the Stream and leave it opened
-                using (var writer = XmlDictionaryWriter.CreateTextWriter(s, Encoding.UTF8, ownsStream: false))
-                {
-                    var ser = new DataContractSerializer(typeof(List<LearningItem>));
-                    ser.WriteObject(writer, revisionList);
-                }
+                Serialize(s);
             }
             await Task.CompletedTask;
+        }
+
+        public static void Serialize(Stream stream)
+        {
+            // Write an object to the Stream and leave it opened
+            using (var writer = XmlDictionaryWriter.CreateTextWriter(stream, Encoding.UTF8, ownsStream: false))
+            {
+                var ser = new DataContractSerializer(typeof(List<LearningItem>));
+                ser.WriteObject(writer, revisionList);
+            }
         }
 
         public static async Task Deserialize()
@@ -171,12 +176,7 @@ namespace DuDuChinese.Models
                 // Write the data
                 using (Stream s = await file.OpenStreamForReadAsync())
                 {
-                    // Read Stream to the Serializer and Deserialize and close it
-                    using (var reader = XmlDictionaryReader.CreateTextReader(s, Encoding.UTF8, new XmlDictionaryReaderQuotas(), null))
-                    {
-                        var serializer = new DataContractSerializer(typeof(List<LearningItem>));
-                        revisionList = (List<LearningItem>)serializer.ReadObject(reader);
-                    }
+                    Deserialize(s);
                 }
 
                 if (revisionList == null)
@@ -197,6 +197,16 @@ namespace DuDuChinese.Models
             }
 
             await Task.CompletedTask;
+        }
+
+        public static void Deserialize(Stream stream)
+        {
+            // Read Stream to the Serializer and Deserialize and close it
+            using (var reader = XmlDictionaryReader.CreateTextReader(stream, Encoding.UTF8, new XmlDictionaryReaderQuotas(), null))
+            {
+                var serializer = new DataContractSerializer(typeof(List<LearningItem>));
+                revisionList = (List<LearningItem>)serializer.ReadObject(reader);
+            }
         }
     }
 }
