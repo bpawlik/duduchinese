@@ -75,7 +75,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="55" />
                     <RowDefinition MinHeight="350"/>
-                    <RowDefinition Height="80"/>
+                    <RowDefinition Height="90"/>
                     <RowDefinition Height="50"/>
                     <RowDefinition />
                     <RowDefinition />
@@ -117,22 +117,30 @@
                         </ListBox>
                     </ScrollViewer>
                 </StackPanel>
-                <TextBox x:Name="inputTextBox" Grid.Row="2" Margin="17" Width="200"
-                         HorizontalAlignment="Left"
-                         FontSize="24"
-                         KeyUp="{x:Bind TextBox_KeyDown}"
-                         Background="{x:Bind ViewModel.BgColour, Mode=TwoWay}"
-                         Text="{x:Bind ViewModel.InputText, Mode=TwoWay}"
-                         IsReadOnly="{x:Bind ViewModel.InputTextDisabled, Mode=TwoWay}"
-                         AcceptsReturn="False"
-                         IsSpellCheckEnabled="False">
-                    <Interactivity:Interaction.Behaviors>
-                        <!--  focus on textbox when page loads  -->
-                        <Core:EventTriggerBehavior>
-                            <Behaviors:FocusAction />
-                        </Core:EventTriggerBehavior>
-                    </Interactivity:Interaction.Behaviors>
-                </TextBox>
+                <RelativePanel HorizontalAlignment="Left" Grid.Row="2">
+                    <TextBlock x:Name="inputWarning"
+                               Foreground="DarkOrange"
+                               FontSize="10" Margin="17,0"
+                               Text="{x:Bind ViewModel.InputWarning, Mode=OneWay}" />
+                    <TextBox x:Name="inputTextBox"  Margin="17,5,17,17" Width="200"
+                             HorizontalAlignment="Left"
+                             RelativePanel.Below="inputWarning"
+                             FontSize="24"
+                             KeyUp="{x:Bind TextBox_KeyDown}"
+                             TextChanged="{x:Bind TextBox_TextChanged}"
+                             Background="{x:Bind ViewModel.BgColour, Mode=TwoWay}"
+                             Text="{x:Bind ViewModel.InputText, Mode=TwoWay}"
+                             IsReadOnly="{x:Bind ViewModel.InputTextDisabled, Mode=TwoWay}"
+                             AcceptsReturn="False"
+                             IsSpellCheckEnabled="False">
+                        <Interactivity:Interaction.Behaviors>
+                            <!--  focus on textbox when page loads  -->
+                            <Core:EventTriggerBehavior>
+                                <Behaviors:FocusAction />
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
+                    </TextBox>
+                </RelativePanel>
                 <StackPanel x:Name="ActionPanel" Grid.Row="3" Margin="10,0,0,0" Orientation="Horizontal">
                     <Button x:Name="PlayButton" Margin="0,0,0,0" Click="PlayButton_Click" Background="Transparent">
                         <Button.Content>

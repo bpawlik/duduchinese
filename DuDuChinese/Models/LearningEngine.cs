@@ -577,5 +577,27 @@ namespace DuDuChinese.Models
 
             return code.ToString();
         }
+
+        public static string CheckInputLanguage(string text)
+        {
+            // Give hint only when string has some characters
+            if (String.IsNullOrWhiteSpace(text))
+                return "";
+
+            bool isLatin = System.Text.RegularExpressions.Regex.Match(
+                text.Trim().Replace(" ", "").Replace("-", "").Replace("'","").Replace(".","").Replace(",",""),
+                @"^[A-Za-z0-9]+$").Success;
+            switch (CurrentExerciseList[CurrentExerciseIndex])
+            {
+                case LearningExercise.English2Hanzi:
+                case LearningExercise.Pinyin2Hanzi:
+                case LearningExercise.FillGapsChinese:
+                    if (Windows.Globalization.Language.CurrentInputMethodLanguageTag.Contains("zh-") || !isLatin)
+                        return "";
+                    return "Change input method to Chinese";
+                default:
+                    return !isLatin ? "Change input method to English" : "";
+            }
+        }
     }
 }

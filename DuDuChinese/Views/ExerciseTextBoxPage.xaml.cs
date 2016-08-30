@@ -24,6 +24,11 @@ namespace DuDuChinese.Views
             }
         }
 
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ViewModel.TextBox_TextChanged((sender as Windows.UI.Xaml.Controls.TextBox).Text);
+        }
+
         private void Continue_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             ViewModel.Continue_Click(sender, e);

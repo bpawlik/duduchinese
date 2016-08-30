@@ -125,6 +125,13 @@ namespace DuDuChinese.ViewModels
             }
         }
 
+        private string inputWarning = "";
+        public string InputWarning
+        {
+            get { return this.inputWarning; }
+            set { this.Set(ref this.inputWarning, value); }
+        }
+
         private string status = "Enter translation:";
         public string Status
         {
@@ -309,13 +316,10 @@ namespace DuDuChinese.ViewModels
             Continue_Click(sender, e);
         }
 
-        // TextBox key down
-        public void TextBox_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        public void TextBox_TextChanged(string text)
         {
-            if (e.Key == Windows.System.VirtualKey.Enter)
-            {
-                Validate((sender as Windows.UI.Xaml.Controls.TextBox).Text);
-            }
+            // Check if the input text matches input method
+            this.InputWarning = LearningEngine.CheckInputLanguage(text);
         }
 
         private void Validate(string input = null)
