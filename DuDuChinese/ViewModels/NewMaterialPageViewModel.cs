@@ -35,11 +35,13 @@ namespace DuDuChinese.ViewModels
             this.SelectedItemsCount.Clear();
 
             // Load revisions
-            RevisionEngine.Deserialize();
+            await RevisionEngine.Deserialize();
 
             // Reset learning engine
             LearningEngine.Reset();
+            LearningEngine.Mode = LearningMode.Words;
 
+            // Update dropdown menus
             App app = (App)Application.Current;
             List<string> items = new List<string>();
             foreach (string key in app.ListManager.Keys)

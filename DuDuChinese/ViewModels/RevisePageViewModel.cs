@@ -61,6 +61,7 @@ namespace DuDuChinese.ViewModels
 
             // Reset learning engine
             LearningEngine.Reset();
+            LearningEngine.Mode = LearningMode.Revision;
 
             // Update lists
             App app = (App)Application.Current;
