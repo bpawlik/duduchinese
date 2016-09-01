@@ -122,7 +122,7 @@
                                Foreground="DarkOrange"
                                FontSize="10" Margin="17,0"
                                Text="{x:Bind ViewModel.InputWarning, Mode=OneWay}" />
-                    <TextBox x:Name="inputTextBox"  Margin="17,5,17,17" Width="200"
+                    <TextBox x:Name="inputTextBox"  Margin="17,5,17,17" Width="300"
                              HorizontalAlignment="Left"
                              RelativePanel.Below="inputWarning"
                              FontSize="24"
