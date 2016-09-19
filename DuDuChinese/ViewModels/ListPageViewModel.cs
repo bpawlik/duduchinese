@@ -290,12 +290,12 @@ namespace DuDuChinese.ViewModels
             if (Encoding.UTF8.GetBytes(sb.ToString()).Length < 16384)
                 sb.AppendLine(s2.ToString());
 
-            sb.AppendLine("Redistributed under license. " + app.Dictionary.Header["license"]);
+            sb.AppendLine("Redistributed under license. " + app.Dictionary.Header["license"] + Environment.NewLine);
 
             try
             {
                 EmailMessage email = new EmailMessage();
-                email.Subject = String.Format("[Kuaishuo] {0}", list.Name);
+                email.Subject = String.Format("[DuDuChinese] {0}", list.Name);
                 email.Body = sb.ToString();
                 await EmailManager.ShowComposeNewEmailAsync(email);
             }

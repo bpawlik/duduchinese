@@ -440,7 +440,7 @@ namespace DuDuChinese.Views
                             StreamWriter writer = new StreamWriter(memStream);
 
                             // Write header
-                            name = message.Subject.Replace("[Kuaishuo] ", "");
+                            name = message.Subject.Replace("[Kuaishuo] ", "").Replace("[DuDuChinese] ", "");
                             writer.Write("#! name=" + name + "\n#! readonly=False\n#! sortorder=0\n");
 
                             // Parse lines and add to the memory stream
