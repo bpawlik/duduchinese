@@ -159,6 +159,7 @@ namespace DuDuChinese.Views
             int i;
             int.TryParse(button.Tag.ToString(), out i);
             ViewModel.Search(i);
+            Bindings.Update();
         }
 
         #endregion
