@@ -146,6 +146,11 @@ namespace DuDuChinese.Views
 
             int minRelevance = ViewModel.QueryText.Equals(ViewModel.LastQuery) ? 30 : 75;
             ViewModel.TriggerSearch(Query.Text, minRelevance);
+
+            // If the input keyboard is visible then focus on the results to hide it
+            Windows.UI.ViewManagement.InputPane inputPane = Windows.UI.ViewManagement.InputPane.GetForCurrentView();
+            if (inputPane.OccludedRect.Width > 0)
+                Results.Focus(FocusState.Programmatic);
         }
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)

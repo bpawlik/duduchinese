@@ -246,9 +246,6 @@ namespace DuDuChinese.ViewModels
             }
 
             this.LastQuery = query;
-
-            // This would be good for mobile up to hide keyboard. On PC however is annoying.
-            //Results.Focus(FocusState.Programmatic);
         }
 
         public void Decompose(DictionaryRecord record)
