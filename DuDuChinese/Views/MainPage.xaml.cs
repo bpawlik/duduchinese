@@ -168,6 +168,7 @@ namespace DuDuChinese.Views
 
         private void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            ViewModel.SelectedPivotIndex = ((Pivot)sender).SelectedIndex;
             switch (((Pivot)sender).SelectedIndex)
             {
                 case 0: // Search page
@@ -176,7 +177,7 @@ namespace DuDuChinese.Views
                     Query.Focus(FocusState.Programmatic);
                     ViewModel.IsActive = false;
                     break;
-                case 1:
+                case 1: // Learn page
                     ViewModel.IsActive = false;
                     break;
                 case 2: // List page
