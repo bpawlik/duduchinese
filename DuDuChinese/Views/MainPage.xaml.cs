@@ -518,8 +518,14 @@ namespace DuDuChinese.Views
             {
                 ListViewModel lvm = (ListViewModel)ListsPane.DataContext;
                 lvm.EditInProgress = true;
-                ListItemViewModel item = new ListItemViewModel { Name = "", LineTwo = "", IsEditable = true };
+                ListItemViewModel item = new ListItemViewModel { Name = "", LineTwo = "", IsEditable = false };
                 lvm.Items.Insert(0, item);
+                Bindings.Update();
+
+                // Update binding and change editable mode in order to force focus on the control
+                lvm.Items[0].IsEditable = true;
+                Bindings.Update();
+
                 ListListBox.ScrollIntoView(ListListBox.Items[0]);
             }
         }
@@ -629,7 +635,7 @@ namespace DuDuChinese.Views
             Bindings.Update();
         }
 
-        void ListEdit_Loaded(object sender, RoutedEventArgs e)
+        void ListEdit_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             ListEdit_VisibilityChanged(sender, null);
         }

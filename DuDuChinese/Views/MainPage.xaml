@@ -241,11 +241,12 @@
                                             Text="{Binding Name}"
                                             Visibility="{Binding IsEditable, Converter={StaticResource VisibilityConverter}}"
                                             Margin="8,5,0,0"
+                                            IsEnabled="{Binding IsEditable}"
+                                            IsEnabledChanged="ListEdit_IsEnabledChanged"
                                             MinWidth="200"
-                                            InputScope="Search"
-                                            Loaded="ListEdit_Loaded"
+                                            InputScope="Default"
                                             LostFocus="ListEdit_LostFocus"
-                                            KeyDown="ListEdit_KeyDown"/>
+                                            KeyDown="ListEdit_KeyDown" />
                                     </StackPanel>
                                 </StackPanel>
                             </DataTemplate>
