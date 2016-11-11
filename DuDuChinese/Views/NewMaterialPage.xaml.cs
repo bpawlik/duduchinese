@@ -26,5 +26,12 @@ namespace DuDuChinese.Views
             ViewModel.NumberOfItems_SelectionChanged(sender);
             Bindings.Update();
         }
+
+        private void NumberOfItems_DropDownOpened(object sender, object e)
+        {
+            // Select 10 by default
+            if (itemsCountComboBox.Items.Count > 0)
+                itemsCountComboBox.SelectedIndex = 0;
+        }
     }
 }

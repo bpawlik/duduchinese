@@ -92,6 +92,7 @@
             <ComboBox x:Name="itemsCountComboBox" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Height="32" MinWidth="180" Margin="20,0"
                   VerticalAlignment="Center"
                   ItemsSource="{Binding SelectedItemsCount}"
+                  DropDownOpened="NumberOfItems_DropDownOpened"
                   DropDownClosed="NumberOfItems_SelectionChanged" >
             </ComboBox>
             <Button x:Name="button" Content="Start" HorizontalAlignment="Left" Height="35" IsEnabled="{x:Bind ViewModel.IsStartEnabled}"
