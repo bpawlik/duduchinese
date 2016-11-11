@@ -39,7 +39,7 @@ namespace DuDuChinese.Models
             }
         }
 
-        public static List<LearningItem> GetRevisionList(int numberOfItems = -1, string name = null)
+        public static List<LearningItem> GetRevisionList(int numberOfItems = -1, string name = null, bool fullList = false)
         {
             if (numberOfItems == 0 || revisionList == null)
                 return new List<LearningItem>();
@@ -61,15 +61,16 @@ namespace DuDuChinese.Models
             if (removedCount > 0)
                 Serialize();
 
-            // Fill list with the worst items
+            // Fill list with the worst items (but not already learnt today)
             List<LearningItem> revList = new List<LearningItem>();
+            DateTime today = DateTime.Today;
             for (int i = 0; i < numberOfItems && i < revisionList.Count; ++i)
             {
                 if (name != null && revisionList[i].ListName != name)
                     continue;
 
-                // Skip items having satisfying score (0)
-                if (revisionList[i].Score == 0)
+                // Skip items having satisfying score (0) and those that are not scheduled for today
+                if (!fullList && (revisionList[i].Score == 0 || revisionList[i].Timestamp.Date > today))
                 {
                     numberOfItems++;
                     continue;
@@ -87,6 +88,7 @@ namespace DuDuChinese.Models
             var find = RevisionList.FirstOrDefault(x => (revItem == x));
             if (find != null)
             {
+                // Increase or decrease score based on result
                 find.Score += (correct ? -1 : 1);
             }
             else

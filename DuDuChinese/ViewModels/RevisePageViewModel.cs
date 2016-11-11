@@ -121,7 +121,7 @@ namespace DuDuChinese.ViewModels
 
                 // Update items count combobox
                 UpdateItemsCount();
-                UpdateDetails(toggle: false);
+                UpdateDetails(toggle: false, fullList: true);
             }
         }
 
@@ -144,7 +144,7 @@ namespace DuDuChinese.ViewModels
                     
             }
 
-            UpdateDetails(toggle: false);
+            UpdateDetails(toggle: false, fullList: false);
             LearningEngine.ItemsCount = this.NumberOfItems;
         }
 
@@ -168,10 +168,13 @@ namespace DuDuChinese.ViewModels
             }
         }
 
-        public void UpdateDetails(bool toggle = true)
+        public void UpdateDetails(bool toggle = true, bool fullList = false)
         {
             if (this.revisionList == null)
                 return;
+
+            // Get full revision list for the current list
+            List<LearningItem> detailRevisionList = RevisionEngine.GetRevisionList(-1, this.SelectedListName, fullList);
 
             if (toggle)
                 this.IsDetailExpanded = !this.IsDetailExpanded;
@@ -180,7 +183,7 @@ namespace DuDuChinese.ViewModels
             if (!this.IsDetailExpanded)
                 return;
 
-            foreach (var item in this.revisionList)
+            foreach (var item in detailRevisionList)
                 this.RevisionItems.Add(item);
         }
 

@@ -29,7 +29,7 @@ namespace DuDuChinese.Views
 
         private void Details_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModel.UpdateDetails();
+            ViewModel.UpdateDetails(toggle: true, fullList: true);
             Bindings.Update();
         }
 

@@ -37,7 +37,24 @@ namespace DuDuChinese.Models
         public LearningExercise Exercise { get; set; }
 
         [DataMember]
-        public int Score { get; set; } = 10;
+        private int score = 10;
+        public int Score {
+            get { return this.score; }
+            set {
+                // Update the score. Limit value to [0-10] ramge
+                this.score = Math.Max(Math.Min(value, 10), 0);
+
+                // Update the date
+                int nextReviewInDays = this.score == 0 ? -1 : (11 - this.score);
+                this.Timestamp = DateTime.Today.AddDays(nextReviewInDays);
+            }
+        }
+
+        /// <summary>
+        /// Next review timestamp.
+        /// </summary>
+        [DataMember]
+        public DateTime Timestamp { get; set; }
 
         public LearningItem(DictionaryRecord record)
         {

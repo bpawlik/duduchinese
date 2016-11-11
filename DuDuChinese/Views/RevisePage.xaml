@@ -20,6 +20,7 @@
     <Page.Resources>
         <c:LearningExerciseToStringConverter x:Key="LearningExerciseToStringConverter" />
         <c:DictionaryRecordToStringConverter x:Key="DictionaryRecordToStringConverter" />
+        <c:TimestampToStringConverter x:Key="TimestampToStringConverter" />
         <c:VisibilityConverter x:Key="VisibilityConverter" True="Visible" False="Collapsed"/>
     </Page.Resources>
 
@@ -102,6 +103,7 @@
                     <mycontrols:DataGridTextColumn FontSize="15" Width="100" Header="汉字" Binding="{Binding Record, Converter={StaticResource DictionaryRecordToStringConverter}}" />
                     <mycontrols:DataGridTextColumn FontSize="15" Width="100" Header="List Name" Binding="{Binding ListName}"  />
                     <mycontrols:DataGridTextColumn FontSize="15" Width="200" Header="Exercise" Binding="{Binding Exercise}" />
+                    <mycontrols:DataGridTextColumn FontSize="15" Width="200" Header="Date" Binding="{Binding Timestamp, Converter={StaticResource TimestampToStringConverter}}" />
                     <mycontrols:DataGridTextColumn FontSize="15" Width="50"  Binding="{Binding Score}" IsAscendingDefault="False" >
                         <mycontrols:DataGridTextColumn.Header>
                             <TextBlock Text="#" Foreground="DarkOrange" />
@@ -120,6 +122,7 @@
                                 <RowDefinition />
                                 <RowDefinition />
                                 <RowDefinition />
+                                <RowDefinition />
                             </Grid.RowDefinitions>
                             <Button x:Name="removeButton" Click="Remove_Click" Grid.Row="0" Grid.Column="0" Grid.RowSpan="4" VerticalAlignment="Center">
                                 <Button.Content>
@@ -132,6 +135,10 @@
                             <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
                                 <TextBlock Text="Number of reviews left: " FontSize="15" />
                                 <TextBlock Text="{Binding Score}" FontSize="15" Margin="10,0,0,0" />
+                            </StackPanel>
+                            <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
+                                <TextBlock Text="Next review scheduled for: " FontSize="15" />
+                                <TextBlock Text="{Binding Timestamp, Converter={StaticResource TimestampToStringConverter}}" FontSize="15" Margin="10,0,0,0" />
                             </StackPanel>
                         </Grid>
                     </DataTemplate>
