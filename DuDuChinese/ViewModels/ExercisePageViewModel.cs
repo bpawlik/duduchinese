@@ -366,7 +366,7 @@ namespace DuDuChinese.ViewModels
             Brush defaultTextColor = (Services.SettingsServices.SettingsService.Instance.AppTheme == ApplicationTheme.Dark) ?
                 whiteBrush : blackBrush;
 
-            this.Status = LearningEngine.GetDescription(LearningEngine.CurrentExercise) + ":";
+            this.Status = LearningEngine.GetDescription<Command>(LearningEngine.CurrentExercise) + ":";
             this.BgColour = transparentBrush;
             this.FgColour = defaultTextColor;
             this.InputTextDisabled = (LearningEngine.CurrentExercise == LearningExercise.Display);

@@ -10,7 +10,7 @@ namespace DuDuChinese.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
-            return Models.LearningEngine.GetDescription((Models.LearningExercise)value);
+            return Models.LearningEngine.GetDescription<Models.Description>((Models.LearningExercise)value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string culture)

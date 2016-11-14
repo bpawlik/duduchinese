@@ -51,11 +51,11 @@
                              RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
                              RelativePanel.AlignTopWithPanel="True"
-                             Text="{x:Bind ViewModel.PageTitle}"
+                             Text="" Height="0"
                              Background="{ThemeResource CustomHeaderBackground}"/>
 
         <!--  content  -->
-        <StackPanel Margin="25, 50" d:DataContext="{d:DesignData SampleData/ProgressViewModelSampleData.xaml}">
+        <StackPanel Margin="25, 10" d:DataContext="{d:DesignData SampleData/ProgressViewModelSampleData.xaml}">
             <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="List of exercises:" />
             <ScrollViewer Margin="25" RelativePanel.AlignBottomWithPanel="True"
                         RelativePanel.AlignLeftWithPanel="True"

@@ -55,7 +55,8 @@
         <controls:PageHeader x:Name="pageHeader" Frame="{x:Bind Frame}"
                              RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignTopWithPanel="True" Text="Learning Exercise"
+                             RelativePanel.AlignTopWithPanel="True"
+                             Text="" Height="0"
                              Background="{ThemeResource CustomHeaderBackground}" />
 
         <!--  content  -->
@@ -65,9 +66,9 @@
                       RelativePanel.Below="pageHeader"
                       Background="Transparent"
                       VerticalScrollBarVisibility="Auto">
-            <Grid HorizontalAlignment="Left" Margin="10, 50">
+            <Grid HorizontalAlignment="Left" Margin="10, 0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="400" />
+                    <RowDefinition Height="370" />
                     <RowDefinition Height="50"/>
                     <RowDefinition />
                     <RowDefinition />
@@ -75,11 +76,12 @@
                 <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10">
                     <MediaElement x:Name="media" AutoPlay="True" />
                     <ScrollViewer Background="Transparent" MinWidth="300"
-                                  VerticalScrollBarVisibility="Auto">
+                                  VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Auto">
                         <ListBox x:Name="Results" ItemsSource="{Binding Items}"
                                  d:DataContext="{d:DesignData SampleData/MainViewModelSampleData.xaml}"
                                  Background="Transparent"
-                                 Grid.Row="1" VirtualizingStackPanel.VirtualizationMode="Standard">
+                                 VirtualizingStackPanel.VirtualizationMode="Standard">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel>

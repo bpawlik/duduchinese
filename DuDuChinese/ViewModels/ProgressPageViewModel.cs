@@ -85,7 +85,7 @@ namespace DuDuChinese.ViewModels
                 this.ProgressItems.Add(new ProgressItem()
                 {
                     Exercise = exerc,
-                    Text = LearningEngine.GetDescription(exerc),
+                    Text = LearningEngine.GetDescription<Description>(exerc),
                     ItemCount = LearningEngine.GetItemCountForExercise(exerc),
                     IsEnabled = (LearningEngine.Mode != LearningMode.Revision)
                 });

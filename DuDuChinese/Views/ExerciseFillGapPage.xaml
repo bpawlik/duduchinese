@@ -62,7 +62,8 @@
         <controls:PageHeader x:Name="pageHeader" Frame="{x:Bind Frame}"
                              RelativePanel.AlignLeftWithPanel="True"
                              RelativePanel.AlignRightWithPanel="True"
-                             RelativePanel.AlignTopWithPanel="True" Text="Learning Exercise"
+                             RelativePanel.AlignTopWithPanel="True"
+                             Text="" Height="0"
                              Background="{ThemeResource CustomHeaderBackground}" />
 
         <!--  content  -->

@@ -40,24 +40,31 @@ namespace DuDuChinese.Models
         // Yes / No
 
         [Description("Translate from Chinese to English")]
+        [Command("Input English")]
         HanziPinyin2English,
 
         [Description("Translate from Pinyin to English")]
+        [Command("Input English")]
         Pinyin2English,
 
         [Description("Translate from 汉字 to English")]
+        [Command("Input English")]
         Hanzi2English,
 
         [Description("Translate from English to Pinyin")]
+        [Command("Input Pin1 yin1")]
         English2Pinyin,
 
         [Description("Translate from English to 汉字")]
+        [Command("Input 汉字")]
         English2Hanzi,
 
         [Description("Translate from Pinyin to 汉字")]
+        [Command("Input 汉字")]
         Pinyin2Hanzi,
 
         [Description("Translate from 汉字 to Pinyin")]
+        [Command("Input Pin1 yin1")]
         Hanzi2Pinyin,
 
         #endregion
@@ -88,13 +95,38 @@ namespace DuDuChinese.Models
         #endregion
     }
 
-    public class Description : Attribute
+    public interface IText
     {
-        public string Text { set; get; }
+        string GetText();
+    }
+
+    public class Description : Attribute, IText
+    {
+        private string text;
 
         public Description(string text)
         {
-            this.Text = text;
+            this.text = text;
+        }
+
+        public string GetText()
+        {
+            return this.text;
+        }
+    }
+
+    public class Command : Attribute, IText
+    {
+        private string text;
+
+        public Command(string text)
+        {
+            this.text = text;
+        }
+
+        public string GetText()
+        {
+            return this.text;
         }
     }
 
@@ -561,7 +593,7 @@ namespace DuDuChinese.Models
         }
 
         // Helper function to display enums description
-        public static string GetDescription(LearningExercise code)
+        public static string GetDescription<T>(LearningExercise code) where T: IText
         {
             Type type = code.GetType();
 
@@ -569,10 +601,10 @@ namespace DuDuChinese.Models
 
             if (memInfo != null && memInfo.Length > 0)
             {
-                object[] attrs = (object[])memInfo[0].GetCustomAttributes(typeof(Description), false);
+                object[] attrs = (object[])memInfo[0].GetCustomAttributes(typeof(T), false);
 
                 if (attrs != null && attrs.Length > 0)
-                    return ((Description)attrs[0]).Text;
+                    return ((T)attrs[0]).GetText();
             }
 
             return code.ToString();
