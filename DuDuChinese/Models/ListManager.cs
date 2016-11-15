@@ -47,16 +47,16 @@ namespace DuDuChinese
                 }
             }
 
-            public async void Save()
+            public async void Save(StorageFolder destinationFolder = null)
             {
                 try
                 {
-                    if (IsDeleted || !IsModified) // save not required
+                    if (IsDeleted || (destinationFolder == null && !IsModified)) // save not required
                         return;
 
                     Debug.WriteLine(String.Format("ManagedList.Save(): {0} ({1} entries)", SaveFilename, this.Count));
                     StorageFolder dataFolder = ApplicationData.Current.LocalFolder;
-                    StorageFolder listsFolder = await dataFolder.GetFolderAsync(_ListsDirectory);
+                    StorageFolder listsFolder = destinationFolder ?? await dataFolder.GetFolderAsync(_ListsDirectory);
                     StorageFile file = await listsFolder.CreateFileAsync(SaveFilename, CreationCollisionOption.ReplaceExisting);
                     using (Stream stream = await file.OpenStreamForWriteAsync())
                     {
@@ -65,7 +65,6 @@ namespace DuDuChinese
                     }
 
                     IsModified = false;
-
                 }
                 catch (Exception ex)
                 {
@@ -117,14 +116,7 @@ namespace DuDuChinese
                     foreach (string file in store.GetFileNames(String.Format("{0}/*.list", ListsDirectory)))
                     {
                         string path = String.Format("{0}/{1}", ListsDirectory, file);
-                        Debug.WriteLine(String.Format("Loading list: {0}", path));
-                        Dictionary dictionary = new Dictionary(path);
-                        ManagedList list = new ManagedList(dictionary);
-                        list.SavePath = path;
-                        list.SaveFilename = file;
-                        base.Add(list.Name, list);
-                        if (list.Identifier > MaxListIdentifier)
-                            MaxListIdentifier = list.Identifier;
+                        LoadListFromFile(file, path);
                     }
                 }
             }
@@ -139,6 +131,21 @@ namespace DuDuChinese
                 foreach (ManagedList list in this.Values)
                     list.Save();
             }, null, 5000, 5000);
+        }
+
+        public void LoadListFromFile(string filename, string path)
+        {
+            Debug.WriteLine(String.Format("Loading list: {0}", path));
+            Dictionary dictionary = new Dictionary(path);
+            ManagedList list = new ManagedList(dictionary);
+            list.SavePath = path;
+            list.SaveFilename = filename;
+            if (base.ContainsKey(list.Name))
+                base[list.Name] = list;
+            else
+                base.Add(list.Name, list);
+            if (list.Identifier > MaxListIdentifier)
+                MaxListIdentifier = list.Identifier;
         }
 
         /// <summary>
@@ -188,6 +195,15 @@ namespace DuDuChinese
             {
                 ManagedList list = (ManagedList)this[name];
                 list.Save(stream);
+            }
+        }
+
+        public void SaveAll(StorageFolder folder)
+        {
+            foreach (var name in this.Keys)
+            {
+                ManagedList list = (ManagedList)this[name];
+                list.Save(folder);
             }
         }
 

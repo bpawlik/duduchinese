@@ -74,7 +74,7 @@
                         <TextBlock x:Name="revisionsTextBlock"
                             Margin="0,20,0,10"
                                    RelativePanel.Below="UseLightThemeToggleSwitch">
-                            Revisions
+                            Backup revision and word lists:
                         </TextBlock>
                         <Button x:Name="backupButton"
                                 RelativePanel.AlignLeftWithPanel="True"
