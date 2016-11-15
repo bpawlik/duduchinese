@@ -409,6 +409,9 @@ namespace DuDuChinese.ViewModels
                     return;
             }
 
+            if (this.currentItem == null)
+                return;
+
             string text = (sentence && this.currentItem.Sentence.Count > 0) ? this.currentItem.Sentence[0] : this.currentItem.Chinese.Simplified;
 
             if (!String.IsNullOrEmpty(text))
