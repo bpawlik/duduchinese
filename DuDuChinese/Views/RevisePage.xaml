@@ -67,7 +67,7 @@
             <Button x:Name="button" Content="Start" HorizontalAlignment="Left" Height="35" IsEnabled="{x:Bind ViewModel.IsStartEnabled}"
                 VerticalAlignment="Top" Width="330" Click="{x:Bind ViewModel.Start_Click}" Grid.Column="1" Grid.Row="2" Margin="-130,0">
                 <Interactivity:Interaction.Behaviors>
-                    <!--  focus on textbox when page loads  -->
+                    <!--  focus on the next button when page loads  -->
                     <Core:EventTriggerBehavior>
                         <Behaviors:FocusAction />
                     </Core:EventTriggerBehavior>
@@ -84,6 +84,7 @@
                 x:Name="dataGrid" Grid.Row="4" Grid.Column="1"  Margin="-130,0,0,0"
                 VerticalAlignment="Top"
                 HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
                 SelectionMode="Multiple"
                 FontSize="10"
                 FontWeight="Light"
@@ -103,7 +104,7 @@
                     <mycontrols:DataGridTextColumn FontSize="15" Width="100" Header="汉字" Binding="{Binding Record, Converter={StaticResource DictionaryRecordToStringConverter}}" />
                     <mycontrols:DataGridTextColumn FontSize="15" Width="100" Header="List Name" Binding="{Binding ListName}"  />
                     <mycontrols:DataGridTextColumn FontSize="15" Width="200" Header="Exercise" Binding="{Binding Exercise}" />
-                    <mycontrols:DataGridTextColumn FontSize="15" Width="200" Header="Date" Binding="{Binding Timestamp, Converter={StaticResource TimestampToStringConverter}}" />
+                    <mycontrols:DataGridTextColumn FontSize="15" Width="100" Header="Date" Binding="{Binding Timestamp, Converter={StaticResource TimestampToStringConverter}}" />
                     <mycontrols:DataGridTextColumn FontSize="15" Width="50"  Binding="{Binding Score}" IsAscendingDefault="False" >
                         <mycontrols:DataGridTextColumn.Header>
                             <TextBlock Text="#" Foreground="DarkOrange" />

@@ -55,69 +55,79 @@
                              Background="{ThemeResource CustomHeaderBackground}"/>
 
         <!--  content  -->
-        <StackPanel Margin="25, 10" d:DataContext="{d:DesignData SampleData/ProgressViewModelSampleData.xaml}">
-            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="List of exercises:" />
-            <ScrollViewer Margin="25" RelativePanel.AlignBottomWithPanel="True"
-                        RelativePanel.AlignLeftWithPanel="True"
-                        RelativePanel.AlignRightWithPanel="True"
-                        RelativePanel.Below="pageHeader"
-                        VerticalScrollBarVisibility="Auto">
-                <ListView x:Name="listView" ItemsSource="{x:Bind ViewModel.ProgressItems}"
-                          HorizontalContentAlignment="Stretch"
-                          SelectionChanged="{x:Bind ViewModel.listView_SelectionChanged}"
-                          SelectedIndex="{x:Bind ViewModel.SelectedItemIndex}"
-                          Background="{ThemeResource ButtonDisabledBackgroundThemeBrush}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="vm:ProgressItem">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="30" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock 
-                                    Text="{Binding ItemCount}" 
-                                    Margin="10,0,0,0"
-                                    Grid.Column="0"
-                                    VerticalAlignment="Center"
-                                    HorizontalAlignment="Left" >
-                                    <TextBlock.Foreground>
-                                        <SolidColorBrush Color="{x:Bind ForegroundColor, Mode=TwoWay}"/>
-                                    </TextBlock.Foreground>
-                                </TextBlock>
-                                <CheckBox Content="{Binding Text, Mode=TwoWay}" Grid.Column="1"
-                                          VerticalAlignment="Center"
-                                          Margin="10,0,10,0"
-                                          IsChecked="{Binding IsChecked, Mode=TwoWay}"
-                                          IsEnabled="{Binding IsEnabled}" >
-                                    <CheckBox.Foreground>
-                                        <SolidColorBrush Color="{x:Bind ForegroundColor, Mode=TwoWay}"/>
-                                    </CheckBox.Foreground>
-                                </CheckBox>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </ScrollViewer>
-            <TextBlock Margin="20, 50" Text="{x:Bind ViewModel.Text, Mode=TwoWay}" />
-            <Grid Margin="0, 10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="150" />
-                    <ColumnDefinition Width="150" />
-                </Grid.ColumnDefinitions>
-                <Button x:Name="continueButton" Grid.Column="1" Content="Continue"
-                        HorizontalAlignment="Center" Click="{x:Bind ViewModel.Continue_Click}">
-                    <Interactivity:Interaction.Behaviors>
-                        <!--  focus on textbox when page loads  -->
-                        <Core:EventTriggerBehavior>
-                            <Behaviors:FocusAction />
-                        </Core:EventTriggerBehavior>
-                    </Interactivity:Interaction.Behaviors>
-                </Button>
-                <Button x:Name="cancelButton" Grid.Column="0" Content="Cancel" HorizontalAlignment="Center" Click="{x:Bind ViewModel.Cancel_Click}" IsEnabled="{x:Bind ViewModel.CancelEnabled, Mode=TwoWay}"/>
-            </Grid>
-                
-        </StackPanel>
-
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      HorizontalContentAlignment="Stretch"
+                      RelativePanel.AlignLeftWithPanel="True"
+                      RelativePanel.AlignRightWithPanel="True">
+            <StackPanel Margin="25, 10"
+                        d:DataContext="{d:DesignData SampleData/ProgressViewModelSampleData.xaml}">
+                <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="List of exercises:" />
+                <ScrollViewer Margin="25" RelativePanel.AlignBottomWithPanel="True"
+                            RelativePanel.AlignLeftWithPanel="True"
+                            RelativePanel.AlignRightWithPanel="True"
+                            RelativePanel.Below="pageHeader"
+                            VerticalScrollBarVisibility="Auto">
+                    <ListView x:Name="listView" ItemsSource="{x:Bind ViewModel.ProgressItems}"
+                              HorizontalContentAlignment="Stretch"
+                              SelectionChanged="{x:Bind ViewModel.listView_SelectionChanged}"
+                              SelectedIndex="{x:Bind ViewModel.SelectedItemIndex}"
+                              Background="{ThemeResource ButtonDisabledBackgroundThemeBrush}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ProgressItem">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock 
+                                        Text="{Binding ItemCount}" 
+                                        Margin="10,0,0,0"
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Left">
+                                        <TextBlock.Foreground>
+                                            <SolidColorBrush Color="{x:Bind ForegroundColor, Mode=TwoWay}"/>
+                                        </TextBlock.Foreground>
+                                    </TextBlock>
+                                    <CheckBox Content="{Binding Text, Mode=TwoWay}" Grid.Column="1"
+                                              VerticalAlignment="Center"
+                                              Margin="10,0,10,0"
+                                              IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                              IsEnabled="{Binding IsEnabled}" 
+                                              HorizontalContentAlignment="Stretch" >
+                                        <CheckBox.Foreground>
+                                            <SolidColorBrush Color="{x:Bind ForegroundColor, Mode=TwoWay}"/>
+                                        </CheckBox.Foreground>
+                                    </CheckBox>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                </ScrollViewer>
+                <TextBlock Margin="20, 50" Text="{x:Bind ViewModel.Text, Mode=TwoWay}" />
+                <Grid Margin="0, 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="continueButton" Grid.Column="1" Content="Continue"
+                            HorizontalAlignment="Center" Click="{x:Bind ViewModel.Continue_Click}">
+                        <Interactivity:Interaction.Behaviors>
+                            <!--focus on textbox when page loads-->
+                            <Core:EventTriggerBehavior>
+                                <Behaviors:FocusAction />
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
+                    </Button>
+                    <Button x:Name="cancelButton" Grid.Column="0" Content="Cancel" HorizontalAlignment="Center" Click="{x:Bind ViewModel.Cancel_Click}" IsEnabled="{x:Bind ViewModel.CancelEnabled, Mode=TwoWay}"/>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
     </RelativePanel>
 </Page>
 

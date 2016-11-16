@@ -40,7 +40,7 @@ namespace DuDuChinese.Views
             var picker = new Windows.Storage.Pickers.FileSavePicker();
             picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary;
             picker.FileTypeChoices.Add("Zip file", new List<string>() { ".zip" });
-            picker.SuggestedFileName = "DuDuChinese_" + System.DateTime.Now.ToString("yyyy-MM-dd");
+            picker.SuggestedFileName = "DuDuChinese_" + System.DateTime.Now.ToString("yyyy-MM-dd-hhmm");
 
             // Pick a file
             Windows.Storage.StorageFile zipFile = await picker.PickSaveFileAsync();
