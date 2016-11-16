@@ -115,8 +115,7 @@ namespace DuDuChinese
                 {
                     foreach (string file in store.GetFileNames(String.Format("{0}/*.list", ListsDirectory)))
                     {
-                        string path = String.Format("{0}/{1}", ListsDirectory, file);
-                        LoadListFromFile(file, path);
+                        LoadListFromFile(file);
                     }
                 }
             }
@@ -133,13 +132,30 @@ namespace DuDuChinese
             }, null, 5000, 5000);
         }
 
-        public void LoadListFromFile(string filename, string path)
+        public void LoadListFromFile(string filename)
         {
+            string path = String.Format("{0}/{1}", ListsDirectory, filename);
             Debug.WriteLine(String.Format("Loading list: {0}", path));
             Dictionary dictionary = new Dictionary(path);
             ManagedList list = new ManagedList(dictionary);
             list.SavePath = path;
             list.SaveFilename = filename;
+            list.IsModified = true;
+            if (base.ContainsKey(list.Name))
+                base[list.Name] = list;
+            else
+                base.Add(list.Name, list);
+            if (list.Identifier > MaxListIdentifier)
+                MaxListIdentifier = list.Identifier;
+        }
+
+        public void LoadListFromStream(string filename, Stream stream)
+        {
+            Dictionary dictionary = new Dictionary(stream);
+            ManagedList list = new ManagedList(dictionary);
+            list.SavePath = String.Format("{0}/{1}", ListsDirectory, filename);
+            list.SaveFilename = filename;
+            list.IsModified = true;
             if (base.ContainsKey(list.Name))
                 base[list.Name] = list;
             else
