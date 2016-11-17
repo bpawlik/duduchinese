@@ -56,6 +56,7 @@
             <ComboBox x:Name="comboBoxLists" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Margin="20,0" Height="32" VerticalAlignment="Top" MinWidth="180"
                   ItemsSource="{Binding Items}"
                   DropDownClosed="SelectedListChanged"
+                  DropDownOpened="SelectedList_DropDownOpened"
                   xmlns:m="using:DuDuChinese.Models">
             </ComboBox>
             <TextBlock x:Name="textBlock2" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" Text="Number of items:" />

@@ -44,5 +44,12 @@ namespace DuDuChinese.Views
             MyToolkit.Controls.DataGrid dg = (MyToolkit.Controls.DataGrid)sender;
             ViewModel.SelectedItem = (Models.LearningItem)dg.SelectedItem;
         }
+
+        private void SelectedList_DropDownOpened(object sender, object e)
+        {
+            // Select All by default
+            if (this.comboBoxLists.Items.Count > 0)
+                this.comboBoxLists.SelectedIndex = 0;
+        }
     }
 }
