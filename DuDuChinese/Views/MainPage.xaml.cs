@@ -39,7 +39,7 @@ namespace DuDuChinese.Views
         void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
             List<string> files = new List<string> {
-                "cedict_ts.u8", "english.index", "hanzi.index", "pinyin.index", "hsklevel1.list", "hsklevel2.list" };
+                "cedict_ts.u8", "english.index", "hanzi.index", "pinyin.index", "hsklevel1.list", "hsklevel2.list", "hsklevel3.list" };
             foreach (string file in files)
                 using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForApplication())
                     if (!store.FileExists(file))
@@ -76,10 +76,7 @@ namespace DuDuChinese.Views
             Stream resourceStream = assembly.GetManifestResourceStream(assemblyName.Name + ".Assets." + file + ".lzma");
 
             if (resourceStream == null)
-            {
-                var items = assembly.GetManifestResourceNames();
                 return;
-            }
 
             decoder.DecodeAsync(resourceStream, file);
         }
