@@ -617,7 +617,7 @@ namespace DuDuChinese.Models
                 return "";
 
             bool isLatin = System.Text.RegularExpressions.Regex.Match(
-                text.Trim().Replace(" ", "").Replace("-", "").Replace("'","").Replace(".","").Replace(",",""),
+                text.Trim().Replace(" ", "").Replace("-", "").Replace("'","").Replace(".","").Replace(",","").Replace("?","").Replace("!",""),
                 @"^[A-Za-z0-9]+$").Success;
             switch (CurrentExerciseList[CurrentExerciseIndex])
             {
