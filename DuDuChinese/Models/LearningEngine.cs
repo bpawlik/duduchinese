@@ -51,20 +51,20 @@ namespace DuDuChinese.Models
         [Command("Input English")]
         Hanzi2English,
 
-        [Description("Translate from English to Pinyin")]
-        [Command("Input Pin1 yin1")]
+        [Description("Translate from English to pin1yin1")]
+        [Command("Input pin1yin1")]
         English2Pinyin,
 
         [Description("Translate from English to 汉字")]
         [Command("Input 汉字")]
         English2Hanzi,
 
-        [Description("Translate from Pinyin to 汉字")]
+        [Description("Translate from pin1yin1 to 汉字")]
         [Command("Input 汉字")]
         Pinyin2Hanzi,
 
-        [Description("Translate from 汉字 to Pinyin")]
-        [Command("Input Pin1 yin1")]
+        [Description("Translate from 汉字 to pin1yin1")]
+        [Command("Input pin1yin1")]
         Hanzi2Pinyin,
 
         #endregion
@@ -548,7 +548,9 @@ namespace DuDuChinese.Models
                     break;
                 case LearningExercise.Hanzi2Pinyin:
                 case LearningExercise.English2Pinyin:
-                    string pinyin = CurrentItem.Chinese.PinyinNoMarkup.ToLower();
+                    // Convert to lower and remove spaces
+                    string pinyin = CurrentItem.Chinese.PinyinNoMarkup.ToLower().Replace(" ", "");
+                    inputText = inputText.Replace(" ", "");
                     result = pinyin == inputText;
                     // If failed then remove 5th tone notation and try again
                     if (!result)
