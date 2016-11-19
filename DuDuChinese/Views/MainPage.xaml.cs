@@ -34,6 +34,9 @@ namespace DuDuChinese.Views
             ViewModel.Media = media;
 
             this.Loaded += new RoutedEventHandler(MainPage_Loaded);
+
+            Windows.Storage.ApplicationData.Current.DataChanged +=
+                new Windows.Foundation.TypedEventHandler<Windows.Storage.ApplicationData, object>(DataChangeHandler);
         }
 
         void MainPage_Loaded(object sender, RoutedEventArgs e)
@@ -56,6 +59,22 @@ namespace DuDuChinese.Views
             }  
 
             Query.Focus(FocusState.Programmatic);
+        }
+
+        async void DataChangeHandler(Windows.Storage.ApplicationData appData, object o)
+        {
+            Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+            string lastBackupFile = (string)roamingSettings.Values["latestBackupFile"];
+
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            async () =>
+            {
+                // Roaming data has changed, notify user
+                var messageDialog = new Windows.UI.Popups.MessageDialog(
+                    String.Format("Detected newer version of your backup data: {0}.\n\nGo to Settings if you'd like to load it.", lastBackupFile));
+                messageDialog.Title = "Newer backup data detected";
+                await messageDialog.ShowAsync();
+            }); 
         }
 
         #region decompress LZMA resources (dictionary, indexes, preinstalled lists)

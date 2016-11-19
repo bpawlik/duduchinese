@@ -29,6 +29,20 @@ namespace DuDuChinese.Views
             var index = int.Parse(_SerializationService.Deserialize(e.Parameter?.ToString()).ToString());
             MyPivot.SelectedIndex = index;
             backupStatus.Text = "";
+
+            // Update latest backup filename
+
+            Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            string localFilename = "";
+            if (localSettings.Values.ContainsKey("latestBackupFile"))
+                localFilename = (string)localSettings.Values["latestBackupFile"];
+
+            Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+            string remoteFilename = "";
+            if (roamingSettings.Values.ContainsKey("latestBackupFile"))
+                remoteFilename = (string)roamingSettings.Values["latestBackupFile"];
+
+            UpdateBackupVersion(localFilename, remoteFilename);
         }
 
         private async void backupButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -40,7 +54,8 @@ namespace DuDuChinese.Views
             var picker = new Windows.Storage.Pickers.FileSavePicker();
             picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary;
             picker.FileTypeChoices.Add("Zip file", new List<string>() { ".zip" });
-            picker.SuggestedFileName = "DuDuChinese_" + System.DateTime.Now.ToString("yyyy-MM-dd-hhmm");
+            DateTime time = DateTime.Now;
+            picker.SuggestedFileName = "DuDuChinese_" + time.ToString("yyyy-MM-dd-HHmm");
 
             // Pick a file
             Windows.Storage.StorageFile zipFile = await picker.PickSaveFileAsync();
@@ -77,6 +92,7 @@ namespace DuDuChinese.Views
                 messageDialog.Title = "Save Revision List Error";
                 await messageDialog.ShowAsync();
                 BackupStatus("Failed to save revisions.", false);
+                return;
             }
 
             // Save lists
@@ -92,49 +108,60 @@ namespace DuDuChinese.Views
                     String.Format("Failed to save lists to the folder: {0}", temporaryFolder.Path));
                 messageDialog.Title = "Save Lists Error";
                 await messageDialog.ShowAsync();
-                BackupStatus("Failed to backup files.", false);
+                BackupStatus("Failed to backup lists.", false);
+                return;
             }
 
             /// Zip files
-
-            // Read files to compress
-            IReadOnlyList<StorageFile> filesToCompress = await temporaryFolder.GetFilesAsync();
-
-            // Create stream to compress files in memory (ZipArchive can't stream to an IRandomAccessStream
-            using (MemoryStream zipMemoryStream = new MemoryStream())
+            try
             {
-                // Create zip archive
-                using (ZipArchive zipArchive = new ZipArchive(zipMemoryStream, ZipArchiveMode.Create))
+                // Read files to compress
+                IReadOnlyList<StorageFile> filesToCompress = await temporaryFolder.GetFilesAsync();
+
+                // Create stream to compress files in memory (ZipArchive can't stream to an IRandomAccessStream
+                using (MemoryStream zipMemoryStream = new MemoryStream())
                 {
-                    // For each file to compress...
-                    foreach (StorageFile fileToCompress in filesToCompress)
+                    // Create zip archive
+                    using (ZipArchive zipArchive = new ZipArchive(zipMemoryStream, ZipArchiveMode.Create))
                     {
-                        // ...read the contents of the file
-                        byte[] buffer = System.Runtime.InteropServices.WindowsRuntime.WindowsRuntimeBufferExtensions.ToArray(
-                            await FileIO.ReadBufferAsync(fileToCompress));
-
-                        // Create a zip archive entry
-                        ZipArchiveEntry entry = zipArchive.CreateEntry(fileToCompress.Name);
-
-                        // And write the contents to it
-                        using (Stream entryStream = entry.Open())
+                        // For each file to compress...
+                        foreach (StorageFile fileToCompress in filesToCompress)
                         {
-                            await entryStream.WriteAsync(buffer, 0, buffer.Length);
+                            // ...read the contents of the file
+                            byte[] buffer = System.Runtime.InteropServices.WindowsRuntime.WindowsRuntimeBufferExtensions.ToArray(
+                                await FileIO.ReadBufferAsync(fileToCompress));
+
+                            // Create a zip archive entry
+                            ZipArchiveEntry entry = zipArchive.CreateEntry(fileToCompress.Name);
+
+                            // And write the contents to it
+                            using (Stream entryStream = entry.Open())
+                            {
+                                await entryStream.WriteAsync(buffer, 0, buffer.Length);
+                            }
+                        }
+                    }
+
+                    using (Windows.Storage.Streams.IRandomAccessStream zipStream = await zipFile.OpenAsync(FileAccessMode.ReadWrite))
+                    {
+                        // Write compressed data from memory to file
+                        using (Stream outstream = zipStream.AsStreamForWrite())
+                        {
+                            byte[] buffer = zipMemoryStream.ToArray();
+                            outstream.Write(buffer, 0, buffer.Length);
+                            outstream.Flush();
                         }
                     }
                 }
-
-                using (Windows.Storage.Streams.IRandomAccessStream zipStream = await zipFile.OpenAsync(FileAccessMode.ReadWrite))
-                {
-                    // Write compressed data from memory to file
-                    using (Stream outstream = zipStream.AsStreamForWrite())
-                    {
-                        byte[] buffer = zipMemoryStream.ToArray();
-                        outstream.Write(buffer, 0, buffer.Length);
-                        outstream.Flush();
-                    }
-                }
             }
+            catch
+            {
+                BackupStatus("Failed to backup files.", false);
+                return;
+            }
+
+            BackupStatus("Backup successful.");
+            UpdateSettingsData(zipFile.Name);
         }
 
         private async void restoreButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -156,7 +183,7 @@ namespace DuDuChinese.Views
             var yesCommand = new Windows.UI.Popups.UICommand("Yes");
             var noCommand = new Windows.UI.Popups.UICommand("No");
             var yesNoDialog = new Windows.UI.Popups.MessageDialog(
-                    String.Format("Are you sure you want to load revisions and lists from the folder: {0}?\n\n" +
+                    String.Format("Are you sure you want to load revisions and lists from the file: {0}?\n\n" +
                                   "This action will overwrite existing revisions and lists.", zipFile.Name));
             yesNoDialog.Commands.Add(yesCommand);
             yesNoDialog.Commands.Add(noCommand);
@@ -261,12 +288,51 @@ namespace DuDuChinese.Views
                 }
             }
             BackupStatus("Restoring successful.");
+            UpdateSettingsData(zipFile.Name);
         }
 
         private void BackupStatus(string text, bool success = true)
         {
             backupStatus.Text = text;
             backupStatus.Foreground = new Windows.UI.Xaml.Media.SolidColorBrush(success ? Windows.UI.Colors.Green : Windows.UI.Colors.Red);
+        }
+
+        private void UpdateSettingsData(string filename)
+        {
+            UpdateLocalData(filename);
+            UpdateRoamingData(filename);
+            UpdateBackupVersion(filename, filename);
+        }
+
+        private void UpdateLocalData(string filename)
+        {
+            Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            localSettings.Values["latestBackupFile"] = filename;
+        }
+
+        private void UpdateRoamingData(string filename)
+        {
+            Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+            roamingSettings.Values["latestBackupFile"] = filename;
+        }
+
+        private void UpdateBackupVersion(string localVersion, string remoteVersion)
+        {
+            Windows.UI.Xaml.Media.Brush defaultTextColor = 
+                (Services.SettingsServices.SettingsService.Instance.AppTheme == ApplicationTheme.Dark) ?
+                new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.White) :
+                new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.Black);
+
+            if (localVersion == remoteVersion)
+            {
+                this.backupVersion.Text = "Current version: " + localVersion.Replace(".zip", "");
+                this.backupVersion.Foreground = defaultTextColor;
+            }
+            else
+            {
+                this.backupVersion.Text = String.Format("Local version: \t{0}\nRemote version: \t{1}", localVersion, remoteVersion);
+                this.backupVersion.Foreground = new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.Red);
+            } 
         }
     }
 }

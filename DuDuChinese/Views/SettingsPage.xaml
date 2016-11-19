@@ -98,6 +98,11 @@
                                    FontSize="10">
                             Backup successful.
                         </TextBlock>
+                        <TextBlock x:Name="backupVersion"
+                                   RelativePanel.Below="backupStatus"
+                                   Margin="0,5"
+                                   FontSize="10">
+                        </TextBlock>
                     </RelativePanel>
 
                 </ScrollViewer>
