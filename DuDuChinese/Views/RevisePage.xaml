@@ -74,6 +74,8 @@
                     </Core:EventTriggerBehavior>
                 </Interactivity:Interaction.Behaviors>
             </Button>
+            <TextBlock x:Name="status" Grid.Column="1" Grid.Row="3" Margin="-50,25,0,0"
+                       Text="{Binding Status}" />
             <Button x:Name="ShowDetails" Grid.Column="1" Grid.Row="3" Margin="-130,20,0,0" Click="Details_Click">
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Symbol="More" />

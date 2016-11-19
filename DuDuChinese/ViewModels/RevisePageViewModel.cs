@@ -23,6 +23,13 @@ namespace DuDuChinese.ViewModels
         public bool IsDetailExpanded { get; set; } = false;
         public LearningItem SelectedItem { get; set; } = null;
 
+        private string status = "";
+        public string Status
+        {
+            get { return this.status; }
+            set { this.Set(ref this.status, value); }
+        }
+
         private string selectedListName = null;
         private string SelectedListName
         {
@@ -70,6 +77,7 @@ namespace DuDuChinese.ViewModels
                 items.Add(key);
             items.Sort();
 
+            this.Status = "";
             this.Items.Clear();
             this.Items.Add(AllLists);
             foreach (string val in items)
@@ -103,6 +111,15 @@ namespace DuDuChinese.ViewModels
         {
             if (this.revisionList == null)
                 return;
+
+            if (!String.IsNullOrEmpty(this.selectedListName) && this.revisionList.Count == 0)
+            {
+                if (this.selectedListName == AllLists)
+                    this.Status = "No revisions for today!";
+                else
+                    this.Status = "No revisions for today for list: " + this.selectedListName;
+            }
+                
 
             SelectedItemsCount.Clear();
             for (int i = 10; i < this.revisionList.Count; i += 10)
