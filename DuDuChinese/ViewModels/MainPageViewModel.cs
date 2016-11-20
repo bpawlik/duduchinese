@@ -12,6 +12,7 @@ using System.IO.IsolatedStorage;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Controls;
 using Windows.Media.SpeechSynthesis;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace DuDuChinese.ViewModels
 {
@@ -63,6 +64,18 @@ namespace DuDuChinese.ViewModels
         public MainPageViewModel()
         {
             this.Items = new ObservableCollection<ItemViewModel>();
+
+            // Add clipboard content aware event
+            Clipboard.ContentChanged += async (s, e) =>
+            {
+                DataPackageView dataPackageView = Clipboard.GetContent();
+                if (dataPackageView.Contains(StandardDataFormats.Text))
+                {
+                    string text = await dataPackageView.GetTextAsync();
+                    this.QueryText = text;
+                    TriggerSearch(text, 30);
+                }
+            };
         }
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)

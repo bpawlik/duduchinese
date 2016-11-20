@@ -33,8 +33,10 @@ namespace DuDuChinese.Views
             SearchPane.DataContext = ViewModel;
             ViewModel.Media = media;
 
+            // Add page loaded event
             this.Loaded += new RoutedEventHandler(MainPage_Loaded);
 
+            // Add remote data changed event
             Windows.Storage.ApplicationData.Current.DataChanged +=
                 new Windows.Foundation.TypedEventHandler<Windows.Storage.ApplicationData, object>(DataChangeHandler);
         }

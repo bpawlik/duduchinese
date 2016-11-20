@@ -100,7 +100,7 @@
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Vertical" Grid.Row="0">
                         <TextBox x:Name="Query" InputScope="Search" GotFocus="Query_GotFocus" LostFocus="Query_LostFocus" KeyDown="Query_KeyDown"
-                                 Text="{x:Bind ViewModel.QueryText}"/>
+                                 Text="{Binding QueryText}"/>
                         <TextBlock x:Name="Status" Text="{x:Bind ViewModel.StatusText, Mode=TwoWay}" TextWrapping="Wrap"
                                    Visibility="{x:Bind ViewModel.StatusVisibility, Mode=TwoWay}" />
                         <ProgressBar x:Name="Progress" Visibility="Collapsed" />
