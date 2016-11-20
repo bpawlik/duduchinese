@@ -68,12 +68,19 @@ namespace DuDuChinese.ViewModels
             // Add clipboard content aware event
             Clipboard.ContentChanged += async (s, e) =>
             {
-                DataPackageView dataPackageView = Clipboard.GetContent();
-                if (dataPackageView.Contains(StandardDataFormats.Text))
+                try
                 {
-                    string text = await dataPackageView.GetTextAsync();
-                    this.QueryText = text;
-                    TriggerSearch(text, 30);
+                    DataPackageView dataPackageView = Clipboard.GetContent();
+                    if (dataPackageView.Contains(StandardDataFormats.Text))
+                    {
+                        string text = await dataPackageView.GetTextAsync();
+                        this.QueryText = text;
+                        TriggerSearch(text, 30);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("Failed to read from the clipboard: " + ex.Message);
                 }
             };
         }
