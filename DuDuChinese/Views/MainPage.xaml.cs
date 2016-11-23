@@ -20,6 +20,7 @@ using Windows.Media.SpeechSynthesis;
 using Windows.ApplicationModel.Resources.Core;
 using Windows.UI.Xaml.Media;
 using System.Xml.Linq;
+using System.Linq;
 
 namespace DuDuChinese.Views
 {
@@ -61,10 +62,42 @@ namespace DuDuChinese.Views
             }  
 
             Query.Focus(FocusState.Programmatic);
+            CheckDeviceUsed();
+        }
+
+        async void CheckDeviceUsed()
+        {
+            // Get the last device used
+            Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+            string lastDeviceUsed = (string)roamingSettings.Values["lastDeviceUsed"];
+
+            // Get the current device name
+            var hostNames = Windows.Networking.Connectivity.NetworkInformation.GetHostNames();
+            var hostName = hostNames.FirstOrDefault(name => name.Type == Windows.Networking.HostNameType.DomainName)?.DisplayName ?? "???";
+
+            // Update roaming data
+            roamingSettings.Values["lastDeviceUsed"] = hostName;
+
+            if (String.IsNullOrWhiteSpace(lastDeviceUsed))
+                return;
+
+            if (lastDeviceUsed != hostName)
+            {
+                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                async () =>
+                {
+                    // Roaming data has changed, notify user
+                    var messageDialog = new Windows.UI.Popups.MessageDialog(
+                        String.Format("DuDuChinese has been used on another device: {0}.\n\nYou might want to go to the Settings and sync the data", lastDeviceUsed));
+                    messageDialog.Title = "Newer backup data detected";
+                    await messageDialog.ShowAsync();
+                });
+            }
         }
 
         async void DataChangeHandler(Windows.Storage.ApplicationData appData, object o)
         {
+            // Get values from the roaming data
             Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
             string lastBackupFile = (string)roamingSettings.Values["latestBackupFile"];
 
@@ -76,7 +109,7 @@ namespace DuDuChinese.Views
                     String.Format("Detected newer version of your backup data: {0}.\n\nGo to Settings if you'd like to load it.", lastBackupFile));
                 messageDialog.Title = "Newer backup data detected";
                 await messageDialog.ShowAsync();
-            }); 
+            });
         }
 
         #region decompress LZMA resources (dictionary, indexes, preinstalled lists)

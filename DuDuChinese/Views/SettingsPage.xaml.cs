@@ -296,6 +296,12 @@ namespace DuDuChinese.Views
             backupStatus.Text = text;
             backupStatus.Foreground = new Windows.UI.Xaml.Media.SolidColorBrush(success ? Windows.UI.Colors.Green : Windows.UI.Colors.Red);
         }
+        private string GetLastDeviceUsed()
+        {
+            Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+            return (string)roamingSettings.Values["lastDeviceUsed"];
+        }
+
 
         private void UpdateSettingsData(string filename)
         {
@@ -332,7 +338,9 @@ namespace DuDuChinese.Views
             {
                 this.backupVersion.Text = String.Format("Local version: \t{0}\nRemote version: \t{1}", localVersion, remoteVersion);
                 this.backupVersion.Foreground = new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.Red);
-            } 
+            }
+
+            this.backupVersion.Text += "\nLast device used: " + GetLastDeviceUsed();
         }
     }
 }
