@@ -45,7 +45,8 @@ namespace DuDuChinese.Views
         void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
             List<string> files = new List<string> {
-                "cedict_ts.u8", "english.index", "hanzi.index", "pinyin.index", "hsklevel1.list", "hsklevel2.list", "hsklevel3.list" };
+                "cedict_ts.u8", "english.index", "hanzi.index", "pinyin.index", "hsklevel1.list",
+                "hsklevel2.list", "hsklevel3.list", "charactertraits.list", "travel.list" };
             foreach (string file in files)
                 using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForApplication())
                     if (!store.FileExists(file))

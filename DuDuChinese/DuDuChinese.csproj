@@ -101,6 +101,8 @@
     <EmbeddedResource Include="Assets\hsklevel2.list.lzma" />
     <EmbeddedResource Include="Assets\pinyin.index.lzma" />
     <EmbeddedResource Include="Assets\hsklevel3.list.lzma" />
+    <EmbeddedResource Include="Assets\charactertraits.list.lzma" />
+    <EmbeddedResource Include="Assets\travel.list.lzma" />
     <None Include="DuDuChinese_TemporaryKey.pfx" />
     <None Include="project.json" />
   </ItemGroup>
