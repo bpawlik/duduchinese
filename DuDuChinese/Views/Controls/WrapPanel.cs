@@ -92,8 +92,8 @@ namespace DuDuChinese.Views.Controls
                         }
                         else
                         {
-                            // This works for english characters font size 24 only!
-                            width = length * 16 + 10;
+                            // This works for english characters Courier font size 24 only!
+                            width = length * 14 + 8;
                         }
                     }
 

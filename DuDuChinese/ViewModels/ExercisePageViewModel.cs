@@ -1,4 +1,4 @@
-using DuDuChinese.Models;
+﻿using DuDuChinese.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -59,13 +59,23 @@ namespace DuDuChinese.ViewModels
 
         private static TextBlock GetTextBlock(string text)
         {
-            return new TextBlock()
-            {
-                Text = text,
-                FontSize = 24.0,
-                Margin = new Thickness(-10, 0, -10, 0),
-                VerticalAlignment = VerticalAlignment.Center
-            };
+            if (LearningEngine.CurrentExercise == LearningExercise.FillGapsChinese)
+                return new TextBlock()
+                {
+                    Text = text,
+                    FontSize = 24.0,
+                    Margin = new Thickness(-8, 0, -8, 0),
+                    VerticalAlignment = VerticalAlignment.Center
+                };
+            else
+                return new TextBlock()
+                {
+                    Text = text,
+                    FontSize = 24.0,
+                    Margin = new Thickness(-10, 0, -10, 0),
+                    FontFamily = new FontFamily("Consolas"),
+                    VerticalAlignment = VerticalAlignment.Center
+                };
         }
 
         public static TextBox GetTextBox()
@@ -213,13 +223,89 @@ namespace DuDuChinese.ViewModels
             await Task.CompletedTask;
         }
 
+        #region String comparison helpers
+
+        private int LevenshteinDistance(string s, string t)
+        {
+            // degenerate cases
+            if (s == t) return 0;
+            if (s.Length == 0) return t.Length;
+            if (t.Length == 0) return s.Length;
+
+            // create two work vectors of integer distances
+            int[] v0 = new int[t.Length + 1];
+            int[] v1 = new int[t.Length + 1];
+
+            // initialize v0 (the previous row of distances)
+            // this row is A[0][i]: edit distance for an empty s
+            // the distance is just the number of characters to delete from t
+            for (int i = 0; i < v0.Length; i++)
+                v0[i] = i;
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                // calculate v1 (current row distances) from the previous row v0
+
+                // first element of v1 is A[i+1][0]
+                //   edit distance is delete (i+1) chars from s to match empty t
+                v1[0] = i + 1;
+
+                // use formula to fill in the rest of the row
+                for (int j = 0; j < t.Length; j++)
+                {
+                    var cost = (s[i] == t[j]) ? 0 : 1;
+                    v1[j + 1] = Math.Min(Math.Min(v1[j] + 1, v0[j + 1] + 1), v0[j] + cost);
+                }
+
+                // copy v1 (current row) to v0 (previous row) for next iteration
+                for (int j = 0; j < v0.Length; j++)
+                    v0[j] = v1[j];
+            }
+
+            return v1[t.Length];
+        }
+
+        /// <summary>
+        /// Gets the similarity between two strings.
+        /// All relation scores are in the [0, 1] range, 
+        /// which means that if the score gets a maximum value (equal to 1) 
+        /// then the two string are absolutely similar
+        /// </summary>
+        /// <param name="string1">The string1.</param>
+        /// <param name="string2">The string2.</param>
+        /// <returns></returns>
+        public float CalculateSimilarity(string s1, string s2)
+        {
+            if ((s1 == null) || (s2 == null))
+                return 0.0f;
+
+            float dis = LevenshteinDistance(s1, s2);
+            float maxLen = s1.Length;
+            if (maxLen < s2.Length)
+                maxLen = s2.Length;
+            if (maxLen == 0.0F)
+                return 1.0F;
+            else
+                return 1.0F - dis / maxLen;
+        }
+
+        private string RemoveSpecialCharacters(string text)
+        {
+            return text.Replace(",", "").Replace(".", "").Replace("!", "").Replace("?", "").Replace("(", "").Replace(")", "");
+        }
+
+        #endregion
+
         /// <summary>
         /// Dissect sentence into List<TextBlock> before,  TextBox keyword, List<TextBlock> after
         /// </summary>
         private async void ShowFillGapTextBox()
         {
-            if (this.currentItem.Sentence.Count == 0)
+            if (this.currentItem == null || this.currentItem.Sentence.Count == 0)
+            {
+                SentenceItems.Add(GetErrorTextBlock("Oops... Something went wrong!"));
                 return;
+            }
 
             string sentence, keyword = "";
             switch (LearningEngine.CurrentExercise)
@@ -230,13 +316,25 @@ namespace DuDuChinese.ViewModels
                     break;
                 case LearningExercise.FillGapsEnglish:
                     sentence = this.currentItem.Sentence[1];
-                    // TODO: add logic in case of abbreviations, apostrophes, change of person, etc
-                    foreach (string word in this.currentItem.English)
-                        if (sentence.Contains(word))
-                        {
-                            keyword = word;
+                    foreach (string word in sentence.Split(' '))
+                    {
+                        if (!String.IsNullOrEmpty(keyword))
                             break;
+
+                        string wordNoSpecial = RemoveSpecialCharacters(word);
+
+                        foreach (string item in this.currentItem.English)
+                        {
+                            string itemNoSpecial = RemoveSpecialCharacters(item).Replace("to", "").Trim();
+
+                            float similarity = CalculateSimilarity(itemNoSpecial, wordNoSpecial);
+                            if (similarity > 0.5)
+                            {
+                                keyword = wordNoSpecial;
+                                break;
+                            }
                         }
+                    }
                     break;
                 default:
                     return;
@@ -244,7 +342,7 @@ namespace DuDuChinese.ViewModels
 
             if (String.IsNullOrWhiteSpace(sentence) || String.IsNullOrWhiteSpace(keyword))
             {
-                SentenceItems.Add(GetErrorTextBlock("Keyword and/or sentence is empty!"));
+                SentenceItems.Add(GetErrorTextBlock("Sentence is empty or keyword not found!"));
                 return;
             }
 

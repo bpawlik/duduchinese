@@ -72,12 +72,8 @@
                       RelativePanel.AlignRightWithPanel="True"
                       RelativePanel.Below="pageHeader"
                       Background="Transparent"
-                      Width="Auto"
                       VerticalScrollBarVisibility="Auto">
             <Grid HorizontalAlignment="Left" Margin="10, 0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition MinWidth="300" Width="Auto" />
-                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="55" />
                     <RowDefinition MinHeight="100"/>
@@ -98,19 +94,36 @@
                                  Background="Transparent" >
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel x:Name="SentencePanel" Orientation="Horizontal" Margin="-3,5,0,5" Visibility="{Binding SentenceVisible}" >
-                                        <Button Click="PlaySentence_Click" Background="Transparent" Padding="0,3,0,5">
-                                            <Button.Content>
-                                                <TextBlock Text="{Binding Sentence}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="22"  />
-                                            </Button.Content>
-                                        </Button>
+                                    <StackPanel>
+                                        <StackPanel x:Name="ExpandedView" >
+                                            <TextBlock Text="{Binding Pinyin}"
+                                                       Loaded="Pinyin_Loaded"
+                                                       Visibility="{Binding PinyinVisible, Mode=TwoWay}"
+                                                       TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="26" Margin="0,0,0,10" />
+                                            <TextBlock Text="{Binding EnglishWithNewlines}"
+                                                       Visibility="{Binding TranslationVisible, Mode=TwoWay}"
+                                                       TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="22" Margin="0,0,0,10" />
+                                            <TextBlock Text="{Binding Chinese}"
+                                                       Visibility="{Binding SimplifiedVisible, Mode=TwoWay}"
+                                                       TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="26" Margin="0,0,0,10" />
+                                        </StackPanel>
+                                        <StackPanel x:Name="SentencePanel" Orientation="Horizontal" Margin="-3,5,0,5" Visibility="{Binding SentenceVisible}" >
+                                            <Button Click="PlaySentence_Click" Background="Transparent" Padding="0,3,0,5">
+                                                <Button.Content>
+                                                    <TextBlock Text="{Binding Sentence}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="22"  />
+                                                </Button.Content>
+                                            </Button>
+                                        </StackPanel>
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </ScrollViewer>
                 </StackPanel>
-                <ListView Name="sentenceListView"  Grid.Row="2" HorizontalAlignment="Left" FontSize="24"
+                <ListView Name="sentenceListView"  Grid.Row="2"
+                          HorizontalAlignment="Stretch"
+                          FontSize="24"
+                          FontFamily="Courier"
                           MinWidth="300"
                           ItemsSource="{x:Bind ViewModel.SentenceItems}"
                           IsHoldingEnabled="False"

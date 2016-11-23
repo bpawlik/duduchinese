@@ -74,9 +74,11 @@ namespace DuDuChinese.Models
         // Textbox
 
         [Description("Fill gaps with English")]
+        [Command("Input English")]
         FillGapsEnglish,
 
         [Description("Fill gaps with 汉字")]
+        [Command("Input 汉字")]
         FillGapsChinese,
 
         #endregion
@@ -146,6 +148,7 @@ namespace DuDuChinese.Models
 
         private static readonly LearningExercise[] exerciseListSentences = {
             LearningExercise.Display,
+            LearningExercise.FillGapsEnglish,
             LearningExercise.FillGapsChinese
         };
 
@@ -436,10 +439,14 @@ namespace DuDuChinese.Models
                     SimplifiedVisible = Visibility.Visible;
                     break;
                 case LearningExercise.FillGapsChinese:
-                case LearningExercise.FillGapsEnglish:
                     PinyinVisible = Visibility.Collapsed;
                     TranslationVisible = Visibility.Collapsed;
                     SimplifiedVisible = Visibility.Collapsed;
+                    break;
+                case LearningExercise.FillGapsEnglish:
+                    PinyinVisible = Visibility.Collapsed;
+                    TranslationVisible = Visibility.Collapsed;
+                    SimplifiedVisible = Visibility.Visible;
                     break;
                 default:
                     PinyinVisible = Visibility.Visible;
