@@ -325,7 +325,13 @@ namespace DuDuChinese.ViewModels
 
                         foreach (string item in this.currentItem.English)
                         {
-                            string itemNoSpecial = RemoveSpecialCharacters(item).Replace("to", "").Trim();
+                            string itemNoSpecial = RemoveSpecialCharacters(item).Trim();
+
+                            if (sentence.Contains(itemNoSpecial))
+                            {
+                                keyword = itemNoSpecial;
+                                break;
+                            }
 
                             float similarity = CalculateSimilarity(itemNoSpecial, wordNoSpecial);
                             if (similarity > 0.5)
