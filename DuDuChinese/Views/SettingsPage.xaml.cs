@@ -331,7 +331,7 @@ namespace DuDuChinese.Views
 
             if (localVersion == remoteVersion)
             {
-                this.backupVersion.Text = "Current version: " + localVersion.Replace(".zip", "");
+                this.backupVersion.Text = "Current version: \t" + localVersion.Replace(".zip", "");
                 this.backupVersion.Foreground = defaultTextColor;
             }
             else
@@ -340,7 +340,7 @@ namespace DuDuChinese.Views
                 this.backupVersion.Foreground = new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.Red);
             }
 
-            this.backupVersion.Text += "\nLast device used: " + GetLastDeviceUsed();
+            this.backupVersion.Text += "\nLast device used: \t" + GetLastDeviceUsed();
         }
     }
 }

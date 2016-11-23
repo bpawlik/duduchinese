@@ -89,7 +89,7 @@ namespace DuDuChinese.Views
                     // Roaming data has changed, notify user
                     var messageDialog = new Windows.UI.Popups.MessageDialog(
                         String.Format("DuDuChinese has been used on another device: {0}.\n\nYou might want to go to the Settings and sync the data", lastDeviceUsed));
-                    messageDialog.Title = "Newer backup data detected";
+                    messageDialog.Title = "Synchronization";
                     await messageDialog.ShowAsync();
                 });
             }
@@ -107,7 +107,7 @@ namespace DuDuChinese.Views
                 // Roaming data has changed, notify user
                 var messageDialog = new Windows.UI.Popups.MessageDialog(
                     String.Format("Detected newer version of your backup data: {0}.\n\nGo to Settings if you'd like to load it.", lastBackupFile));
-                messageDialog.Title = "Newer backup data detected";
+                messageDialog.Title = "Synchronization";
                 await messageDialog.ShowAsync();
             });
         }
