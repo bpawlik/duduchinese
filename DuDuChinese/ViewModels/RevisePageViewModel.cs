@@ -209,8 +209,8 @@ namespace DuDuChinese.ViewModels
             if (this.SelectedItem != null && this.revisionList != null)
             {
                 this.revisionList.Remove(this.SelectedItem);
-                this.RevisionItems.Remove(this.SelectedItem);
                 RevisionEngine.RevisionList.Remove(this.SelectedItem);
+                this.RevisionItems.Remove(this.SelectedItem);
                 RevisionEngine.Serialize();
             }    
         }
