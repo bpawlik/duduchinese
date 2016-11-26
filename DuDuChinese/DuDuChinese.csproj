@@ -17,8 +17,8 @@
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>DuDuChinese_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>F2AF17DB83FBCFABD86FEE654DE7269A67B380A9</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>DuDuChinese_StoreKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>931062116926055F269D7A8AFBD9D9D6153DC6AA</PackageCertificateThumbprint>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
@@ -103,6 +103,7 @@
     <EmbeddedResource Include="Assets\hsklevel3.list.lzma" />
     <EmbeddedResource Include="Assets\charactertraits.list.lzma" />
     <EmbeddedResource Include="Assets\travel.list.lzma" />
+    <None Include="DuDuChinese_StoreKey.pfx" />
     <None Include="DuDuChinese_TemporaryKey.pfx" />
     <None Include="project.json" />
   </ItemGroup>
