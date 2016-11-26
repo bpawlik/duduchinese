@@ -27,11 +27,18 @@ namespace DuDuChinese.Views
             Bindings.Update();
         }
 
+        private void SelectedList_DropDownOpened(object sender, object e)
+        {
+            // Select All by default
+            if (this.comboBoxLists.Items.Count > 0)
+                this.comboBoxLists.SelectedIndex = 0;
+        }
+
         private void NumberOfItems_DropDownOpened(object sender, object e)
         {
             // Select 10 by default
-            if (itemsCountComboBox.Items.Count > 0)
-                itemsCountComboBox.SelectedIndex = 0;
+            if (this.itemsCountComboBox.Items.Count > 0)
+                this.itemsCountComboBox.SelectedIndex = 0;
         }
     }
 }

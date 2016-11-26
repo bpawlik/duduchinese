@@ -84,6 +84,7 @@
                   ItemsSource="{Binding Items}"
                   VerticalAlignment="Center"
                   DropDownClosed="SelectedListChanged"
+                  DropDownOpened="SelectedList_DropDownOpened"
                   xmlns:m="using:DuDuChinese.Models">
             </ComboBox>
             <RadioButton x:Name="radioButtonWords" Grid.Row="1" Grid.Column="0" Content="Words" IsChecked="True" Tag="0" GroupName="mode" HorizontalAlignment="Left" Height="32" VerticalAlignment="Center" Checked="{x:Bind ViewModel.radioButton_Checked}" />

@@ -19,6 +19,7 @@ namespace DuDuChinese.ViewModels
         public bool IsStartEnabled { get; set; } = false;
         private int NumberOfItems { get; set; } = 0;
         private DictionaryRecordList CurrentRecordList { get; set; } = null;
+        private static string AllLists = "All";
 
         public NewMaterialPageViewModel()
         {
@@ -49,6 +50,7 @@ namespace DuDuChinese.ViewModels
             items.Sort();
 
             this.Items.Clear();
+            this.Items.Add(AllLists);
             foreach (string val in items)
                 this.Items.Add(val);
 
@@ -117,7 +119,20 @@ namespace DuDuChinese.ViewModels
             App app = (App)Application.Current;
             if (cb.SelectedValue != null)
             {
-                this.CurrentRecordList = app.ListManager[cb.SelectedValue.ToString()];
+                string listName = cb.SelectedValue.ToString();
+                if (listName == AllLists)
+                {
+                    foreach (var list in app.ListManager.Keys)
+                        if (this.CurrentRecordList == null)
+                            this.CurrentRecordList = app.ListManager[list];
+                        else
+                            this.CurrentRecordList.AddRange(app.ListManager[list]);
+                }
+                else
+                {
+                    this.CurrentRecordList = app.ListManager[listName];
+                }
+                
                 this.NumberOfItems = LearningEngine.GenerateLearningItems(this.CurrentRecordList);
 
                 // Update items count combobox
