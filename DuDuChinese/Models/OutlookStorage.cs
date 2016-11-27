@@ -277,9 +277,6 @@ namespace DuDuChinese
 
         protected class NativeMethods
         {
-            [DllImport("kernel32.dll")]
-            static extern IntPtr GlobalLock(IntPtr hMem);
-
             [DllImport("ole32.DLL")]
             public static extern int CreateILockBytesOnHGlobal(IntPtr hGlobal, bool fDeleteOnRelease, out ILockBytes ppLkbyt);
 
