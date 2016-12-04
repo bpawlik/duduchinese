@@ -77,6 +77,10 @@ namespace DuDuChinese.ViewModels
             // Peek next exercise
             LearningExercise nextExcercise = LearningEngine.PeekNextExercise(out this.nextExerciseIndex);
 
+            // Play 'complete' sound effect
+            App app = (App)Application.Current;
+            app.AppSoundEffects.Play(Services.SoundEfxEnum.COMPLETE);
+
             // Refresh task list
             if (this.ProgressItems == null)
                 this.ProgressItems = new List<ProgressItem>();

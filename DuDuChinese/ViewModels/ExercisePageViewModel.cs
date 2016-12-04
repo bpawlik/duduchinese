@@ -443,6 +443,10 @@ namespace DuDuChinese.ViewModels
                 this.Status = "Correct answer:";
                 this.BgColour = redBrush;
                 this.FgColour = redBrush;
+
+                // Play 'wrong' sound effect
+                App app = (App)Application.Current;
+                app.AppSoundEffects.Play(Services.SoundEfxEnum.WRONG);
             }
 
             if (LearningEngine.IsSentence)

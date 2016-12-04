@@ -1,0 +1,65 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.UI.Core;
+using Windows.UI.Xaml.Controls;
+
+namespace DuDuChinese.Services
+{
+    public enum SoundEfxEnum
+    {
+        WRONG,
+        COMPLETE
+    }
+
+    public class SoundEffects
+    {
+        private Dictionary<SoundEfxEnum, MediaElement> effects;
+
+        public SoundEffects()
+        {
+            effects = new Dictionary<SoundEfxEnum, MediaElement>();
+            LoadEfx();
+        }
+
+        private async void LoadEfx()
+        {
+            effects.Add(SoundEfxEnum.WRONG, await LoadSoundFile("wrong.wav"));
+            effects.Add(SoundEfxEnum.COMPLETE, await LoadSoundFile("complete.wav"));
+        }
+
+        private async Task<MediaElement> LoadSoundFile(string file)
+        {
+            MediaElement snd = new MediaElement();
+
+            snd.AutoPlay = false;
+            Assembly assembly = this.GetType().GetTypeInfo().Assembly;
+            AssemblyName assemblyName = new AssemblyName(assembly.FullName);
+            Stream resourceStream = assembly.GetManifestResourceStream(assemblyName.Name + ".Assets.Sounds." + file);
+            var memStream = new MemoryStream();
+            await resourceStream.CopyToAsync(memStream);
+            memStream.Position = 0;
+            snd.SetSource(memStream.AsRandomAccessStream(), "audio/wav");
+            return snd;
+        }
+
+        public async void Play(SoundEfxEnum efx)
+        {
+            var mediaElement = effects[efx];
+            mediaElement.Play();
+
+            switch (efx)
+            {
+                case SoundEfxEnum.WRONG:
+                default:
+                    await Task.Delay(TimeSpan.FromMilliseconds(500));
+                    break;
+            }
+        }
+    }
+}

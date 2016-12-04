@@ -59,9 +59,24 @@ namespace DuDuChinese
 
         #endregion
 
+        #region Sound effects
+
+        private Services.SoundEffects appSoundEffects = null;
+        public Services.SoundEffects AppSoundEffects
+        {
+            get
+            {
+                if (this.appSoundEffects == null)
+                    this.appSoundEffects = new Services.SoundEffects();
+                return this.appSoundEffects;
+            }
+        }
+
+        #endregion
+
         #region Speach synthesizer
 
-        // Speech recognition elements
+        // Text-to-speech elements
         private ResourceContext speechContext;
         private ResourceMap speechResourceMap;
         private SpeechSynthesizer synthesizer = null;
