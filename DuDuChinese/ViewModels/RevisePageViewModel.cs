@@ -83,9 +83,11 @@ namespace DuDuChinese.ViewModels
             foreach (string val in items)
                 this.Items.Add(val);
 
-            // Update items count combobox
-            this.revisionList = RevisionEngine.GetRevisionList();
-            UpdateItemsCount();
+            // Select "All" list by default
+            ComboBox listsComboBox = new ComboBox();
+            listsComboBox.Items.Add(AllLists);
+            listsComboBox.SelectedIndex = 0;
+            SelectedListChanged(listsComboBox);
 
             await Task.CompletedTask;
         }
@@ -109,17 +111,19 @@ namespace DuDuChinese.ViewModels
 
         private void UpdateItemsCount()
         {
-            if (this.revisionList == null)
+            if (this.revisionList == null || RevisionEngine.RevisionList.Count == 0)
+            {
+                this.Status = "Go to New Material page and learn something first! :)";
                 return;
+            }
 
             if (!String.IsNullOrEmpty(this.selectedListName) && this.revisionList.Count == 0)
             {
                 if (this.selectedListName == AllLists)
                     this.Status = "No revisions for today!";
                 else
-                    this.Status = "No revisions for today for list: " + this.selectedListName;
-            }
-                
+                    this.Status = "No revisions for today for the list: " + this.selectedListName;
+            }  
 
             SelectedItemsCount.Clear();
             for (int i = 10; i < this.revisionList.Count; i += 10)
@@ -138,7 +142,8 @@ namespace DuDuChinese.ViewModels
 
                 // Update items count combobox
                 UpdateItemsCount();
-                UpdateDetails(toggle: false, fullList: true);
+                if (this.IsDetailExpanded)
+                    UpdateDetails(toggle: false, fullList: true);
             }
         }
 
@@ -161,7 +166,8 @@ namespace DuDuChinese.ViewModels
                     
             }
 
-            UpdateDetails(toggle: false, fullList: false);
+            if (this.IsDetailExpanded)
+                UpdateDetails(toggle: false, fullList: false);
             LearningEngine.ItemsCount = this.NumberOfItems;
         }
 
