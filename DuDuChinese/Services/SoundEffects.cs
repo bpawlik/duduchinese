@@ -35,22 +35,28 @@ namespace DuDuChinese.Services
 
         private async Task<MediaElement> LoadSoundFile(string file)
         {
-            MediaElement snd = new MediaElement();
+            MediaElement mediaElement = new MediaElement();
+            mediaElement.AutoPlay = false;
 
-            snd.AutoPlay = false;
+            // Load sound from the resources
             Assembly assembly = this.GetType().GetTypeInfo().Assembly;
             AssemblyName assemblyName = new AssemblyName(assembly.FullName);
             Stream resourceStream = assembly.GetManifestResourceStream(assemblyName.Name + ".Assets.Sounds." + file);
             var memStream = new MemoryStream();
             await resourceStream.CopyToAsync(memStream);
             memStream.Position = 0;
-            snd.SetSource(memStream.AsRandomAccessStream(), "audio/wav");
-            return snd;
+
+            mediaElement.SetSource(memStream.AsRandomAccessStream(), "audio/wav");
+            return mediaElement;
         }
 
         public async void Play(SoundEfxEnum efx)
         {
             var mediaElement = effects[efx];
+
+            if (mediaElement.CurrentState.Equals(Windows.UI.Xaml.Media.MediaElementState.Playing))
+                mediaElement.Stop();
+
             mediaElement.Play();
 
             switch (efx)
