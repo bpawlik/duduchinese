@@ -82,14 +82,14 @@ namespace DuDuChinese.Models
             return revList;
         }
 
-        public static void UpdateRevisionList(LearningItem revItem, bool correct)
+        public static void UpdateRevisionList(LearningItem revItem, bool correct, int addend = 1)
         {
             // Find given record and exercise
             var find = RevisionList.FirstOrDefault(x => (revItem == x));
             if (find != null)
             {
                 // Increase or decrease score based on result
-                find.Score += (correct ? -1 : 1);
+                find.Score += (correct ? -addend : addend);
             }
             else
             {

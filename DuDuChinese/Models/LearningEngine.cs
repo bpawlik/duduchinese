@@ -598,7 +598,8 @@ namespace DuDuChinese.Models
                 LearningItems[CurrentExercise].Add(LearningItems[CurrentExercise][currentItemIndex - 1]);
             }
 
-            RevisionEngine.UpdateRevisionList(LearningItems[CurrentExercise][currentItemIndex - 1], newResult);
+            // We need to update revision list twice in order to correct for the previous update
+            RevisionEngine.UpdateRevisionList(LearningItems[CurrentExercise][currentItemIndex - 1], newResult, 2);
         }
 
         // Helper function to display enums description
