@@ -78,10 +78,10 @@ namespace DuDuChinese.ViewModels
             LearningExercise nextExcercise = LearningEngine.PeekNextExercise(out this.nextExerciseIndex);
 
             // Play 'complete' sound effect
-            if (nextExcercise != LearningExercise.Display)
+            if (nextExcercise != LearningExercise.Display && LearningEngine.Mode != LearningMode.Revision)
             {
                 App app = (App)Application.Current;
-                app.AppSoundEffects.Play(Services.SoundEfxEnum.COMPLETE);
+                await app.AppSoundEffects.Play(Services.SoundEfxEnum.COMPLETE);
             }
 
             // Refresh task list

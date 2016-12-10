@@ -50,7 +50,7 @@ namespace DuDuChinese.Services
             return mediaElement;
         }
 
-        public async void Play(SoundEfxEnum efx)
+        public async Task<bool> Play(SoundEfxEnum efx)
         {
             var mediaElement = effects[efx];
 
@@ -66,6 +66,8 @@ namespace DuDuChinese.Services
                     await Task.Delay(TimeSpan.FromMilliseconds(500));
                     break;
             }
+
+            return true;
         }
     }
 }
