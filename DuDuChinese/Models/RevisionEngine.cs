@@ -184,6 +184,11 @@ namespace DuDuChinese.Models
                 if (revisionList == null)
                     revisionList = new List<LearningItem>();
 
+                // Remove duplicates
+                System.Diagnostics.Debug.WriteLine("Revision list size: " + revisionList.Count);
+                revisionList = revisionList.Distinct(new LearningItemComparer()).ToList();
+                System.Diagnostics.Debug.WriteLine("Revision list size (after removing duplicates): " + revisionList.Count);
+
                 // Sort the list in descending order
                 revisionList.Sort((s1, s2) => s2.Score.CompareTo(s1.Score));
             }

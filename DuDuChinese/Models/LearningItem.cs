@@ -126,4 +126,25 @@ namespace DuDuChinese.Models
             return obj.Hash.GetHashCode();
         }
     }
+
+    public class LearningItemComparer : IEqualityComparer<LearningItem>
+    {
+        public bool Equals(LearningItem item1, LearningItem item2)
+        {
+            if (object.ReferenceEquals(item1, item2))
+                return true;
+
+            if (item1 == null || item2 == null)
+                return false;
+
+            return item1.Hash.Equals(item2.Hash) &&
+                item1.ListName.Equals(item2.ListName) &&
+                item1.Exercise.Equals(item2.Exercise);
+        }
+
+        public int GetHashCode(LearningItem obj)
+        {
+            return obj.Hash.GetHashCode();
+        }
+    }
 }
