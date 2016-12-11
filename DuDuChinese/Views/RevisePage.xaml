@@ -127,8 +127,9 @@
                                 <RowDefinition />
                                 <RowDefinition />
                                 <RowDefinition />
+                                <RowDefinition />
                             </Grid.RowDefinitions>
-                            <Button x:Name="removeButton" Click="Remove_Click" Grid.Row="0" Grid.Column="0" Grid.RowSpan="5" VerticalAlignment="Stretch" Margin="0,0,0,15">
+                            <Button x:Name="removeButton" Click="Remove_Click" Grid.Row="0" Grid.Column="0" Grid.RowSpan="6" VerticalAlignment="Stretch" Margin="0,0,0,15">
                                 <Button.Content>
                                     <SymbolIcon Symbol="Delete" />
                                 </Button.Content>
@@ -146,9 +147,14 @@
                                 <TextBlock Text="Number of reviews left: " FontSize="15" />
                                 <TextBlock Text="{Binding Score}" FontSize="15" Margin="10,0,0,0" />
                             </StackPanel>
-                            <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,15">
+                            <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
                                 <TextBlock Text="Next review scheduled for: " FontSize="15" />
                                 <TextBlock Text="{Binding Timestamp, Converter={StaticResource TimestampToStringConverter}}" FontSize="15" Margin="10,0,0,0" />
+                            </StackPanel>
+                            <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,15">
+                                <TextBlock Text="Hash: " FontSize="15" />
+                                <TextBox Text="{Binding Hash}" FontSize="12" Height="Auto"
+                                         IsReadOnly="True" BorderThickness="0" Background="Transparent" />
                             </StackPanel>
                         </Grid>
                     </DataTemplate>
