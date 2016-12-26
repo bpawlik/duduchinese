@@ -66,8 +66,12 @@
             </controls:PageHeader.SecondaryCommands>
 
         </controls:PageHeader>
-
-        <Grid Margin="10,60" MinWidth="300">
+        
+        <Grid Margin="10" MinWidth="300"
+              HorizontalAlignment="Center"
+              RelativePanel.AlignLeftWithPanel="True"
+              RelativePanel.AlignRightWithPanel="True"
+              RelativePanel.Below="pageHeader">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="130" />
                 <ColumnDefinition Width="Auto" />

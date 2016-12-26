@@ -64,6 +64,7 @@
                       RelativePanel.AlignLeftWithPanel="True"
                       RelativePanel.AlignRightWithPanel="True"
                       RelativePanel.Below="pageHeader"
+                      HorizontalAlignment="Center"
                       Background="Transparent"
                       VerticalScrollBarVisibility="Auto">
             <Grid HorizontalAlignment="Left" Margin="10, 0">
