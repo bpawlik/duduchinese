@@ -159,6 +159,33 @@ namespace DuDuChinese.Models
             }
         }
 
+        public static void SaveToCsv(Stream stream)
+        {
+            // Write an object to the Stream and leave it opened
+            StringBuilder sb = new StringBuilder();
+            string csvDelimiter = ",\t";
+
+            // Write the header first
+            sb.AppendLine(
+                "Character(s)" + csvDelimiter
+                + "List" + csvDelimiter
+                + "Score" + csvDelimiter
+                + "Next review" + csvDelimiter
+                + "Exercise");
+
+            // Dump revision items line by line
+            foreach (LearningItem item in revisionList)
+                sb.AppendLine(
+                    item.Record.Chinese.Simplified + csvDelimiter
+                    + item.ListName + csvDelimiter
+                    + item.Score + csvDelimiter
+                    + item.Timestamp.ToString("dd-MM-yyyy") + csvDelimiter
+                    + item.Exercise);
+
+            byte[] data = Encoding.UTF8.GetBytes(sb.ToString());
+            stream.Write(data, 0, data.Length);
+        }
+
         public static async Task Deserialize()
         {
             try

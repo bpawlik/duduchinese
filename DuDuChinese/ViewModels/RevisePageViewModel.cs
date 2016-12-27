@@ -9,6 +9,7 @@ using DuDuChinese.Models;
 using Windows.UI.Xaml.Controls;
 using System.Collections.ObjectModel;
 using Windows.UI.Xaml;
+using System.IO;
 
 namespace DuDuChinese.ViewModels
 {
@@ -219,6 +220,44 @@ namespace DuDuChinese.ViewModels
                 this.RevisionItems.Remove(this.SelectedItem);
                 RevisionEngine.Serialize();
             }    
+        }
+
+        public async void Save()
+        {
+            // Just to be sure that revisions are loaded
+            await RevisionEngine.Deserialize();
+
+            // Save file picker settings
+            var picker = new Windows.Storage.Pickers.FileSavePicker();
+            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary;
+            picker.FileTypeChoices.Add("XML file", new List<string>() { ".xml" });
+            picker.FileTypeChoices.Add("Text file", new List<string>() { ".txt" });
+            DateTime time = DateTime.Now;
+            picker.SuggestedFileName = "DuDuChinese_" + time.ToString("yyyy-MM-dd-HHmm");
+
+            // Pick a file
+            Windows.Storage.StorageFile file = await picker.PickSaveFileAsync();
+            if (file == null)
+                return;
+
+            // Dump revisions
+            try
+            {
+                using (Stream stream = await file.OpenStreamForWriteAsync())
+                    if (file.FileType == ".xml")
+                        RevisionEngine.Serialize(stream);
+                    else
+                        RevisionEngine.SaveToCsv(stream);
+                this.Status = "Revisions saved successfully!";
+            }
+            catch
+            {
+                var messageDialog = new Windows.UI.Popups.MessageDialog(
+                    String.Format("Failed to save revisions to the file: {0}", file.Name));
+                messageDialog.Title = "Save Revision List Error";
+                await messageDialog.ShowAsync();
+                this.Status = "Saving revisions failed!";
+            }
         }
     }
 }

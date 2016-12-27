@@ -33,6 +33,12 @@ namespace DuDuChinese.Views
             Bindings.Update();
         }
 
+        private void Save_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            ViewModel.Save();
+            Bindings.Update();
+        }
+
         private void Remove_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             ViewModel.RemoveSelectedItem();
