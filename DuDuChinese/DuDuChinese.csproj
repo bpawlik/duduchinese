@@ -103,6 +103,7 @@
     <EmbeddedResource Include="Assets\hsklevel3.list.lzma" />
     <EmbeddedResource Include="Assets\charactertraits.list.lzma" />
     <EmbeddedResource Include="Assets\travel.list.lzma" />
+    <EmbeddedResource Include="Assets\SVGs.zip" />
     <None Include="DuDuChinese_StoreKey.pfx" />
     <None Include="DuDuChinese_TemporaryKey.pfx" />
     <None Include="project.json" />
@@ -147,6 +148,9 @@
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\DetailPageViewModel.cs" />
     <Compile Include="ViewModels\SettingsPageViewModel.cs" />
+    <Compile Include="Views\Controls\StrokeOrderDialog.xaml.cs">
+      <DependentUpon>StrokeOrderDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\AddSentenceDialog.xaml.cs">
       <DependentUpon>AddSentenceDialog.xaml</DependentUpon>
     </Compile>
@@ -215,6 +219,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Views\Controls\StrokeOrderDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Controls\AddSentenceDialog.xaml">
       <SubType>Designer</SubType>

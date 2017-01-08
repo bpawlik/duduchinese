@@ -61,6 +61,11 @@ namespace DuDuChinese.Views
         {
             ViewModel.Play(sentence: true);
         }
+
+        private void Character_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            ViewModel.ShowStrokeOrder();
+        }
     }
 }
 

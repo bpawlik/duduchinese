@@ -288,6 +288,12 @@ namespace DuDuChinese.ViewModels
             Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dataPackage);
         }
 
+        public async void ShowStrokeOrder(int index)
+        {
+            var dialog = new DuDuChinese.Views.Controls.StrokeOrderDialog(this.Dictionary[index].Chinese);
+            var result = await dialog.ShowAsync();
+        }
+
         public async void Play(int index)
         {
             // If the media is playing, the user has pressed the button to stop the playback.

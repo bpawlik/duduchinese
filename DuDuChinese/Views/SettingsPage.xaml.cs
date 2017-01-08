@@ -162,6 +162,7 @@ namespace DuDuChinese.Views
 
             BackupStatus("Backup successful.");
             UpdateSettingsData(zipFile.Name);
+            await System.Threading.Tasks.Task.CompletedTask;
         }
 
         private async void restoreButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -289,6 +290,7 @@ namespace DuDuChinese.Views
             }
             BackupStatus("Restoring successful.");
             UpdateSettingsData(zipFile.Name);
+            await System.Threading.Tasks.Task.CompletedTask;
         }
 
         private void BackupStatus(string text, bool success = true)

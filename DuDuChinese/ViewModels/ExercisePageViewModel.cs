@@ -502,6 +502,15 @@ namespace DuDuChinese.ViewModels
             }
         }
 
+        public async void ShowStrokeOrder()
+        {
+            if (this.currentItem == null)
+                return;
+
+            var dialog = new DuDuChinese.Views.Controls.StrokeOrderDialog(this.currentItem.Chinese);
+            var result = await dialog.ShowAsync();
+        }
+
         public async void Play(bool sentence = false, bool ignoreException = false)
         {
             // If the media is playing, the user has pressed the button to stop the playback.

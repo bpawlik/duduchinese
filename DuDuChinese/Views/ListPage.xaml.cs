@@ -88,6 +88,11 @@ namespace DuDuChinese.Views
             ViewModel.Email();
         }
 
+        private void  Character_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ShowStrokeOrder();
+        }
+
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.Play();

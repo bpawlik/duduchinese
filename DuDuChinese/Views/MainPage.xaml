@@ -118,7 +118,11 @@
                                     <StackPanel x:Name="ExpandedView" Margin="0,0,0,0" Visibility="Collapsed">
                                         <TextBlock Text="{Binding Pinyin}" Loaded="Pinyin_Loaded" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="26"/>
                                         <TextBlock Text="{Binding EnglishWithNewlines}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="20" />
-                                        <TextBlock Text="{Binding Chinese}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="26" />
+                                        <Button Tag="{Binding Index}" Margin="-5,0,0,0" Click="Character_Click" Background="Transparent">
+                                            <Button.Content>
+                                                <TextBlock Text="{Binding Chinese}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="26"  />
+                                            </Button.Content>
+                                        </Button>
                                     </StackPanel>
 
                                     <StackPanel x:Name="ActionPanel" Margin="-5,2,0,0" Orientation="Horizontal" Visibility="Collapsed">

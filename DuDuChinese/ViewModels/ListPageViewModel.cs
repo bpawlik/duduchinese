@@ -193,6 +193,12 @@ namespace DuDuChinese.ViewModels
             }
         }
 
+        public async void ShowStrokeOrder()
+        {
+            var dialog = new DuDuChinese.Views.Controls.StrokeOrderDialog(SelectedItem.Chinese);
+            var result = await dialog.ShowAsync();
+        }
+
         public void Sort()
         {
             switch (list.SortOrder)

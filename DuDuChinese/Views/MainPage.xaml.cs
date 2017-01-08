@@ -21,6 +21,8 @@ using Windows.ApplicationModel.Resources.Core;
 using Windows.UI.Xaml.Media;
 using System.Xml.Linq;
 using System.Linq;
+using Windows.Storage;
+using System.IO.Compression;
 
 namespace DuDuChinese.Views
 {
@@ -42,8 +44,9 @@ namespace DuDuChinese.Views
                 new Windows.Foundation.TypedEventHandler<Windows.Storage.ApplicationData, object>(DataChangeHandler);
         }
 
-        void MainPage_Loaded(object sender, RoutedEventArgs e)
+        async void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
+            // Unzip rest of the files
             List<string> files = new List<string> {
                 "cedict_ts.u8", "english.index", "hanzi.index", "pinyin.index", "hsklevel1.list",
                 "hsklevel2.list", "hsklevel3.list", "charactertraits.list", "travel.list" };
@@ -51,6 +54,9 @@ namespace DuDuChinese.Views
                 using (IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForApplication())
                     if (!store.FileExists(file))
                         ExtractFile(file);
+
+            // Unzip SVGs folder
+            await UnzipSVGs();
 
             if (inProgress == 0)
             {
@@ -64,6 +70,72 @@ namespace DuDuChinese.Views
 
             Query.Focus(FocusState.Programmatic);
             CheckDeviceUsed();
+        }
+
+        private async System.Threading.Tasks.Task UnzipSVGs()
+        {
+            StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+
+            // If folder SVGs already exists then return
+            if (Directory.Exists(Path.Combine(localFolder.Path, "SVGs")))
+                return;
+
+            // Load zip file from resources
+            Assembly assembly = this.GetType().GetTypeInfo().Assembly;
+            AssemblyName assemblyName = new AssemblyName(assembly.FullName);
+            Stream zipMemoryStream = assembly.GetManifestResourceStream((assemblyName.Name + ".Assets.SVGs.zip"));
+            StorageFolder svgFolder = await localFolder.CreateFolderAsync("SVGs");
+
+            // Create zip archive to access compressed files in memory stream
+            using (ZipArchive zipArchive = new ZipArchive(zipMemoryStream, ZipArchiveMode.Read))
+            {
+                float counter = 0;
+                float maxCount = zipArchive.Entries.Count;
+                Progress.Visibility = Visibility.Visible;
+                Status.Visibility = Visibility.Visible;
+
+                // Unzip compressed file iteratively.
+                foreach (ZipArchiveEntry entry in zipArchive.Entries)
+                {
+                    // Load SVGs file by file
+                    try
+                    {
+                        using (Stream entryStream = entry.Open())
+                        {
+                            byte[] buffer = new byte[entry.Length];
+                            entryStream.Read(buffer, 0, buffer.Length);
+
+                            // Create temporary file to store a list
+                            StorageFile uncompressedFile = await svgFolder.CreateFileAsync(entry.FullName, CreationCollisionOption.ReplaceExisting);
+
+                            // Save list to the file
+                            using (Windows.Storage.Streams.IRandomAccessStream uncompressedFileStream =
+                                await uncompressedFile.OpenAsync(FileAccessMode.ReadWrite))
+                            {
+                                using (Stream outstream = uncompressedFileStream.AsStreamForWrite())
+                                {
+                                    outstream.Write(buffer, 0, buffer.Length);
+                                    outstream.Flush();
+                                }
+                            }
+                        }
+                        float percentage = 100.0f * ++counter / maxCount;
+                        Status.Text = String.Format("Extracting animations: {0}... {1}%", entry.FullName, (int)percentage);
+                        Progress.Value = percentage;
+                    }
+                    catch (Exception ex)
+                    {
+                        var messageDialog = new Windows.UI.Popups.MessageDialog(
+                            String.Format("Failed to load SVGs fom the resources.\n\nError: {1}", ex.Message));
+                        messageDialog.Title = "Load SVGs Error";
+                        await messageDialog.ShowAsync();
+                        return;
+                    }
+                }
+            }
+
+            await System.Threading.Tasks.Task.CompletedTask;
+            Progress.Visibility = Visibility.Collapsed;
         }
 
         async void CheckDeviceUsed()
@@ -154,6 +226,19 @@ namespace DuDuChinese.Views
 
             ViewModel.IsDataLoaded = true;
             Bindings.Update();
+        }
+
+        #endregion
+
+        #region Show stroke order
+
+        private async void Character_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            int i;
+            int.TryParse(button.Tag.ToString(), out i);
+
+            ViewModel.ShowStrokeOrder(i);
         }
 
         #endregion
