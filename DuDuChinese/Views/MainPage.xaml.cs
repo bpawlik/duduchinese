@@ -136,6 +136,7 @@ namespace DuDuChinese.Views
 
             await System.Threading.Tasks.Task.CompletedTask;
             Progress.Visibility = Visibility.Collapsed;
+            Status.Text = "";
         }
 
         async void CheckDeviceUsed()
@@ -220,7 +221,6 @@ namespace DuDuChinese.Views
             if (--inProgress > 0) // still busy
                 return;
 
-            Progress.Visibility = Visibility.Collapsed; // don't need this any more
             ViewModel.LoadDictionary();
             ViewModel.RealizePreinstalledLists();
 
