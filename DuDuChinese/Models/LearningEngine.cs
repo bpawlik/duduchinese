@@ -345,11 +345,19 @@ namespace DuDuChinese.Models
 
         public static int GenerateLearningItems(DictionaryRecordList recordList)
         {
+            // Black list
+            List<LearningExercise> blackList = new List<LearningExercise>() {
+                LearningExercise.English2Pinyin,
+                LearningExercise.Pinyin2English,
+                LearningExercise.Pinyin2Hanzi
+            };
+
             List<LearningItem> allItems = new List<LearningItem>();
             foreach (var record in recordList)
             {
                 foreach (LearningExercise exercise in ExerciseList)
-                    allItems.Add(new LearningItem(record) { Exercise = exercise, ListName = recordList.Name, Score = 10 });
+                    if (!blackList.Contains(exercise))
+                        allItems.Add(new LearningItem(record) { Exercise = exercise, ListName = recordList.Name, Score = 10 });
             }
 
             // Remove overlapping items between new material and revisions

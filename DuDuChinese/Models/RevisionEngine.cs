@@ -61,6 +61,13 @@ namespace DuDuChinese.Models
             if (removedCount > 0)
                 Serialize();
 
+            // Black list
+            List<LearningExercise> blackList = new List<LearningExercise>() {
+                LearningExercise.English2Pinyin,
+                LearningExercise.Pinyin2English,
+                LearningExercise.Pinyin2Hanzi
+            };
+
             // Fill list with the worst items (but not already learnt today)
             List<LearningItem> revList = new List<LearningItem>();
             DateTime today = DateTime.Today;
@@ -69,8 +76,8 @@ namespace DuDuChinese.Models
                 if (name != null && revisionList[i].ListName != name)
                     continue;
 
-                // Skip items having satisfying score (0) and those that are not scheduled for today
-                if (!fullList && (revisionList[i].Score == 0 || revisionList[i].Timestamp.Date > today))
+                // Skip items having satisfying score (0) and those that are not scheduled for today or those listed on the black list
+                if (!fullList && (revisionList[i].Score == 0 || revisionList[i].Timestamp.Date > today || blackList.Contains(revisionList[i].Exercise)))
                 {
                     numberOfItems++;
                     continue;
