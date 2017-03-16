@@ -105,7 +105,8 @@
                                             <Button Visibility="{Binding SimplifiedVisible, Mode=TwoWay}"
                                                     Margin="-5,0,0,10" Click="Character_Click" Background="Transparent">
                                                 <Button.Content>
-                                                    <TextBlock Text="{Binding Chinese}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="30"  />
+                                                    <TextBlock Text="{Binding Chinese}" TextWrapping="Wrap" TextTrimming="WordEllipsis"
+                                                               FontSize="{StaticResource ChineseExerciseFontSize}" FontFamily="{StaticResource ChineseFontFamily}" />
                                                 </Button.Content>
                                             </Button>
                                         </StackPanel>

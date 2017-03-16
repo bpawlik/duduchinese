@@ -65,7 +65,8 @@ namespace DuDuChinese.Models
             List<LearningExercise> blackList = new List<LearningExercise>() {
                 LearningExercise.English2Pinyin,
                 LearningExercise.Pinyin2English,
-                LearningExercise.Pinyin2Hanzi
+                LearningExercise.Pinyin2Hanzi,
+                LearningExercise.FillGapsEnglish
             };
 
             // Fill list with the worst items (but not already learnt today)

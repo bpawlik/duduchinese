@@ -10,6 +10,10 @@
     <Color x:Key="ContrastColor">White</Color>
     <Color x:Key="SystemAccentColor">SteelBlue</Color>
 
+    <x:Double x:Key="ChineseFontSize">30</x:Double>
+    <x:Double x:Key="ChineseExerciseFontSize">36</x:Double>
+    <FontFamily x:Key="ChineseFontFamily">SimSun</FontFamily>
+    
     <ResourceDictionary.ThemeDictionaries>
 
         <ResourceDictionary x:Key="Light">
