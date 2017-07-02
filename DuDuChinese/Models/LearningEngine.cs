@@ -67,6 +67,10 @@ namespace DuDuChinese.Models
         [Command("Input pin1yin1")]
         Hanzi2Pinyin,
 
+        [Description("Draw 汉字")]
+        [Command("Draw 汉字")]
+        DrawHanzi,
+
         #endregion
 
         #region Sentence exercises
@@ -138,6 +142,7 @@ namespace DuDuChinese.Models
 
         private static readonly LearningExercise[] exerciseListWords = {
             LearningExercise.Display,
+            LearningExercise.DrawHanzi,
             LearningExercise.HanziPinyin2English,
             LearningExercise.English2Hanzi,
             LearningExercise.Hanzi2English,
@@ -430,6 +435,7 @@ namespace DuDuChinese.Models
                     break;
                 case LearningExercise.English2Hanzi:
                 case LearningExercise.English2Pinyin:
+                case LearningExercise.DrawHanzi:
                     PinyinVisible = Visibility.Collapsed;
                     TranslationVisible = Visibility.Visible;
                     SimplifiedVisible = Visibility.Collapsed;
@@ -559,6 +565,7 @@ namespace DuDuChinese.Models
                 case LearningExercise.English2Hanzi:
                 case LearningExercise.Pinyin2Hanzi:
                 case LearningExercise.FillGapsChinese:
+                case LearningExercise.DrawHanzi:
                     result = CurrentItem.Chinese.Simplified == inputText;
                     break;
                 case LearningExercise.Hanzi2Pinyin:

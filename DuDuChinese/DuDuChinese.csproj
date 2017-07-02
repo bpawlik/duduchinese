@@ -158,6 +158,9 @@
     <Compile Include="Views\ExerciseFillGapPage.xaml.cs">
       <DependentUpon>ExerciseFillGapPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ExerciseDrawPage.xaml.cs">
+      <DependentUpon>ExerciseDrawPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ExerciseTextBoxPage.xaml.cs">
       <DependentUpon>ExerciseTextBoxPage.xaml</DependentUpon>
     </Compile>
@@ -229,6 +232,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ExerciseFillGapPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ExerciseDrawPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

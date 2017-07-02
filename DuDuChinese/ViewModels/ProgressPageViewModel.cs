@@ -152,6 +152,10 @@ namespace DuDuChinese.ViewModels
                     NavigationService.Navigate(typeof(Views.ExerciseDisplayPage), 0);
                     break;
 
+                case LearningExercise.DrawHanzi:
+                    NavigationService.Navigate(typeof(Views.ExerciseDrawPage), 0);
+                    break;
+
                 case LearningExercise.FillGapsChinese:
                 case LearningExercise.FillGapsEnglish:
                     NavigationService.Navigate(typeof(Views.ExerciseFillGapPage), 0);
