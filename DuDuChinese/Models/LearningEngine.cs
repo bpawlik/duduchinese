@@ -574,9 +574,14 @@ namespace DuDuChinese.Models
                     string pinyin = CurrentItem.Chinese.PinyinNoMarkup.ToLower().Replace(" ", "");
                     inputText = inputText.Replace(" ", "");
                     result = pinyin == inputText;
+
                     // If failed then remove 5th tone notation and try again
                     if (!result)
                         result = pinyin.Replace("5", "") == inputText;
+
+                    // If failed again then replace u: notation with v
+                    if (!result)
+                        result = pinyin.Replace("u:", "v") == inputText;
                     break;
             }
 
