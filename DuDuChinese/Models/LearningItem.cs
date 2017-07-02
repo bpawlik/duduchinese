@@ -46,6 +46,8 @@ namespace DuDuChinese.Models
 
                 // Update the date
                 int nextReviewInDays = this.score == 0 ? -1 : (11 - this.score);
+                if (nextReviewInDays > 2)
+                    nextReviewInDays *= 2;
                 this.Timestamp = DateTime.Today.AddDays(nextReviewInDays);
             }
         }
