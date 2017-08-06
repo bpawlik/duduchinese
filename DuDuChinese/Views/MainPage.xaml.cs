@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using DuDuChinese.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -618,11 +618,60 @@ namespace DuDuChinese.Views
 
                             using (StreamReader streamReader = new StreamReader(stream))
                             {
+                                // 0 - word (simplified)
+                                // 1 - word (translation)
+                                // 2 - sentence (simplified)
+                                // 3 - sentence (translation)
+                                bool jumpOverFourLines = false;
+
                                 while (streamReader.Peek() >= 0)
                                 {
                                     string line = streamReader.ReadLine();
+
                                     if (line.StartsWith("#") || String.IsNullOrWhiteSpace(line))
                                         continue;
+
+                                    if (!line.StartsWith("#") && !line.Contains("\\"))
+                                    {
+                                        if (line == "Outro")
+                                            break;
+
+                                        if (!jumpOverFourLines)
+                                        {
+                                            jumpOverFourLines = (line == "Intro");
+                                            if (jumpOverFourLines)
+                                                continue;
+                                        }
+
+                                        // Search for the character and replace the line
+                                        List<DictionaryRecord> records = ViewModel.SearchAllRelevant(line.Trim(), 100);
+                                        if (records.Count == 0)
+                                            continue;
+
+                                        // Add sentence to every dict record if provided
+                                        if (jumpOverFourLines)
+                                        {
+                                            string wordTranslation = streamReader.ReadLine();
+                                            string sentence = streamReader.ReadLine();
+                                            string sentenceTranslation = streamReader.ReadLine();
+
+                                            string sentenceSimplified = sentence.Split('。', '？', '！')[0];
+                                            if (sentence.Contains("。"))
+                                                sentenceSimplified += "。";
+                                            else if (sentence.Contains("！"))
+                                                sentenceSimplified += "！";
+                                            else if (sentence.Contains("？"))
+                                                sentenceSimplified += "？";
+
+                                            for (int i = 0; i < records.Count; ++i)
+                                                records[i].Sentence = new List<string>() { sentenceSimplified, sentenceTranslation };
+                                        }
+
+                                        line = "";
+                                        foreach (DictionaryRecord record in records)
+                                            line += record.ToString() + Environment.NewLine;
+                                    }
+
                                     writer.WriteLine(line);
                                 }
                             }

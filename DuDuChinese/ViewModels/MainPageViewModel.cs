@@ -228,6 +228,16 @@ namespace DuDuChinese.ViewModels
             this.Items.Clear();
         }
 
+        public List<DictionaryRecord> SearchAllRelevant(string query, int minRelevance = 50)
+        {
+            List<DictionaryRecord> results = this.Searcher.Search(query, minRelevance);
+
+            if (results.Count == 0 && this.Searcher.Total > 0) // try again
+                results = this.Searcher.Search(query);
+
+            return results;
+        }
+
         public void Search(int index)
         {
             DictionaryRecord record = this.Dictionary[index];

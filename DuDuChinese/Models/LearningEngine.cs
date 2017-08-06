@@ -67,7 +67,7 @@ namespace DuDuChinese.Models
         [Command("Input pin1yin1")]
         Hanzi2Pinyin,
 
-        [Description("Draw 汉字")]
+        [Description("Write 汉字")]
         [Command("Draw 汉字")]
         DrawHanzi,
 
@@ -142,13 +142,13 @@ namespace DuDuChinese.Models
 
         private static readonly LearningExercise[] exerciseListWords = {
             LearningExercise.Display,
-            LearningExercise.DrawHanzi,
             LearningExercise.HanziPinyin2English,
             LearningExercise.English2Hanzi,
             LearningExercise.Hanzi2English,
             LearningExercise.Pinyin2Hanzi,
             LearningExercise.English2Pinyin,
-            LearningExercise.Hanzi2Pinyin
+            LearningExercise.Hanzi2Pinyin,
+            LearningExercise.DrawHanzi,
         };
 
         private static readonly LearningExercise[] exerciseListSentences = {
