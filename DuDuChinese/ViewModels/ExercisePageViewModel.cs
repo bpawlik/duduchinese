@@ -112,8 +112,8 @@ namespace DuDuChinese.ViewModels
                 if (value == null)
                     return;
 
-                Visibility pinyinVisible, translationVisible, simplifiedVisible, sentenceVisible;
-                LearningEngine.SetVisibility(out pinyinVisible, out translationVisible, out simplifiedVisible, out sentenceVisible);
+                Visibility pinyinVisible, translationVisible, simplifiedVisible, sentenceVisible, sentenceChineseVisible;
+                LearningEngine.SetVisibility(out pinyinVisible, out translationVisible, out simplifiedVisible, out sentenceVisible, out sentenceChineseVisible);
                 this.Items.Add(new ItemViewModel()
                 {
                     Record = value,
@@ -122,11 +122,14 @@ namespace DuDuChinese.ViewModels
                     EnglishWithNewlines = String.Join("\n", value.English),
                     Chinese = value.Chinese.Simplified,
                     Index = value.Index,
+                    Sentence = String.Join(Environment.NewLine + " - ", value.Sentence),
+                    SentenceChinese = value.Sentence.Count > 0 ? value.Sentence[0] : "",
+                    SentenceEnglish = value.Sentence.Count > 1 ? value.Sentence[1] : "",
                     PinyinVisible = pinyinVisible,
                     TranslationVisible = translationVisible,
                     SimplifiedVisible = simplifiedVisible,
                     SentenceVisible = sentenceVisible,
-                    Sentence = String.Join(Environment.NewLine + " - ", value.Sentence)
+                    SentenceChineseVisible = sentenceChineseVisible
                 });
                 this.Set(ref this.currentItem, value);
 
@@ -464,6 +467,7 @@ namespace DuDuChinese.ViewModels
                 this.Items[0].TranslationVisible = Visibility.Visible;
                 this.Items[0].SimplifiedVisible = Visibility.Visible;
                 this.Items[0].SentenceVisible = Visibility.Visible;
+                this.Items[0].SentenceChineseVisible = Visibility.Visible;
             }
             this.Validated = true;
             this.InputTextDisabled = true;
@@ -492,13 +496,14 @@ namespace DuDuChinese.ViewModels
             // Set visibility
             if (this.Items.Count > 0)
             {
-                Visibility pinyinVisible, translationVisible, simplifiedVisible, sentenceVisible;
-                LearningEngine.SetVisibility(out pinyinVisible, out translationVisible, out simplifiedVisible, out sentenceVisible);
+                Visibility pinyinVisible, translationVisible, simplifiedVisible, sentenceVisible, sentenceChineseVisible;
+                LearningEngine.SetVisibility(out pinyinVisible, out translationVisible, out simplifiedVisible, out sentenceVisible, out sentenceChineseVisible);
                 ItemViewModel c = this.Items[0];
                 this.Items[0].PinyinVisible = pinyinVisible;
                 this.Items[0].TranslationVisible = translationVisible;
                 this.Items[0].SimplifiedVisible = simplifiedVisible;
                 this.Items[0].SentenceVisible = sentenceVisible;
+                this.Items[0].SentenceChineseVisible = sentenceChineseVisible;
             }
         }
 

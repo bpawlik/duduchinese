@@ -168,6 +168,7 @@ namespace DuDuChinese.ViewModels
                 case LearningExercise.Pinyin2Hanzi:
                 case LearningExercise.English2Hanzi:
                 case LearningExercise.English2Pinyin:
+                case LearningExercise.EnglishSentence2Hanzi:
                 default:
                     NavigationService.Navigate(typeof(Views.ExerciseTextBoxPage), 0);
                     break;

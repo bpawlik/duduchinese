@@ -96,6 +96,20 @@ namespace DuDuChinese.ViewModels
             set { Set(ref this.sentence, value); }
         }
 
+        private string sentenceChinese;
+        public string SentenceChinese
+        {
+            get { return this.sentenceChinese; }
+            set { Set(ref this.sentenceChinese, value); }
+        }
+
+        private string sentenceEnglish;
+        public string SentenceEnglish
+        {
+            get { return this.sentenceEnglish; }
+            set { Set(ref this.sentenceEnglish, value); }
+        }
+
         #region Visibility flags
 
         private Visibility pinyinVisible = Visibility.Collapsed;
@@ -131,6 +145,23 @@ namespace DuDuChinese.ViewModels
                 if (String.IsNullOrWhiteSpace(this.Sentence))
                     this.sentenceVisible = Visibility.Collapsed;
                 this.Set(ref this.sentenceVisible, value);
+            }
+        }
+
+        private Visibility sentenceChineseVisible = Visibility.Collapsed;
+        public Visibility SentenceChineseVisible
+        {
+            get
+            {
+                if (String.IsNullOrWhiteSpace(this.SentenceChinese))
+                    this.sentenceChineseVisible = Visibility.Collapsed;
+                return this.sentenceChineseVisible;
+            }
+            set
+            {
+                if (String.IsNullOrWhiteSpace(this.SentenceChinese))
+                    this.sentenceChineseVisible = Visibility.Collapsed;
+                this.Set(ref this.sentenceChineseVisible, value);
             }
         }
 

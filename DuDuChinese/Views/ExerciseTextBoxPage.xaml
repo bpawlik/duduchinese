@@ -110,11 +110,14 @@
                                                 </Button.Content>
                                             </Button>
                                         </StackPanel>
-                                        <StackPanel x:Name="SentencePanel" Orientation="Horizontal" Margin="-3,5,0,5"
+                                        <StackPanel x:Name="SentencePanel" Margin="-3,5,0,5"
                                                     Visibility="{Binding SentenceVisible, Mode=TwoWay}" >
+                                            <TextBlock Text="{Binding SentenceEnglish}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="22"  />
                                             <Button Click="PlaySentence_Click" Background="Transparent" Padding="0,3,0,5">
                                                 <Button.Content>
-                                                    <TextBlock Text="{Binding Sentence}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="22"  />
+                                                    <TextBlock Text="{Binding SentenceChinese}"
+                                                               Visibility="{Binding SentenceChineseVisible, Mode=TwoWay}"
+                                                               TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="24"  />
                                                 </Button.Content>
                                             </Button>
                                         </StackPanel>

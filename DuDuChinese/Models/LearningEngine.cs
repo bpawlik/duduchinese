@@ -37,8 +37,6 @@ namespace DuDuChinese.Models
         [Description("Write translation from hearing")]
         Translation,
 
-        // Yes / No
-
         [Description("Translate from Chinese to English")]
         [Command("Input English")]
         HanziPinyin2English,
@@ -84,6 +82,10 @@ namespace DuDuChinese.Models
         [Description("Fill gaps with 汉字")]
         [Command("Input 汉字")]
         FillGapsChinese,
+
+        [Description("Translate sentence to 汉字")]
+        [Command("Input 汉字")]
+        EnglishSentence2Hanzi,
 
         #endregion
 
@@ -148,13 +150,14 @@ namespace DuDuChinese.Models
             LearningExercise.Pinyin2Hanzi,
             LearningExercise.English2Pinyin,
             LearningExercise.Hanzi2Pinyin,
-            LearningExercise.DrawHanzi,
+            LearningExercise.DrawHanzi
         };
 
         private static readonly LearningExercise[] exerciseListSentences = {
             LearningExercise.Display,
             LearningExercise.FillGapsEnglish,
-            LearningExercise.FillGapsChinese
+            LearningExercise.FillGapsChinese,
+            LearningExercise.EnglishSentence2Hanzi
         };
 
         #endregion
@@ -290,6 +293,7 @@ namespace DuDuChinese.Models
                 {
                     case LearningExercise.FillGapsChinese:
                     case LearningExercise.FillGapsEnglish:
+                    case LearningExercise.EnglishSentence2Hanzi:
                         return true;
                     default:
                         return false;
@@ -418,9 +422,11 @@ namespace DuDuChinese.Models
                     : LearningItems[exercise].Count;
         }
 
-        public static void SetVisibility(out Visibility PinyinVisible, out Visibility TranslationVisible, out Visibility SimplifiedVisible, out Visibility SentenceVisible)
+        public static void SetVisibility(out Visibility PinyinVisible, out Visibility TranslationVisible, out Visibility SimplifiedVisible, out Visibility SentenceVisible, out Visibility SentenceChineseVisible)
         {
             SentenceVisible = CurrentExercise == LearningExercise.Display ? Visibility.Visible : Visibility.Collapsed;
+            SentenceChineseVisible = Visibility.Visible;
+
             switch (CurrentExerciseList[CurrentExerciseIndex])
             {
                 case LearningExercise.Display:
@@ -461,6 +467,13 @@ namespace DuDuChinese.Models
                     PinyinVisible = Visibility.Collapsed;
                     TranslationVisible = Visibility.Collapsed;
                     SimplifiedVisible = Visibility.Visible;
+                    break;
+                case LearningExercise.EnglishSentence2Hanzi:
+                    PinyinVisible = Visibility.Collapsed;
+                    TranslationVisible = Visibility.Collapsed;
+                    SimplifiedVisible = Visibility.Collapsed;
+                    SentenceVisible = Visibility.Visible;
+                    SentenceChineseVisible = Visibility.Collapsed;
                     break;
                 default:
                     PinyinVisible = Visibility.Visible;
@@ -568,6 +581,9 @@ namespace DuDuChinese.Models
                 case LearningExercise.DrawHanzi:
                     result = CurrentItem.Chinese.Simplified == inputText;
                     break;
+                case LearningExercise.EnglishSentence2Hanzi:
+                    result = CurrentItem.Sentence[0].Replace("。","") == inputText.Replace("。", "");
+                    break;
                 case LearningExercise.Hanzi2Pinyin:
                 case LearningExercise.English2Pinyin:
                     // Convert to lower and remove spaces
@@ -654,6 +670,7 @@ namespace DuDuChinese.Models
                 case LearningExercise.English2Hanzi:
                 case LearningExercise.Pinyin2Hanzi:
                 case LearningExercise.FillGapsChinese:
+                case LearningExercise.EnglishSentence2Hanzi:
                     if (Windows.Globalization.Language.CurrentInputMethodLanguageTag.Contains("zh-") || !isLatin)
                         return "";
                     return "Change input method to Chinese";
