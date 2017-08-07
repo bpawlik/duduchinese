@@ -667,9 +667,11 @@ namespace DuDuChinese.Views
                                                 records[i].Sentence = new List<string>() { sentenceSimplified, sentenceTranslation };
                                         }
 
+                                        string inputLine = line;
                                         line = "";
                                         foreach (DictionaryRecord record in records)
-                                            line += record.ToString() + Environment.NewLine;
+                                            if (record.Chinese.Simplified == inputLine)
+                                                line += record.ToString() + Environment.NewLine;
                                     }
 
                                     writer.WriteLine(line);
