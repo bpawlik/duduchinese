@@ -159,6 +159,19 @@ namespace DuDuChinese.Models
 
         public static void Serialize(Stream stream)
         {
+// Move past items to the future if you've been lazy ;)
+#if LAZY_MODE
+            List<LearningItem> revList = new List<LearningItem>();
+            DateTime today = DateTime.Today;
+            Random rnd = new Random();
+            for (int i = 0; i < revisionList.Count; ++i)
+            {
+                // Move old items to the future
+                if (revisionList[i].Score != 0 && revisionList[i].Timestamp.Date < today)
+                    revisionList[i].Timestamp = today.AddDays(rnd.Next(1, 30));
+            }
+#endif
+
             // Write an object to the Stream and leave it opened
             using (var writer = XmlDictionaryWriter.CreateTextWriter(stream, Encoding.UTF8, ownsStream: false))
             {

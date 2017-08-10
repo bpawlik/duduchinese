@@ -124,31 +124,36 @@ namespace DuDuChinese.Views
 
         private async Task<string> RecognizeInput()
         {
-            var inkRecognizer = new InkRecognizerContainer();
-
-            int hanziIndex = 0;
-            foreach (InkRecognizer inkR in inkRecognizer.GetRecognizers())
+            try
             {
-                if (inkR.Name == "Microsoft 中文(简体)手写识别器")
-                    break;
-                hanziIndex++;
-            }
+                var inkRecognizer = new InkRecognizerContainer();
 
-            if (inkRecognizer != null)
-            {
-                // Set Hanzi recognizer
-                inkRecognizer.SetDefaultRecognizer(inkRecognizer.GetRecognizers()[hanziIndex]);
-
-                try
+                int hanziIndex = 0;
+                foreach (InkRecognizer inkR in inkRecognizer.GetRecognizers())
                 {
+                    if (inkR.Name == "Microsoft 中文(简体)手写识别器")
+                        break;
+                    hanziIndex++;
+                }
+
+                if (inkRecognizer != null)
+                {
+                    // Set Hanzi recognizer
+                    inkRecognizer.SetDefaultRecognizer(inkRecognizer.GetRecognizers()[hanziIndex]);
+
                     var recognitionResults = await inkRecognizer.RecognizeAsync(
                         this.hanziCanvas.InkPresenter.StrokeContainer,
                         InkRecognitionTarget.All);
 
+                    if (recognitionResults.Count == 0)
+                        return String.Empty;
+
                     return string.Join("", recognitionResults.Select(i => i.GetTextCandidates()[0]));
                 }
-                catch { /* Do nothing */ }
+
             }
+            catch { /* Do nothing */ }
+
             return String.Empty;
         }
 
