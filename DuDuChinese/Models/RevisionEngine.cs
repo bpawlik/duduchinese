@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Windows.Storage;
@@ -14,6 +15,7 @@ namespace DuDuChinese.Models
 {
     public class RevisionEngine
     {
+        private static Mutex mutex = new Mutex();
         private static readonly string revisionsFile = "revisions.xml";
 
         // DictionaryItem - learning exercise - score (10, +1 for wrong, -1 for correct)
@@ -159,7 +161,9 @@ namespace DuDuChinese.Models
 
         public static void Serialize(Stream stream)
         {
-// Move past items to the future if you've been lazy ;)
+            mutex.WaitOne();
+
+            // Move past items to the future if you've been lazy ;)
 #if LAZY_MODE
             List<LearningItem> revList = new List<LearningItem>();
             DateTime today = DateTime.Today;
@@ -209,6 +213,8 @@ namespace DuDuChinese.Models
 
         public static async Task Deserialize()
         {
+            mutex.WaitOne();
+
             try
             {
                 // Get the local folder.
@@ -256,6 +262,8 @@ namespace DuDuChinese.Models
 
         public static void Deserialize(Stream stream)
         {
+            mutex.WaitOne();
+
             // Read Stream to the Serializer and Deserialize and close it
             using (var reader = XmlDictionaryReader.CreateTextReader(stream, Encoding.UTF8, new XmlDictionaryReaderQuotas(), null))
             {

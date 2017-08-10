@@ -15,6 +15,8 @@ namespace DuDuChinese
 {
     public class ListManager : Dictionary<string, DictionaryRecordList>
     {
+        private static Mutex mutex = new Mutex();
+
         /// <summary>
         /// Wraps DictionaryRecordList to add management functionality.
         /// </summary>
@@ -49,6 +51,8 @@ namespace DuDuChinese
 
             public async void Save(StorageFolder destinationFolder = null)
             {
+                mutex.WaitOne();
+
                 try
                 {
                     if (IsDeleted || (destinationFolder == null && !IsModified)) // save not required
@@ -74,6 +78,8 @@ namespace DuDuChinese
 
             public void Save(Stream stream)
             {
+                mutex.WaitOne();
+
                 try
                 {
                     byte[] data = Encoding.UTF8.GetBytes(this.ToString());
@@ -87,6 +93,8 @@ namespace DuDuChinese
 
             public void Delete()
             {
+                mutex.WaitOne();
+
                 try
                 {
                     if (!IsDeleted)
@@ -134,6 +142,8 @@ namespace DuDuChinese
 
         public void LoadListFromFile(string filename)
         {
+            mutex.WaitOne();
+
             string path = String.Format("{0}/{1}", ListsDirectory, filename);
             Debug.WriteLine(String.Format("Loading list: {0}", path));
             Dictionary dictionary = new Dictionary(path);
@@ -151,6 +161,8 @@ namespace DuDuChinese
 
         public void LoadListFromStream(string filename, Stream stream)
         {
+            mutex.WaitOne();
+
             Dictionary dictionary = new Dictionary(stream);
             ManagedList list = new ManagedList(dictionary);
             list.SavePath = String.Format("{0}/{1}", ListsDirectory, filename);
@@ -195,6 +207,8 @@ namespace DuDuChinese
         /// <param name="key">Name of the list to mark as deleted</param>
         public new string Remove(string key)
         {
+            mutex.WaitOne();
+
             if (this.ContainsKey(key))
             {
                 this[key].IsDeleted = true;
@@ -207,6 +221,8 @@ namespace DuDuChinese
 
         public void Save(Stream stream, string name)
         {
+            mutex.WaitOne();
+
             if (this.ContainsKey(name))
             {
                 ManagedList list = (ManagedList)this[name];
