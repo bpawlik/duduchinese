@@ -155,7 +155,6 @@ namespace DuDuChinese.Models
 
         private static readonly LearningExercise[] exerciseListSentences = {
             LearningExercise.Display,
-            LearningExercise.FillGapsEnglish,
             LearningExercise.FillGapsChinese,
             LearningExercise.EnglishSentence2Hanzi
         };
