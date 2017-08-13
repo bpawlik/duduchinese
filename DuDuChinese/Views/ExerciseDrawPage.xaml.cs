@@ -138,6 +138,14 @@ namespace DuDuChinese.Views
 
                 if (inkRecognizer != null)
                 {
+                    var recognizers = inkRecognizer.GetRecognizers();
+                    if (hanziIndex > recognizers.Count - 1)
+                    {
+                        var messageDialog = new Windows.UI.Popups.MessageDialog("Microsoft 中文(简体)手写识别器 Handwriting module not found! Please install it first.");
+                        await messageDialog.ShowAsync();
+                        return String.Empty;
+                    }
+
                     // Set Hanzi recognizer
                     inkRecognizer.SetDefaultRecognizer(inkRecognizer.GetRecognizers()[hanziIndex]);
 
