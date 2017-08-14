@@ -10,6 +10,7 @@ using Windows.UI.Xaml.Navigation;
 using DuDuChinese.Models;
 using Windows.Storage;
 using System.IO.Compression;
+using System.Diagnostics;
 
 namespace DuDuChinese.Views
 {
@@ -85,13 +86,14 @@ namespace DuDuChinese.Views
                     RevisionEngine.Serialize(stream);
                 BackupStatus("Revisions saved successfully.");
             }
-            catch
+            catch (Exception ex)
             {
                 var messageDialog = new Windows.UI.Popups.MessageDialog(
                     String.Format("Failed to save revisions to the file: {0}", revisionsFilename));
                 messageDialog.Title = "Save Revision List Error";
                 await messageDialog.ShowAsync();
                 BackupStatus("Failed to save revisions.", false);
+                Debug.WriteLine(String.Format("Failed to save revisions: {0}", ex.Message));
                 return;
             }
 
@@ -102,13 +104,14 @@ namespace DuDuChinese.Views
                 app.ListManager.SaveAll(temporaryFolder);
                 BackupStatus("Backup successful.");
             }
-            catch
+            catch (Exception ex)
             {
                 var messageDialog = new Windows.UI.Popups.MessageDialog(
                     String.Format("Failed to save lists to the folder: {0}", temporaryFolder.Path));
                 messageDialog.Title = "Save Lists Error";
                 await messageDialog.ShowAsync();
                 BackupStatus("Failed to backup lists.", false);
+                Debug.WriteLine(String.Format("Failed to backup lists: {0}", ex.Message));
                 return;
             }
 
@@ -154,9 +157,10 @@ namespace DuDuChinese.Views
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 BackupStatus("Failed to backup files.", false);
+                Debug.WriteLine(String.Format("Failed to backup files: {0}", ex.Message));
                 return;
             }
 
