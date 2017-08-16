@@ -58,6 +58,9 @@ namespace DuDuChinese.ViewModels
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
         {
+            // Show waiting cursor
+            ShowWaitingCursor();
+
             // Restore shell
             Views.Shell.HamburgerMenu.IsFullScreen = false;
 
@@ -91,6 +94,21 @@ namespace DuDuChinese.ViewModels
             SelectedListChanged(listsComboBox);
 
             await Task.CompletedTask;
+
+            // Reset cursor
+            ResetCursor();
+        }
+
+        private void ShowWaitingCursor()
+        {
+            Window.Current.CoreWindow.PointerCursor =
+                new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Wait, 1);
+        }
+
+        private void ResetCursor()
+        {
+            Window.Current.CoreWindow.PointerCursor =
+                new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 1);
         }
 
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> suspensionState, bool suspending)
@@ -124,7 +142,11 @@ namespace DuDuChinese.ViewModels
                     this.Status = "No revisions for today!";
                 else
                     this.Status = "No revisions for today for the list: " + this.selectedListName;
-            }  
+            }
+            else
+            {
+                this.Status = "";
+            }
 
             SelectedItemsCount.Clear();
             for (int i = 10; i < this.revisionList.Count; i += 10)
@@ -134,6 +156,8 @@ namespace DuDuChinese.ViewModels
 
         public void SelectedListChanged(object sender)
         {
+            ShowWaitingCursor();
+
             ComboBox cb = sender as ComboBox;
             App app = (App)Application.Current;
             if (cb.SelectedValue != null)
@@ -146,10 +170,14 @@ namespace DuDuChinese.ViewModels
                 if (this.IsDetailExpanded)
                     UpdateDetails(toggle: false, fullList: true);
             }
+
+            ResetCursor();
         }
 
         public void NumberOfItems_SelectionChanged(object sender)
         {
+            ShowWaitingCursor();
+
             ComboBox cb = sender as ComboBox;
             this.NumberOfItems = Convert.ToInt32(cb.SelectedValue);
             if (this.NumberOfItems > 0 && this.revisionList != null)
@@ -170,6 +198,8 @@ namespace DuDuChinese.ViewModels
             if (this.IsDetailExpanded)
                 UpdateDetails(toggle: false, fullList: false);
             LearningEngine.ItemsCount = this.NumberOfItems;
+
+            ResetCursor();
         }
 
         public async void Start_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -197,6 +227,8 @@ namespace DuDuChinese.ViewModels
             if (this.revisionList == null)
                 return;
 
+            ShowWaitingCursor();
+
             // Get full revision list for the current list
             List<LearningItem> detailRevisionList = RevisionEngine.GetRevisionList(-1, this.SelectedListName, fullList);
 
@@ -205,10 +237,15 @@ namespace DuDuChinese.ViewModels
             this.RevisionItems.Clear();
 
             if (!this.IsDetailExpanded)
+            {
+                ResetCursor();
                 return;
+            }
 
             foreach (var item in detailRevisionList)
                 this.RevisionItems.Add(item);
+
+            ResetCursor();
         }
 
         public void RemoveSelectedItem()
