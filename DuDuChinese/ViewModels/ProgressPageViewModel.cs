@@ -94,7 +94,7 @@ namespace DuDuChinese.ViewModels
                     Exercise = exerc,
                     Text = LearningEngine.GetDescription<Description>(exerc),
                     ItemCount = LearningEngine.GetItemCountForExercise(exerc),
-                    IsEnabled = (LearningEngine.Mode != LearningMode.Revision)
+                    IsEnabled = true
                 });
             }
 
@@ -129,10 +129,9 @@ namespace DuDuChinese.ViewModels
         public void Continue_Click(object sender, RoutedEventArgs e)
         {
             // Update exercise list based on the checkbox selection
-            if (LearningEngine.Mode != LearningMode.Revision)
-                foreach (var item in ProgressItems)
-                    if (!item.IsChecked)
-                        LearningEngine.CurrentExerciseList.Remove(item.Exercise);
+            foreach (var item in ProgressItems)
+                if (!item.IsChecked)
+                    LearningEngine.CurrentExerciseList.Remove(item.Exercise);
 
             // Move to the next exercise
             LearningEngine.NextExercise();
