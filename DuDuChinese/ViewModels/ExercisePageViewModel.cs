@@ -392,6 +392,7 @@ namespace DuDuChinese.ViewModels
                     Validate((e.OriginalSource as Windows.UI.Xaml.Controls.TextBox).Text);
                 else
                     Validate();
+                Summary = LearningEngine.GetStatus();
                 return;
             }
 

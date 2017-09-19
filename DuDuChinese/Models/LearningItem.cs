@@ -41,8 +41,8 @@ namespace DuDuChinese.Models
         public int Score {
             get { return this.score; }
             set {
-                // Update the score. Limit value to [0-11] ramge
-                this.score = Math.Max(Math.Min(value, 11), 0);
+                // Update the score. Limit value to [0-10] range
+                this.score = Math.Max(Math.Min(value, 10), 0);
 
                 // Update the date
                 int nextReviewInDays = this.score == 0 ? -1 : (11 - this.score);

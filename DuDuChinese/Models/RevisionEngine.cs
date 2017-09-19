@@ -94,15 +94,14 @@ namespace DuDuChinese.Models
         {
             // Find given record and exercise
             var find = RevisionList.FirstOrDefault(x => (revItem == x));
-            if (find != null)
-            {
-                // Increase or decrease score based on result
-                find.Score += (correct ? -addend : addend);
-            }
-            else
+            if (find == null)
             {
                 RevisionList.Add(revItem);
+                find = revItem;
             }
+
+            // Increase or decrease score based on result
+            find.Score += (correct ? -addend : addend);
         }
 
         public static void UpdateRevisionList(string listName, DictionaryRecord record, LearningExercise exercise, bool correct)

@@ -514,6 +514,22 @@ namespace DuDuChinese.Models
 
         public static string GetStatus()
         {
+#if DEBUG_ENGINE
+            LearningItem curItem = LearningItems[CurrentExercise][currentItemIndex - 1];
+            string time = curItem.Timestamp.ToString("dd-MM-yyyy");
+            string status = "#" + curItem.Score + " (" + time + ")" + Environment.NewLine;
+
+            // Previous item
+            if (currentItemIndex > 1)
+            {
+                LearningItem prevItem = LearningItems[CurrentExercise][currentItemIndex - 2];
+                string pword = "(previous) Word: " + prevItem.Record.Chinese.Simplified + Environment.NewLine;
+                string pleft = "(previous) Repetitions: " + prevItem.Score + Environment.NewLine;
+                string pnext = "(previous) Timestamp: " + prevItem.Timestamp.ToString("dd-MM-yyyy") + Environment.NewLine;
+                status += pword + pleft + pnext;
+            }
+#endif
+
             if (correctCount > 0 || wrongCount > 0)
             {
                 int totalItems = LearningItems[CurrentExercise].Count;
