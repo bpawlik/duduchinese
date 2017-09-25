@@ -96,7 +96,6 @@ namespace DuDuChinese.ViewModels
         public ObservableCollection<ItemViewModel> Items { get; private set; } = new ObservableCollection<ItemViewModel>();
         public ObservableCollection<object> SentenceItems { get; private set; } = new ObservableCollection<object>();
         public TextBox KeywordTextBox { get; set; } = null;
-        public bool Validated { get; set; } = false;
         public bool InputTextDisabled { get; set; } = false;
         public MediaElement Media { get; internal set; }
 
@@ -185,6 +184,13 @@ namespace DuDuChinese.ViewModels
         {
             get { return this.isWrongAnswer; }
             set { this.Set(ref this.isWrongAnswer, value); }
+        }
+
+        private bool validated = false;
+        public bool Validated
+        {
+            get { return this.validated; }
+            set { this.Set(ref this.validated, value); }
         }
 
         #endregion
@@ -419,6 +425,15 @@ namespace DuDuChinese.ViewModels
         {
             // Need to revert Validate result
             LearningEngine.RevertLastValidate(true);
+
+            this.Validated = true;
+            Continue_Click(sender, e);
+        }
+
+        public void Learnt_Click(object sender, RoutedEventArgs e)
+        {
+            // Mark last item as learnt (no more reviews)
+            LearningEngine.MarkLastAsLearnt();
 
             this.Validated = true;
             Continue_Click(sender, e);

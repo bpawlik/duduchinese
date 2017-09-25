@@ -170,6 +170,7 @@ namespace DuDuChinese.Models
         private static int currentItemIndex = 0;
         private static int correctCount = 0;
         private static int wrongCount = 0;
+        private static bool lastResult = true;
 
         private static LearningMode mode = LearningMode.Words;
         public static LearningMode Mode
@@ -490,6 +491,7 @@ namespace DuDuChinese.Models
             LearningItems = null;
             correctCount = 0;
             wrongCount = 0;
+            lastResult = true;
         }
 
         public static DictionaryRecord GetNextItem()
@@ -514,10 +516,12 @@ namespace DuDuChinese.Models
 
         public static string GetStatus()
         {
+            string status = String.Empty;
+
 #if DEBUG_ENGINE
             LearningItem curItem = LearningItems[CurrentExercise][currentItemIndex - 1];
             string time = curItem.Timestamp.ToString("dd-MM-yyyy");
-            string status = "#" + curItem.Score + " (" + time + ")" + Environment.NewLine;
+            status += "#" + curItem.Score + " (" + time + ")" + Environment.NewLine;
 
             // Previous item
             if (currentItemIndex > 1)
@@ -536,11 +540,11 @@ namespace DuDuChinese.Models
                 string score = "Total: " + ((int)(100.0 * Convert.ToDouble(correctCount) / Convert.ToDouble(totalItems))).ToString() + " %" + Environment.NewLine;
                 string correct = "Correct: " + correctCount.ToString() + Environment.NewLine;
                 string wrong = "Wrong: " + wrongCount.ToString() + Environment.NewLine;
-                
-                return correct + wrong + score;
+
+                status += correct + wrong + score;
             }
 
-            return String.Empty;
+            return status;
         }
 
         public static bool Validate(string inputText)
@@ -628,6 +632,7 @@ namespace DuDuChinese.Models
             if (!result)
                 LearningItems[CurrentExercise].Add(LearningItems[CurrentExercise][currentItemIndex - 1]);
 
+            lastResult = result;
             return result;
         }
 
@@ -648,9 +653,18 @@ namespace DuDuChinese.Models
                 correctCount--;
                 LearningItems[CurrentExercise].Add(LearningItems[CurrentExercise][currentItemIndex - 1]);
             }
+            lastResult = newResult;
 
             // We need to update revision list twice in order to correct for the previous update
             RevisionEngine.UpdateRevisionList(LearningItems[CurrentExercise][currentItemIndex - 1], newResult, 2);
+        }
+
+        public static void MarkLastAsLearnt()
+        {
+            if (!lastResult)
+                RevertLastValidate(true);
+
+            RevisionEngine.UpdateRevisionList(LearningItems[CurrentExercise][currentItemIndex - 1], true, 10);
         }
 
         // Helper function to display enums description

@@ -183,6 +183,10 @@
                              Value="{x:Bind ViewModel.ProgressValue}"  Maximum="{x:Bind ViewModel.ProgressMaxValue}" 
                     IsIndeterminate="False" />
                 <StackPanel Grid.Row="5" VerticalAlignment="Bottom">
+                    <Button x:Name="learntButton" Content="Mark As Learnt" Margin="20,10,0,0" HorizontalAlignment="Right"
+                            Click="{x:Bind Learnt_Click}"
+                            Visibility="{Binding Validated, Converter={StaticResource VisibilityConverter}}"
+                            />
                     <TextBlock Text="{x:Bind ViewModel.Summary, Mode=TwoWay}" Margin="20,0" />
                 </StackPanel>
             </Grid>

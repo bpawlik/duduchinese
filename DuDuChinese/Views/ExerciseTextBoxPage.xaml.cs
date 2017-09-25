@@ -43,6 +43,13 @@ namespace DuDuChinese.Views
             Bindings.Update();
         }
 
+        private void Learnt_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            ViewModel.Learnt_Click(sender, e);
+            this.inputTextBox.Focus(Windows.UI.Xaml.FocusState.Programmatic);
+            Bindings.Update();
+        }
+
         private void Pinyin_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             TextBlock textBlock = (TextBlock)sender;
