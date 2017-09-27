@@ -70,7 +70,7 @@ namespace CC_CEDICT.Universal
             k = line.IndexOf("//", i);
             if (k == -1)
                 return;
-            Sentence.Add(line.Substring(i, k - i));
+            Sentence.Add(line.Substring(i, k - i));  // Chinese
 
             i = k + 2;
             k = line.IndexOf("//", i);
@@ -79,7 +79,15 @@ namespace CC_CEDICT.Universal
                 Sentence.Clear();
                 return;
             }
-            Sentence.Add(line.Substring(i, k - i));
+            Sentence.Add(line.Substring(i, k - i));  // English
+
+            i = k + 2;
+            k = line.IndexOf("//", i);
+            if (k == -1)
+            {
+                return;
+            }
+            Sentence.Add(line.Substring(i, k - i));  // Pinyin
         }
 
         #endregion

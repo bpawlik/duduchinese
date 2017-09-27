@@ -28,6 +28,15 @@ namespace DuDuChinese.Views
             p.Colorize(textBlock, record);
         }
 
+        private void PinyinSentence_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            TextBlock textBlock = (TextBlock)sender;
+            ItemViewModel item = (ItemViewModel)textBlock.DataContext;
+            DictionaryRecord record = item.Record;
+            PinyinColorizer p = new PinyinColorizer();
+            p.ColorizeSentence(textBlock, record.Sentence);
+        }
+
         int previous = -1;
         private void listView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

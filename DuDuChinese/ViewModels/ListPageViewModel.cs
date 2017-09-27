@@ -166,6 +166,7 @@ namespace DuDuChinese.ViewModels
             {
                 string chinese = dialog.Chinese;
                 string english = dialog.English;
+                string pinyin = dialog.Pinyin;
 
                 int idx = list.IndexOf(SelectedItem);
                 if (idx == -1)
@@ -173,13 +174,19 @@ namespace DuDuChinese.ViewModels
 
                 list[idx].Sentence.Clear();
                 if (!String.IsNullOrWhiteSpace(chinese) && !String.IsNullOrWhiteSpace(english))
-                    list[idx].Sentence.AddRange(new List<string>() { chinese, english });
+                {
+                    if (!String.IsNullOrWhiteSpace(pinyin))
+                        list[idx].Sentence.AddRange(new List<string>() { chinese, english, pinyin });
+                    else
+                        list[idx].Sentence.AddRange(new List<string>() { chinese, english });
+                }
+                    
 
                 list.IsModified = true;
                 LoadListData();
 
                 // Create toast
-                string message = list[idx].Sentence.Count == 2 ? "Sentence saved for the list item: "
+                string message = list[idx].Sentence.Count > 1 ? "Sentence saved for the list item: "
                     : "Sentence removed from the list item: ";
                 var xmlDoc = CreateToast(message + list[idx].Chinese.Simplified);
                 var toast = new Windows.UI.Notifications.ToastNotification(xmlDoc);

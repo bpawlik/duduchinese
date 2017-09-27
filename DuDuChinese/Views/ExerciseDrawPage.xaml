@@ -115,7 +115,7 @@
                                                     Visibility="{Binding SentenceVisible, Mode=TwoWay}" >
                                             <Button Click="PlaySentence_Click" Background="Transparent" Padding="0,3,0,5">
                                                 <Button.Content>
-                                                    <TextBlock Text="{Binding Sentence}" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="22"  />
+                                                    <TextBlock Text="{Binding Sentence}" Loaded="PinyinSentence_Loaded" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="22"  />
                                                 </Button.Content>
                                             </Button>
                                         </StackPanel>

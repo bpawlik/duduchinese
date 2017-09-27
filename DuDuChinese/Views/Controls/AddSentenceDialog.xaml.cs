@@ -25,6 +25,9 @@ namespace DuDuChinese.Views.Controls
         public static readonly DependencyProperty EnglishProperty = DependencyProperty.Register(
             "English", typeof(string), typeof(AddSentenceDialog), new PropertyMetadata(default(string)));
 
+        public static readonly DependencyProperty PinyinProperty = DependencyProperty.Register(
+            "Pinyin", typeof(string), typeof(AddSentenceDialog), new PropertyMetadata(default(string)));
+
         public string Chinese
         {
             get { return (string)GetValue(ChineseProperty); }
@@ -36,21 +39,36 @@ namespace DuDuChinese.Views.Controls
             get { return (string)GetValue(EnglishProperty); }
             set { SetValue(EnglishProperty, value); }
         }
+        public string Pinyin
+        {
+            get { return (string)GetValue(PinyinProperty); }
+            set { SetValue(PinyinProperty, value); }
+        }
+
 
         public AddSentenceDialog(List<string> sentence)
         {
             this.InitializeComponent();
 
-            if (sentence.Count == 2)
+            if (sentence.Count == 3)
             {
                 chineseTextBox.Text = sentence[0];
                 englishTextBox.Text = sentence[1];
+                pinyinTextBox.Text = sentence[2];
+                PrimaryButtonText = "Save";
+            }
+            else if (sentence.Count == 2)
+            {
+                chineseTextBox.Text = sentence[0];
+                englishTextBox.Text = sentence[1];
+                pinyinTextBox.Text = "pin1yin1";
                 PrimaryButtonText = "Save";
             }
             else
             {
                 chineseTextBox.Text = "中文";
                 englishTextBox.Text = "English";
+                pinyinTextBox.Text = "pin1yin1";
                 PrimaryButtonText = "Add";
             }
             chineseTextBox.SelectAll();
@@ -60,6 +78,7 @@ namespace DuDuChinese.Views.Controls
         {
             this.Chinese = chineseTextBox.Text;
             this.English = englishTextBox.Text;
+            this.Pinyin = pinyinTextBox.Text;
         }
 
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -74,6 +93,11 @@ namespace DuDuChinese.Views.Controls
         private void englishTextBox_GotFocus(object sender, RoutedEventArgs e)
         {
             englishTextBox.SelectAll();
+        }
+
+        private void pinyinTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            pinyinTextBox.SelectAll();
         }
     }
 }
