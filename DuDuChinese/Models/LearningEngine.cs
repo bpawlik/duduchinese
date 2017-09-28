@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Windows.UI.Xaml;
 
 namespace DuDuChinese.Models
@@ -573,8 +574,11 @@ namespace DuDuChinese.Models
                         if (String.IsNullOrWhiteSpace(s) || String.IsNullOrWhiteSpace(inputText))
                             continue;
 
+                        // Remove brackets and its content
+                        string refText = Regex.Replace(s, @"\s*?(?:\(.*?\)|\[.*?\]|\{.*?\})", String.Empty);
+
                         // Convert to lower-case and replace comas/dots/colons/brackets with spaces
-                        string refText = s.ToLower().Replace(',',' ').Replace('.',' ').Replace(';',' ').Replace(':',' ').Replace('(',' ').Replace(')',' ');
+                        refText = refText.ToLower().Replace(',',' ').Replace('.',' ').Replace(';',' ').Replace(':',' ').Replace("  "," ");
 
                         // If input text contains space then match it as a whole phrase
                         if (inputText.Contains(" "))
