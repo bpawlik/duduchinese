@@ -20,6 +20,10 @@ namespace DuDuChinese.Models
         static Regex pattern3 = new Regex("^([a-zA-Z]+)([1-5])([a-zA-Z]+)([1-5])$");
         static Regex pattern4 = new Regex("^([a-zA-Z]+)([1-5])([a-zA-Z]+)$");
         static Regex pattern5 = new Regex("^([a-zA-Z1-5]+)$");
+        static Regex pattern6 = new Regex("^([a-zA-Z]+)([1-5])([a-zA-Z]+)([1-5])([a-zA-Z]+)([1-5])$");
+        static Regex pattern7 = new Regex("^([a-zA-Z]+)([1-5])([a-zA-Z]+)([1-5])([a-zA-Z]+)$");
+        static Regex pattern8 = new Regex("^([a-zA-Z]+)([1-5])([a-zA-Z]+)([1-5])([a-zA-Z]+)([1-5])([a-zA-Z]+)([1-5])$");
+        static Regex pattern9 = new Regex("^([a-zA-Z]+)([1-5])([a-zA-Z]+)([1-5])([a-zA-Z]+)([1-5])([a-zA-Z]+)$");
 
         public PinyinColorizer()
         {
@@ -67,6 +71,8 @@ namespace DuDuChinese.Models
                     if (match1.Success || match2.Success)
                     {
                         FillTextBlock(textBlock, word, !first);
+                        first = false;
+                        continue;
                     }
 
                     Match match3 = pattern3.Match(word);
@@ -82,9 +88,54 @@ namespace DuDuChinese.Models
 
                         FillTextBlock(textBlock, w1, !first);
                         FillTextBlock(textBlock, w2, false);
+                        first = false;
+                        continue;
                     }
 
-                    first = false;
+                    Match match6 = pattern6.Match(word);
+                    Match match7 = pattern7.Match(word);
+                    if (match6.Success || match7.Success)
+                    {
+                        string w1 = match6.Success ?
+                              (match6.Groups[1].ToString() + match6.Groups[2].ToString())
+                            : (match7.Groups[1].ToString() + match7.Groups[2].ToString());
+                        string w2 = match6.Success ?
+                              (match6.Groups[3].ToString() + match6.Groups[4].ToString())
+                            : (match7.Groups[3].ToString());
+                        string w3 = match6.Success ?
+                              (match6.Groups[5].ToString() + match6.Groups[6].ToString())
+                            : (match7.Groups[5].ToString());
+
+                        FillTextBlock(textBlock, w1, !first);
+                        FillTextBlock(textBlock, w2, false);
+                        FillTextBlock(textBlock, w3, false);
+                        first = false;
+                        continue;
+                    }
+
+                    Match match8 = pattern8.Match(word);
+                    Match match9 = pattern9.Match(word);
+                    if (match8.Success || match9.Success)
+                    {
+                        string w1 = match8.Success ?
+                              (match8.Groups[1].ToString() + match8.Groups[2].ToString())
+                            : (match9.Groups[1].ToString() + match9.Groups[2].ToString());
+                        string w2 = match8.Success ?
+                              (match8.Groups[3].ToString() + match8.Groups[4].ToString())
+                            : (match9.Groups[3].ToString());
+                        string w3 = match8.Success ?
+                              (match8.Groups[5].ToString() + match8.Groups[6].ToString())
+                            : (match9.Groups[5].ToString());
+                        string w4 = match8.Success ?
+                              (match8.Groups[7].ToString() + match8.Groups[8].ToString())
+                            : (match9.Groups[7].ToString());
+
+                        FillTextBlock(textBlock, w1, !first);
+                        FillTextBlock(textBlock, w2, false);
+                        FillTextBlock(textBlock, w3, false);
+                        FillTextBlock(textBlock, w4, false);
+                        first = false;
+                    }
                 }
 
                 string lastChar = sentencePinyin[sentencePinyin.Length - 1].ToString();
