@@ -487,8 +487,13 @@ namespace DuDuChinese.Models
         {
             currentExerciseIndex = -1;
             CurrentExercise = LearningExercise.Start;
-            currentItemIndex = 0;
             LearningItems = null;
+            ResetExerciseState();
+        }
+
+        public static void ResetExerciseState()
+        {
+            currentItemIndex = 0;
             correctCount = 0;
             wrongCount = 0;
             lastResult = true;

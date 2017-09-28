@@ -219,9 +219,9 @@ namespace DuDuChinese.ViewModels
 
         public override async Task OnNavigatedFromAsync(IDictionary<string, object> suspensionState, bool suspending)
         {
-            if (suspending)
+            if (!suspending)
             {
-                //suspensionState[nameof(Value)] = Value;
+                LearningEngine.ResetExerciseState();
             }
             await Task.CompletedTask;
         }
