@@ -578,7 +578,7 @@ namespace DuDuChinese.Models
                         string refText = Regex.Replace(s, @"\s*?(?:\(.*?\)|\[.*?\]|\{.*?\})", String.Empty);
 
                         // Convert to lower-case and replace comas/dots/colons/brackets with spaces
-                        refText = refText.ToLower().Replace(',',' ').Replace('.',' ').Replace(';',' ').Replace(':',' ').Replace("  "," ");
+                        refText = refText.ToLower().Replace(',',' ').Replace('.',' ').Replace(';',' ').Replace(':',' ').Replace("  "," ").Trim();
 
                         // If input text contains space then match it as a whole phrase
                         if (inputText.Contains(" "))
