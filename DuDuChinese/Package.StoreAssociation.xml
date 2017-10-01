@@ -358,11 +358,14 @@
     <Language Code="zu-za" InMinimumRequirementSet="true" />
   </SupportedLocales>
   <ProductReservedInfo>
-    <MainPackageIdentityName>65355BartekPawlik.DuDuChinese</MainPackageIdentityName>
+    <MainPackageIdentityName>65355BartekPawlik.Chinese-English-Dictionary</MainPackageIdentityName>
     <ReservedNames>
-      <ReservedName>DuDuChinese</ReservedName>
+      <ReservedName>Chinese-English-汉字 Dictionary</ReservedName>
     </ReservedNames>
   </ProductReservedInfo>
-  <AccountPackageIdentityNames />
-  <PackageInfoList LandingUrl="https://developer.microsoft.com/dashboard/Application?appId=9NBLGGH4401Q" />
+  <AccountPackageIdentityNames>
+    <MainPackageIdentityName>65355BartekPawlik.Chinese-English--Dictionary</MainPackageIdentityName>
+    <MainPackageIdentityName>65355BartekPawlik.DuDuChinese</MainPackageIdentityName>
+  </AccountPackageIdentityNames>
+  <PackageInfoList LandingUrl="https://developer.microsoft.com/dashboard/Application?appId=9PPBKQWP8KKN" />
 </StoreAssociation>
