@@ -63,20 +63,26 @@ namespace DuDuChinese.Models
             // Add Pinyin sentence
             if (!String.IsNullOrWhiteSpace(sentencePinyin))
             {
-                string[] words = sentencePinyin.Replace(",", "").Replace(".", "").Replace("?", "").Replace("!", "").Split(' ');
+                string[] words = sentencePinyin.Split(' ');
                 foreach (string word in words)
                 {
-                    Match match1 = pattern1.Match(word);
-                    Match match2 = pattern2.Match(word);
+                    // Save and remove last character if it is a special character
+                    string wordBase = word;
+                    string lastChar = word[word.Length - 1].ToString();
+                    Match match5 = pattern5.Match(lastChar);
+                    if (!match5.Success)
+                        wordBase = word.Substring(0, word.Length - 1);
+
+                    Match match1 = pattern1.Match(wordBase);
+                    Match match2 = pattern2.Match(wordBase);
                     if (match1.Success || match2.Success)
                     {
-                        FillTextBlock(textBlock, word, !first);
-                        first = false;
-                        continue;
+                        FillTextBlock(textBlock, wordBase, !first);
+                        goto LoopComplete;
                     }
 
-                    Match match3 = pattern3.Match(word);
-                    Match match4 = pattern4.Match(word);
+                    Match match3 = pattern3.Match(wordBase);
+                    Match match4 = pattern4.Match(wordBase);
                     if (match3.Success || match4.Success)
                     {
                         string w1 = match3.Success ?
@@ -88,12 +94,11 @@ namespace DuDuChinese.Models
 
                         FillTextBlock(textBlock, w1, !first);
                         FillTextBlock(textBlock, w2, false);
-                        first = false;
-                        continue;
+                        goto LoopComplete;
                     }
 
-                    Match match6 = pattern6.Match(word);
-                    Match match7 = pattern7.Match(word);
+                    Match match6 = pattern6.Match(wordBase);
+                    Match match7 = pattern7.Match(wordBase);
                     if (match6.Success || match7.Success)
                     {
                         string w1 = match6.Success ?
@@ -101,7 +106,7 @@ namespace DuDuChinese.Models
                             : (match7.Groups[1].ToString() + match7.Groups[2].ToString());
                         string w2 = match6.Success ?
                               (match6.Groups[3].ToString() + match6.Groups[4].ToString())
-                            : (match7.Groups[3].ToString());
+                            : (match7.Groups[3].ToString() + match7.Groups[4].ToString());
                         string w3 = match6.Success ?
                               (match6.Groups[5].ToString() + match6.Groups[6].ToString())
                             : (match7.Groups[5].ToString());
@@ -109,12 +114,11 @@ namespace DuDuChinese.Models
                         FillTextBlock(textBlock, w1, !first);
                         FillTextBlock(textBlock, w2, false);
                         FillTextBlock(textBlock, w3, false);
-                        first = false;
-                        continue;
+                        goto LoopComplete;
                     }
 
-                    Match match8 = pattern8.Match(word);
-                    Match match9 = pattern9.Match(word);
+                    Match match8 = pattern8.Match(wordBase);
+                    Match match9 = pattern9.Match(wordBase);
                     if (match8.Success || match9.Success)
                     {
                         string w1 = match8.Success ?
@@ -122,10 +126,10 @@ namespace DuDuChinese.Models
                             : (match9.Groups[1].ToString() + match9.Groups[2].ToString());
                         string w2 = match8.Success ?
                               (match8.Groups[3].ToString() + match8.Groups[4].ToString())
-                            : (match9.Groups[3].ToString());
+                            : (match9.Groups[3].ToString() + match9.Groups[4].ToString());
                         string w3 = match8.Success ?
                               (match8.Groups[5].ToString() + match8.Groups[6].ToString())
-                            : (match9.Groups[5].ToString());
+                            : (match9.Groups[5].ToString() + match9.Groups[6].ToString());
                         string w4 = match8.Success ?
                               (match8.Groups[7].ToString() + match8.Groups[8].ToString())
                             : (match9.Groups[7].ToString());
@@ -134,16 +138,17 @@ namespace DuDuChinese.Models
                         FillTextBlock(textBlock, w2, false);
                         FillTextBlock(textBlock, w3, false);
                         FillTextBlock(textBlock, w4, false);
-                        first = false;
+                        goto LoopComplete;
                     }
+
+                LoopComplete:
+                    // Add special character
+                    if (!match5.Success)
+                        textBlock.Inlines.Add(new Run() { Text = lastChar });
+                    first = false;
                 }
 
-                string lastChar = sentencePinyin[sentencePinyin.Length - 1].ToString();
-                Match match5 = pattern5.Match(lastChar);
-                if (match5.Success)
-                    textBlock.Inlines.Add(new Run() { Text = Environment.NewLine });
-                else
-                    textBlock.Inlines.Add(new Run() { Text = lastChar + Environment.NewLine });
+                textBlock.Inlines.Add(new Run() { Text = Environment.NewLine });
             }
 
             // Add english sentence
