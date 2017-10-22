@@ -124,6 +124,7 @@ namespace DuDuChinese.ViewModels
                     Sentence = String.Join(Environment.NewLine + " - ", value.Sentence),
                     SentenceChinese = value.Sentence.Count > 0 ? value.Sentence[0] : "",
                     SentenceEnglish = value.Sentence.Count > 1 ? value.Sentence[1] : "",
+                    SentencePinyin = value.Sentence.Count > 2 ? value.Sentence[2] : "",
                     PinyinVisible = pinyinVisible,
                     TranslationVisible = translationVisible,
                     SimplifiedVisible = simplifiedVisible,

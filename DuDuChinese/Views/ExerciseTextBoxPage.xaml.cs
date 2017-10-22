@@ -59,6 +59,15 @@ namespace DuDuChinese.Views
             p.Colorize(textBlock, record);
         }
 
+        private void PinyinSentence_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            TextBlock textBlock = (TextBlock)sender;
+            ItemViewModel item = (ItemViewModel)textBlock.DataContext;
+            CC_CEDICT.Universal.DictionaryRecord record = item.Record;
+            PinyinColorizer p = new PinyinColorizer();
+            p.ColorizeSentence(textBlock, record.Sentence, true);
+        }
+
         private void PlayButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             ViewModel.Play();

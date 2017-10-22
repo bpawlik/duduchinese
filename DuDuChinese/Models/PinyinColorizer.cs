@@ -46,7 +46,7 @@ namespace DuDuChinese.Models
             }
         }
 
-        public void ColorizeSentence(TextBlock textBlock, List<string> sentence)
+        public void ColorizeSentence(TextBlock textBlock, List<string> sentence, bool pinyinOnly = false)
         {
             if (sentence.Count < 2)
                 return;
@@ -55,10 +55,13 @@ namespace DuDuChinese.Models
             bool first = true;
             string sentencePinyin = sentence.Count == 3 ? sentence[2] : null;
 
-            // Add Chinese sentence first
-            Run runCH = new Run();
-            runCH.Text = sentence[0] + System.Environment.NewLine;
-            textBlock.Inlines.Add(runCH);
+            if (!pinyinOnly)
+            {
+                // Add Chinese sentence first
+                Run runCH = new Run();
+                runCH.Text = sentence[0] + System.Environment.NewLine;
+                textBlock.Inlines.Add(runCH);
+            }
 
             // Add Pinyin sentence
             if (!String.IsNullOrWhiteSpace(sentencePinyin))
@@ -148,13 +151,17 @@ namespace DuDuChinese.Models
                     first = false;
                 }
 
-                textBlock.Inlines.Add(new Run() { Text = Environment.NewLine });
+                if (!pinyinOnly)
+                    textBlock.Inlines.Add(new Run() { Text = Environment.NewLine });
             }
 
-            // Add english sentence
-            Run runEN = new Run();
-            runEN.Text = " - " + sentence[1];
-            textBlock.Inlines.Add(runEN);
+            if (!pinyinOnly)
+            {
+                // Add english sentence
+                Run runEN = new Run();
+                runEN.Text = " - " + sentence[1];
+                textBlock.Inlines.Add(runEN);
+            }
         }
 
         private void FillTextBlock(TextBlock textBlock, string pinyin, bool addSpaceBefore)

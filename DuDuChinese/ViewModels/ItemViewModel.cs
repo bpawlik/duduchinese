@@ -103,6 +103,13 @@ namespace DuDuChinese.ViewModels
             set { Set(ref this.sentenceChinese, value); }
         }
 
+        private string sentencePinyin;
+        public string SentencePinyin
+        {
+            get { return this.sentencePinyin; }
+            set { Set(ref this.sentencePinyin, value); }
+        }
+
         private string sentenceEnglish;
         public string SentenceEnglish
         {

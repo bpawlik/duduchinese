@@ -120,6 +120,9 @@
                                                                TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="24"  />
                                                 </Button.Content>
                                             </Button>
+                                            <TextBlock Text="{Binding SentencePinyin}" Loaded="PinyinSentence_Loaded"
+                                                       Visibility="{Binding SentenceChineseVisible, Mode=TwoWay}"
+                                                       TextWrapping="Wrap" TextTrimming="WordEllipsis" FontSize="22"  />
                                         </StackPanel>
                                     </StackPanel>
                                 </DataTemplate>
