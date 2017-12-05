@@ -160,7 +160,7 @@ namespace DuDuChinese.ViewModels
 
         public async void AddSentence()
         {
-            var dialog = new DuDuChinese.Views.Controls.AddSentenceDialog(SelectedItem.Sentence);
+            var dialog = new DuDuChinese.Views.Controls.AddSentenceDialog(SelectedItem, list);
             var result = await dialog.ShowAsync();
             if (result == ContentDialogResult.Primary)
             {

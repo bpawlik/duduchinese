@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CC_CEDICT.Universal;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -46,8 +47,9 @@ namespace DuDuChinese.Views.Controls
         }
 
 
-        public AddSentenceDialog(List<string> sentence)
+        public AddSentenceDialog(DictionaryRecord record, DictionaryRecordList list)
         {
+            List<string> sentence = record.Sentence;
             this.InitializeComponent();
 
             if (sentence.Count == 3)
@@ -66,12 +68,41 @@ namespace DuDuChinese.Views.Controls
             }
             else
             {
-                chineseTextBox.Text = "中文";
-                englishTextBox.Text = "English";
-                pinyinTextBox.Text = "pin1yin1";
+                // Look for sentences containing the same character(s)
+                DictionaryRecord r = SearchListForSentences(record, list);
+
+                if (r != null)
+                {
+                    chineseTextBox.Text = r.Sentence[0];
+                    englishTextBox.Text = r.Sentence.Count > 1 ? r.Sentence[1] : "English";
+                    pinyinTextBox.Text = r.Sentence.Count > 2 ? r.Sentence[2] : "pin1yin1";
+                }
+                else
+                {
+                    chineseTextBox.Text = "中文";
+                    englishTextBox.Text = "English";
+                    pinyinTextBox.Text = "pin1yin1";
+                }
+                
                 PrimaryButtonText = "Add";
             }
             chineseTextBox.SelectAll();
+        }
+
+        private DictionaryRecord SearchListForSentences(DictionaryRecord record, DictionaryRecordList list)
+        {
+            string chinese = record.Chinese.Simplified;
+            foreach (DictionaryRecord r in list)
+            {
+                if (r != record)
+                {
+                    if (r.Sentence.Count > 0 && r.Sentence[0].Contains(chinese))
+                    {
+                        return r;
+                    }
+                }
+            }
+            return null;
         }
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
