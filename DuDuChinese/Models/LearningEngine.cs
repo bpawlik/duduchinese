@@ -522,10 +522,10 @@ namespace DuDuChinese.Models
 
         public static string GetStatus()
         {
-            string status = String.Empty;
-
-#if DEBUG_ENGINE
             LearningItem curItem = LearningItems[CurrentExercise][currentItemIndex - 1];
+            string status = "List: " + curItem.ListName + Environment.NewLine + Environment.NewLine;
+#if DEBUG_ENGINE
+            
             string time = curItem.Timestamp.ToString("dd-MM-yyyy");
             status += "#" + curItem.Score + " (" + time + ")" + Environment.NewLine;
 

@@ -158,9 +158,8 @@ namespace DuDuChinese.Models
 
         public static void Serialize(Stream stream)
         {
-// Move past items to the future if you've been lazy ;)
+            // Move past items to the future if you've been lazy ;)
 #if LAZY_MODE
-            List<LearningItem> revList = new List<LearningItem>();
             DateTime today = DateTime.Today;
             Random rnd = new Random();
             for (int i = 0; i < revisionList.Count; ++i)
