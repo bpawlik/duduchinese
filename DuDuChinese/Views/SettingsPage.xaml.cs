@@ -83,7 +83,7 @@ namespace DuDuChinese.Views
                 Windows.Storage.StorageFile revisionsFile = await temporaryFolder.CreateFileAsync(
                     revisionsFilename, Windows.Storage.CreationCollisionOption.ReplaceExisting);
                 using (Stream stream = await revisionsFile.OpenStreamForWriteAsync())
-                    RevisionEngine.Serialize(stream);
+                    RevisionEngine.Serialize(stream, this.lazyMode.IsChecked.Value);
                 BackupStatus("Revisions saved successfully.");
             }
             catch (Exception ex)

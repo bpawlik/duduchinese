@@ -72,20 +72,29 @@
                                       OnContent="Light theme" OffContent="Dark theme"
                                       RelativePanel.AlignLeftWithPanel="True" />
                         <TextBlock x:Name="revisionsTextBlock"
-                            Margin="0,20,0,10"
+                            Margin="0,20,0,0"
                                    RelativePanel.Below="UseLightThemeToggleSwitch">
                             Backup revision and word lists:
                         </TextBlock>
+                        <CheckBox x:Name="lazyMode"
+                                  RelativePanel.AlignLeftWithPanel="True"
+                                  RelativePanel.Below="revisionsTextBlock">
+                            <TextBlock>Lazy Mode
+                                <ToolTipService.ToolTip> 
+                                    <ToolTip Content="Pushes all revisions to the future."/>
+                                </ToolTipService.ToolTip>
+                            </TextBlock>
+                        </CheckBox>
                         <Button x:Name="backupButton"
                                 RelativePanel.AlignLeftWithPanel="True"
-                                RelativePanel.Below="revisionsTextBlock"
+                                RelativePanel.Below="lazyMode"
                                 Click="backupButton_Click">
                             <Button.Content>
                                 <TextBlock>Backup Now</TextBlock>
                             </Button.Content>
                         </Button>
                         <Button x:Name="restoreButton" Margin="10,0"
-                                RelativePanel.Below="revisionsTextBlock"
+                                RelativePanel.Below="lazyMode"
                                 RelativePanel.RightOf="backupButton"
                                 Click="restoreButton_Click">
                             <Button.Content>
