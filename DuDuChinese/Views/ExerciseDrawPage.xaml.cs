@@ -190,6 +190,7 @@ namespace DuDuChinese.Views
                 
             ViewModel.Continue_Click(sender, e);
             Bindings.Update();
+            this.continueButton.Focus(Windows.UI.Xaml.FocusState.Programmatic);
         }
 
         private void Accept_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -197,6 +198,7 @@ namespace DuDuChinese.Views
             ViewModel.Accept_Click(sender, e);
             Clear_Click(sender, e);
             Bindings.Update();
+            this.continueButton.Focus(Windows.UI.Xaml.FocusState.Programmatic);
         }
 
         private void Pinyin_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -220,11 +222,13 @@ namespace DuDuChinese.Views
         private void PlayButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             ViewModel.Play();
+            this.continueButton.Focus(Windows.UI.Xaml.FocusState.Programmatic);
         }
 
         private void PlaySentence_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             ViewModel.Play(sentence: true);
+            this.continueButton.Focus(Windows.UI.Xaml.FocusState.Programmatic);
         }
 
         private void Character_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)

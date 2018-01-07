@@ -40,11 +40,13 @@ namespace DuDuChinese.Views
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.Play();
+            this.continueButton.Focus(Windows.UI.Xaml.FocusState.Programmatic);
         }
 
         private void PlaySentence_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.Play(sentence: true);
+            this.continueButton.Focus(Windows.UI.Xaml.FocusState.Programmatic);
         }
 
         private void Character_Click(object sender, RoutedEventArgs e)
