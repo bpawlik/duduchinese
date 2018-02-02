@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="65355BartekPawlik.Chinese-English-Dictionary" Publisher="CN=F6F85C26-2AC5-416F-8215-7E344E93C290" Version="1.1.0.0" />
+  <Identity Name="65355BartekPawlik.Chinese-English-Dictionary" Publisher="CN=F6F85C26-2AC5-416F-8215-7E344E93C290" Version="1.1.15.0" />
   <mp:PhoneIdentity PhoneProductId="0e323fac-f0d7-4398-9f9e-4f6020945318" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Chinese-English-汉字 Dictionary</DisplayName>

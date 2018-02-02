@@ -18,7 +18,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>DuDuChinese_StoreKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>931062116926055F269D7A8AFBD9D9D6153DC6AA</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>EE3343FAD8DF9AE97DC731E3063242AB3533FAC3</PackageCertificateThumbprint>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
@@ -204,7 +204,9 @@
     <None Include="Package.StoreAssociation.xml">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="Properties\Default.rd.xml" />
+    <Content Include="Properties\Default.rd.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
