@@ -47,6 +47,34 @@ namespace DuDuChinese.Models
             if (numberOfItems < 0 || numberOfItems > revisionList.Count)
                 numberOfItems = revisionList.Count;
 
+            // Black list
+            List<LearningExercise> blackList = new List<LearningExercise>() {
+                LearningExercise.English2Pinyin,
+                LearningExercise.Pinyin2English,
+                LearningExercise.Pinyin2Hanzi,
+                LearningExercise.FillGapsEnglish
+            };
+
+            // Find the oldest revision item
+            DateTime minDate = DateTime.Today;
+            for (int i = 0; i < revisionList.Count; ++i)
+            {
+                if (name != null && revisionList[i].ListName != name)
+                    continue;
+
+                // Skip items having satisfying score (0) and  those listed on the black list
+                if (revisionList[i].Score == 0 || blackList.Contains(revisionList[i].Exercise))
+                    continue;
+
+                if (revisionList[i].Timestamp.Date < minDate)
+                    minDate = revisionList[i].Timestamp.Date;
+            }
+
+            // Move all timestamps by minDate - Today
+            TimeSpan timeShift = DateTime.Today - minDate;
+            for (int i = 0; i < revisionList.Count; ++i)
+                revisionList[i].Timestamp += timeShift;
+
             // Sort item by the score in descending order
             revisionList.Sort((s1, s2) => s2.Score.CompareTo(s1.Score));
 
@@ -58,16 +86,9 @@ namespace DuDuChinese.Models
                 app.ListManager[item.ListName].Count == 0 ||    // ...list they belong to is empty...
                 app.ListManager[item.ListName].Find(r => LearningItem.ComputeHash(r) == item.Hash) == null  //  ...or doesn't exist in the list
             ));
-            if (removedCount > 0)
-                Serialize();
 
-            // Black list
-            List<LearningExercise> blackList = new List<LearningExercise>() {
-                LearningExercise.English2Pinyin,
-                LearningExercise.Pinyin2English,
-                LearningExercise.Pinyin2Hanzi,
-                LearningExercise.FillGapsEnglish
-            };
+            // Save updated revision list
+            Serialize();
 
             // Fill list with the worst items (but not already learnt today)
             List<LearningItem> revList = new List<LearningItem>();
@@ -156,21 +177,8 @@ namespace DuDuChinese.Models
             await Task.CompletedTask;
         }
 
-        public static void Serialize(Stream stream, bool lazyMode = false)
+        public static void Serialize(Stream stream)
         {
-            // Move past items to the future if you've been lazy ;)
-            if (lazyMode)
-            {
-                DateTime today = DateTime.Today;
-                Random rnd = new Random();
-                for (int i = 0; i < revisionList.Count; ++i)
-                {
-                    // Move old items to the future
-                    if (revisionList[i].Score != 0 && revisionList[i].Timestamp.Date < today)
-                        revisionList[i].Timestamp = today.AddDays(rnd.Next(1, 30));
-                }
-            }
-
             // Write an object to the Stream and leave it opened
             using (var writer = XmlDictionaryWriter.CreateTextWriter(stream, Encoding.UTF8, ownsStream: false))
             {
